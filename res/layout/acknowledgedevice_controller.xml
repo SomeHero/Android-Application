@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ctrnParentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dip"
+        android:layout_marginTop="40dip" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="200dip"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="#0000FF"
+            android:padding="5dip"
+            android:text="Welcome to PaidThx.  We enable our users to send and receivie money right from their mobile phone.  To get started, enter the mobile number of this device in the text box below."
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#FFFFFF" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="280dip"
+        android:layout_height="wrap_content" 
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/txtYourMobileNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Your Mobile Number"
+            android:inputType="phone"
+            android:phoneNumber="true" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/btnSubmitYourMobileNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Continue" />
+    </LinearLayout>
+
+</LinearLayout>

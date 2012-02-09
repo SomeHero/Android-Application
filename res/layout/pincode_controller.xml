@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ctrlSecurityPinCode"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+            <TableLayout
+                android:id="@+id/tableLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <ImageButton
+                            android:id="@+id/btnSecurityPin1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:src="@drawable/nsel"
+                            android:text="@string/hello" />
+
+                        <ImageButton
+                            android:id="@+id/btnSecurityPin2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:src="@drawable/nsel"
+                            android:text="@string/hello" />
+
+                        <ImageButton
+                            android:id="@+id/btnSecurityPin3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:src="@drawable/nsel"
+                            android:text="@string/hello" />
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <ImageButton
+                            android:id="@+id/btnSecurityPin4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:src="@drawable/nsel"
+                            android:text="@string/hello" />
+
+                        <ImageButton
+                            android:id="@+id/btnSecurityPin5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:src="@drawable/nsel"
+                            android:text="@string/hello" />
+
+                        <ImageButton
+                            android:id="@+id/btnSecurityPin6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:src="@drawable/nsel"
+                            android:text="@string/hello" />
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <ImageButton
+                            android:id="@+id/btnSecurityPin7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:src="@drawable/nsel"
+                            android:text="@string/hello" />
+
+                        <ImageButton
+                            android:id="@+id/btnSecurityPin8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:src="@drawable/nsel"
+                            android:text="@string/hello" />
+
+                        <ImageButton
+                            android:id="@+id/btnSecurityPin9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@null"
+                            android:clickable="true"
+                            android:src="@drawable/nsel"
+                            android:text="@string/hello" />
+                    </LinearLayout>
+                </TableRow>
+            </TableLayout>
+
+    </LinearLayout>
+
+</merge>
