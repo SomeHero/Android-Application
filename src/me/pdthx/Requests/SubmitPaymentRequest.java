@@ -4,6 +4,7 @@ public class SubmitPaymentRequest {
 	public SubmitPaymentRequest() {
 		
 	}
+	public String ApiKey = "";
 	public String UserId = "";
 	public String SecurityPin = "";
 	public String FromMobileNumber = "";

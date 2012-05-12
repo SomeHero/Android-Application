@@ -1,15 +1,2 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:id="@+id/menu_refresh"
-        android:title="@string/menu_refresh"
-        android:icon="@drawable/ic_tab_artists_grey"
-        android:orderInCategory="1"
-        android:showAsAction="always" />
-    <item android:id="@+id/menu_search"
-        android:title="@string/menu_search"
-        android:icon="@drawable/ic_tab_artists_grey"
-        android:orderInCategory="0"
-        android:showAsAction="always" />
-
-</menu>
+    <menu xmlns:android="http://schemas.android.com/apk/res/android"></menu>

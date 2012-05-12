@@ -21,4 +21,7 @@
     <color name="actionbar_background_item_pressed_start">#FF7F00</color>
     <color name="actionbar_background_item_pressed_end">#EE7600</color>
     <color name="transparent">#00000000</color>
+     <color name="transparent_white">#FFFFFF</color>
+        <color name="word_bar">#FF0000</color>
+    <color name="number_bar">#00FF00</color>
 </resources>

@@ -14,24 +14,59 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
+    
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="10dip">
 
-               <TextView
-            android:id="@+id/textView1"
-            android:layout_width="fill_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout01" 
+    android:layout_width="fill_parent" 
+    android:layout_height="30dp">
+<ImageView 
+    android:src="@drawable/logo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:contentDescription="PaidThx Logo"
+    android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+ />
+<TextView android:text="Send Money" 
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="#0000FF"
-            android:padding="5dip"
-            android:layout_marginBottom="5px"
-            android:text="Send Money"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#FFFFFF"
-            android:gravity="top" />
+            android:layout_alignParentRight="true" 
+            android:layout_alignParentBottom="true"
+            android:textColor="#41924b" />
+</RelativeLayout>   
+<LinearLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dip"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/panel_background" >
+  
+                   <LinearLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="280dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+
+                       
+    <TextView
+        android:id="@+id/textView1"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send To:" />
+    
     <AutoCompleteTextView
         android:id="@+id/txtSendMoneyRecipient"
         android:layout_width="match_parent"
@@ -41,6 +76,14 @@
         <requestFocus />
     </AutoCompleteTextView>
 
+    
+    <TextView
+        android:id="@+id/textView1"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Amount to Send:" />
     <EditText
         android:id="@+id/txtAmount"
         android:layout_width="128dp"
@@ -52,6 +95,14 @@
         android:maxLines="1"
         android:text="$0.00" />
 
+    
+    <TextView
+        android:id="@+id/textView1"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comments:" />
     <EditText
         android:id="@+id/txtComments"
         android:layout_width="fill_parent"
@@ -62,23 +113,13 @@
         android:lines="3" >
     </EditText>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
         <Button
             android:id="@+id/btnSubmitPaymentRequest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send Money" />
-
-        <me.pdthx.CustomLockView
-            android:id="@+id/ctrlSecurityPin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="10dip" />
-    </RelativeLayout>
+            android:background="@drawable/btn_sendmoney_now" />
+        
+</LinearLayout>
+</LinearLayout>
 
 </LinearLayout>

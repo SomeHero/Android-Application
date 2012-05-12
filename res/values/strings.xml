@@ -52,5 +52,9 @@
     
     <string name="hello">Hello World!</string>
     <string name="actionbar_activity_not_found">Failed to open intent...</string>
+    
+    <string name="secret_key">4f022fe0e228c88d286b</string>
+     <string name="tab_words">Words</string>
+    <string name="tab_numbers">Numbers</string>
   
 </resources>

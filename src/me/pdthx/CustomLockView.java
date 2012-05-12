@@ -3,6 +3,8 @@ package me.pdthx;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zubhium.ZubhiumSDK;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,7 +31,8 @@ public class CustomLockView extends View {
 
 	private Bitmap selected = BitmapFactory.decodeResource(this.getResources(),
 			R.drawable.sel);
-
+	ZubhiumSDK sdk ;
+	
 	public CustomLockView(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
 

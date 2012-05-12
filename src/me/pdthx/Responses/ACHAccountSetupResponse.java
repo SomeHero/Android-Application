@@ -6,4 +6,5 @@ public class ACHAccountSetupResponse {
 	}
 	public boolean Success = false;
 	public String PaymentAccountId = "";
+	public String AccountInformation = "";
 }

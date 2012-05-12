@@ -23,7 +23,8 @@ public class PaymentServices {
 	public PaymentServices() {
 	}
 
-	private static final String SUBMITPAYMENT_URL = "http://www.pdthx.me/Services/PaymentService/Payments?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String ROOTURL = "http://beta.paidthx.com";
+	private static final String SUBMITPAYMENT_URL = "/Services/PaymentService/Payments?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
 
 	public SubmitPaymentResponse SubmitPayment(
@@ -34,16 +35,17 @@ public class PaymentServices {
 
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost request = new HttpPost(SUBMITPAYMENT_URL);
+			HttpPost request = new HttpPost(ROOTURL + SUBMITPAYMENT_URL);
 
 			JSONObject json = new JSONObject();
+			json.put("apiKey", APIKEY);
 			json.put("userId", submitPaymentRequest.UserId);
 			json.put("securityPin", submitPaymentRequest.SecurityPin);
 			json.put("fromMobileNumber", submitPaymentRequest.FromMobileNumber);
 			json.put("toMobileNumber", submitPaymentRequest.Recipient);
 			json.put("amount", submitPaymentRequest.Amount.toString());
 			json.put("comment", submitPaymentRequest.Comments);
-			json.put("fromAccount", submitPaymentRequest.PaymentAccountId);
+			json.put("paymentAccountId", submitPaymentRequest.PaymentAccountId);
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);

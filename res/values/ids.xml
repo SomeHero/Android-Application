@@ -20,4 +20,15 @@
     <item type="id" name="actionbar_compat_item_refresh_progress" />
     <item type="id" name="actionbar_compat_item_refresh" />
     <item type="id" name="menu_refresh" />
+    <item type="id" name="USERSIGNIN_COMPLETE" />
+    <item type="id" name="USERREGISTRATION_COMPLETE" />
+    <item type="id" name="VALIDATEUSER_DIALOG" />
+    <item type="id" name="INVALIDUSERSIGNIN_DIALOG" />
+	<item type="id" name="CREATEACCOUNT_DIALOG" />
+	<item type="id" name="CREATEACCOUNTFAILED_DIALOG" />
+	<item type="id" name="SETUPACHACCOUNT_DIALOG" />
+	<item type="id" name="SETUPACHACCOUNTFAILED_DIALOG" />
+	<item type="id" name="INVALIDPASSCODELENGTH_DIALOG" />
+	<item type="id" name="SECURITYPINMISMATCH_DIALOG" />
+	<item type="id" name="UNHANDLEDEXCEPTION_DIALOG" />
 </resources>

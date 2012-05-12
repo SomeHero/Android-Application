@@ -9,6 +9,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.zubhium.ZubhiumSDK;
+
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -68,6 +70,8 @@ public class LockPatternView extends View {
 	private int arrowPointRadius;
 	private int arrowBaseRadius;
 	private int arrowBaseHalfLength;
+	
+	ZubhiumSDK sdk ;
 
 	public LockPatternView(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);

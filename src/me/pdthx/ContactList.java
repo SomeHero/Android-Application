@@ -2,6 +2,8 @@ package me.pdthx;
 
 import java.util.ArrayList;
 
+import com.zubhium.ZubhiumSDK;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,6 +13,7 @@ import android.provider.Contacts.People;
 public class ContactList {
 	
 	private ArrayList<String> contactsList = new ArrayList<String>();
+	ZubhiumSDK sdk ;
 	
 	public ContactList(Context context) {
 		ContentResolver cr = context.getContentResolver();

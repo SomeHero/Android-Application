@@ -7,4 +7,5 @@ public class PaymentRequestRequest {
 	public String RecipientUri = "";
 	public Double Amount = (double) 0;
 	public String Comments = "";
+	public String SecurityPin = "";
 }
