@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list android:oneshot="true" xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/pdthx1" android:duration="100" />
+    <item android:drawable="@drawable/pdthx2" android:duration="100" />
+    <item android:drawable="@drawable/pdthx3" android:duration="100" />
+    <item android:drawable="@drawable/pdthx4" android:duration="100" />
+    <item android:drawable="@drawable/pdthx5" android:duration="100" />
+    <item android:drawable="@drawable/pdthx6" android:duration="100" />
+    <item android:drawable="@drawable/pdthx7" android:duration="100" />
+    <item android:drawable="@drawable/pdthx8" android:duration="100" />
+    <item android:drawable="@drawable/pdthx9" android:duration="100" />
+    <item android:drawable="@drawable/pdthx10" android:duration="100" />
+    <item android:drawable="@drawable/pdthx11" android:duration="100" />
+    <item android:drawable="@drawable/pdthx12" android:duration="100" />
+    <item android:drawable="@drawable/pdthx13" android:duration="100" />
+    <item android:drawable="@drawable/pdthx14" android:duration="100" />
+    <item android:drawable="@drawable/pdthx15" android:duration="100" />
+    <item android:drawable="@drawable/pdthx16" android:duration="100" />
+    <item android:drawable="@drawable/pdthx17" android:duration="100" />
+    <item android:drawable="@drawable/pdthx18" android:duration="100" />
+    <item android:drawable="@drawable/pdthx19" android:duration="100" />
+    <item android:drawable="@drawable/pdthx20" android:duration="100" />
+    <item android:drawable="@drawable/pdthx21" android:duration="100" />
+    <item android:drawable="@drawable/pdthx22" android:duration="100" />
+    <item android:drawable="@drawable/pdthx23" android:duration="100" />
+    <item android:drawable="@drawable/pdthx24" android:duration="100" />
+    <item android:drawable="@drawable/pdthx25" android:duration="100" />
+    <item android:drawable="@drawable/pdthx26" android:duration="500" />
+</animation-list>
