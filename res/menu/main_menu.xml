@@ -8,8 +8,8 @@
             android:title="Sign Out"></item>
 
         <item
-            android:id="@+id/forgetMeMenuItem"
-            android:title="Forget Me"></item>
+            android:id="@+id/profileMenuItem"
+            android:title="My Profile"></item>
     </group>
 
 </menu>

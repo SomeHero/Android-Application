@@ -55,6 +55,7 @@ public class SplashActivity extends Activity {
 					
 				} finally{
 					finish();
+					overridePendingTransition(R.anim.mainfadein, R.anim.splashfadeout);
 					startActivity(new Intent(getApplicationContext(), CustomTabActivity.class));
 				}
 			}

@@ -7,8 +7,10 @@ import com.zubhium.ZubhiumSDK;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.Contacts;
 import android.provider.Contacts.People;
+import android.provider.ContactsContract;
 
 public class ContactList {
 	
@@ -16,7 +18,17 @@ public class ContactList {
 	ZubhiumSDK sdk ;
 	
 	public ContactList(Context context) {
-		ContentResolver cr = context.getContentResolver();
+		Cursor phones = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
+		while (phones.moveToNext())
+		{
+		  //String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+		  String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+		  contactsList.add(phoneNumber);
+
+		}
+		phones.close();		
+	
+		/*ContentResolver cr = context.getContentResolver();
 		Cursor cur = cr.query(People.CONTENT_URI, null,
 				null, null, null);
 		if (cur.getCount() > 0) {
@@ -55,8 +67,7 @@ public class ContactList {
 				//emails.close();
 			}
 		}
-		cur.close();
-		contactsList.add("804-387-9693");	
+		cur.close();*/
 	}
 	public ArrayList<String> getContacts() {
 		return contactsList;

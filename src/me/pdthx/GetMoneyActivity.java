@@ -66,7 +66,7 @@ public final class GetMoneyActivity extends Activity {
 			startActivity(intent);
 
 			break;
-		case R.id.forgetMeMenuItem:
+		/*case R.id.forgetMeMenuItem:
 
 			editor.clear();
 			editor.commit();
@@ -76,6 +76,7 @@ public final class GetMoneyActivity extends Activity {
 			startActivity(intent);
 
 			break;
+			*/
 
 		}
 		return super.onOptionsItemSelected(item);

@@ -8,7 +8,6 @@ import com.zubhium.ZubhiumSDK.CrashReportingMode;
 import me.pdthx.Requests.PaymentRequestRequest;
 import me.pdthx.Responses.PaymentRequestResponse;
 import me.pdthx.Services.PaymentRequestService;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -25,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,7 +65,7 @@ public class RequestMoneyActivity extends BaseActivity {
 	ZubhiumSDK sdk ;
 	private static final String TAG = "RequestMoneyActivity";
 	
-	//private ContactList contactList = null;
+	private ContactList contactList = null;
 	
 	Handler mHandler = new Handler() {
 
@@ -122,7 +122,7 @@ public class RequestMoneyActivity extends BaseActivity {
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		userId = prefs.getString("userId", "");
 		mobileNumber = prefs.getString("mobileNumber", "");
-		//contactList = new ContactList(getBaseContext());
+		contactList = new ContactList(getBaseContext());
 
 		launchRequestMoneyView();
 	}
@@ -242,13 +242,14 @@ public class RequestMoneyActivity extends BaseActivity {
 
 		sendRequestView = View.inflate(this, R.layout.requestmoney_controller, null);
 		setContentView(sendRequestView);
+		
 
-		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-		//		R.layout.list_item, contactList.getContacts().toArray(
-		//				new String[0]));
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_dropdown_item_1line, contactList.getContacts().toArray(
+					new String[0]));
 
 		txtRequestMoneyRecipient = (AutoCompleteTextView) findViewById(R.id.txtRequestMoneyRecipient);
-		//txtRequestMoneyRecipient.setAdapter(adapter);
+		txtRequestMoneyRecipient.setAdapter(adapter);
 
 		txtAmount = (EditText) findViewById(R.id.txtRequestMoneyAmount);
 		txtAmount.addTextChangedListener(new TextWatcher() {
@@ -384,7 +385,5 @@ public class RequestMoneyActivity extends BaseActivity {
 
 		paymentRequestResponse = paymentRequestService.SendPaymentRequest(paymentRequest);
 	}
-
-
 
 }

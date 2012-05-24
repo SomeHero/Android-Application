@@ -20,6 +20,10 @@ import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -38,7 +42,7 @@ public class CustomTabActivity extends TabActivity {
 		mTabHost = (TabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 	}
-
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +53,7 @@ public class CustomTabActivity extends TabActivity {
 
 		mTabHost = getTabHost(); // The activity TabHost
 		mTabHost.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
-
+		
 		Intent intent; // Reusable Intent for each tab
 
 		sdk = ZubhiumSDK.getZubhiumSDKInstance(CustomTabActivity.this,
@@ -62,27 +66,24 @@ public class CustomTabActivity extends TabActivity {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		
-		 intent = new Intent(mTabHost.getContext(), HomeActivity.class);
-		 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		 setupTab(res.getDrawable(R.drawable.ic_tab_home), "Home", intent);
-		  
-		 intent = new Intent(mTabHost.getContext(),
-		 MakePaymentActivity.class);
-		 setupTab(res.getDrawable(R.drawable.ic_tab_send), "Send $", intent);
-		 
-		 if(prefs.getString("paymentAccountId", "").length() == 0) { intent =
-		 new Intent(mTabHost.getContext(), GetMoneyActivity.class);
-		 setupTab(res.getDrawable(R.drawable.ic_tab_home), "Get $", intent); }
-		  
-		 intent = new Intent(mTabHost.getContext(),
-		 RequestMoneyActivity.class);
-		 setupTab(res.getDrawable(R.drawable.ic_tab_recv), "Req $", intent);
-		 
-		 intent = new Intent(mTabHost.getContext(), PaystreamActivity.class);
-		 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		 setupTab(res.getDrawable(R.drawable.ic_tab_stream), "Stream",
-		 intent);
+		intent = new Intent(mTabHost.getContext(), HomeActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		setupTab(res.getDrawable(R.drawable.ic_tab_home), "Home", intent);
+
+		intent = new Intent(mTabHost.getContext(), MakePaymentActivity.class);
+		setupTab(res.getDrawable(R.drawable.ic_tab_send), "Send $", intent);
+
+		if (prefs.getString("paymentAccountId", "").length() == 0) {
+			intent = new Intent(mTabHost.getContext(), GetMoneyActivity.class);
+			setupTab(res.getDrawable(R.drawable.ic_tab_home), "Get $", intent);
+		}
+
+		intent = new Intent(mTabHost.getContext(), RequestMoneyActivity.class);
+		setupTab(res.getDrawable(R.drawable.ic_tab_recv), "Req $", intent);
+
+		intent = new Intent(mTabHost.getContext(), PaystreamActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		setupTab(res.getDrawable(R.drawable.ic_tab_stream), "Stream", intent);
 
 		// intent = new Intent(CustomTabActivity.this,
 		// VerifyMobileNumberActivity.class);
@@ -183,18 +184,23 @@ public class CustomTabActivity extends TabActivity {
 		tv.setText(text);
 		return view;
 	}
-	
-	private static OnTabChangeListener MyOnTabChangeListener = new OnTabChangeListener(){
+
+	private OnTabChangeListener MyOnTabChangeListener = new OnTabChangeListener() {
+
 		@Override
-		public void onTabChanged(String tabId) {
-			for(int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++)
-			{
-				TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title); //Unselected Tabs
-		        tv.setTextColor(Color.parseColor("#424242"));
-				mTabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.tab_bg_unselected);
+		public void onTabChanged(String tabId) {	
+			for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+				TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i)
+						.findViewById(android.R.id.title); // Unselected Tabs
+				tv.setTextColor(Color.parseColor("#424242"));
+				mTabHost.getTabWidget().getChildAt(i)
+						.setBackgroundResource(R.drawable.tab_bg_unselected);
 			}
-			mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab()).setBackgroundResource(R.drawable.tab_bg_selected);
-			TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab()).findViewById(android.R.id.title);
+			mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab())
+					.setBackgroundResource(R.drawable.tab_bg_selected);
+			TextView tv = (TextView) mTabHost.getTabWidget()
+					.getChildAt(mTabHost.getCurrentTab())
+					.findViewById(android.R.id.title);
 			tv.setTextColor(Color.parseColor("#FFFFFF"));
 		}
 	};
