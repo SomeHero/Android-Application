@@ -17,7 +17,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.telephony.PhoneNumberFormattingTextWatcher;
+//import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +29,6 @@ import android.widget.EditText;
 public class SignUpActivity extends BaseActivity {
 	
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
-	private String deviceId= "";
 	private UserRegistrationModel registrationModel;
 	private ACHAccountModel achAccountModel;
 	
@@ -42,7 +41,7 @@ public class SignUpActivity extends BaseActivity {
 	final private int USERSECURITYPIN_CONFIRMMISMATCH = 6;
 	final private int USERREGISTRATION_PASSWORDMISMATCH = 7;
 	final private int USERREGISTRATION_ACHNUMBERMISMATCH = 8;
-	final private int USERREGISTRATION_PHONENUMBERFORMATERROR = 9;
+//	final private int USERREGISTRATION_PHONENUMBERFORMATERROR = 9;
 	
 	protected UserService userService = new UserService();
 	protected UserRegistrationResponse userRegistrationResponse;
@@ -56,7 +55,7 @@ public class SignUpActivity extends BaseActivity {
 	
 	private EditText txtEmailAddress;
 	private EditText txtPassword;
-	private EditText txtMobileNumber;
+//	private EditText txtMobileNumber;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,8 +70,8 @@ public class SignUpActivity extends BaseActivity {
 		
 		txtEmailAddress = (EditText)findViewById(R.id.txtEmailAddress);
 		txtPassword = (EditText)findViewById(R.id.txtPassword);
-		txtMobileNumber = (EditText)findViewById(R.id.txtMobileNumber);
-		txtMobileNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+//		txtMobileNumber = (EditText)findViewById(R.id.txtMobileNumber);
+//		txtMobileNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 		
 		showSignUpActivity(); 
 		}
@@ -176,20 +175,20 @@ public class SignUpActivity extends BaseActivity {
 				alertDialog.show();
         		break;
         		
-	        	case(USERREGISTRATION_PHONENUMBERFORMATERROR):
-	        		alertDialog = new AlertDialog.Builder(parent)
-				.create();
-				alertDialog.setTitle("Phone Number Format error.");
-				alertDialog
-						.setMessage("Phone number does not have 10 digits. Please try again.");
-				alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-				
-				alertDialog.show();
-        		break;
+//	        	case(USERREGISTRATION_PHONENUMBERFORMATERROR):
+//	        		alertDialog = new AlertDialog.Builder(parent)
+//				.create();
+//				alertDialog.setTitle("Phone Number Format error.");
+//				alertDialog
+//						.setMessage("Phone number does not have 10 digits. Please try again.");
+//				alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.dismiss();
+//					}
+//				});
+//				
+//				alertDialog.show();
+//        		break;
         	}	
 			
         }
@@ -205,21 +204,21 @@ public class SignUpActivity extends BaseActivity {
 
 				EditText txtConfirmPassword = (EditText) findViewById(R.id.txtConfirmPassword);
 
-				if(txtMobileNumber.getText().toString().matches("[0-9]{3}-[0-9]{3}-[0-9]{4}")) {
+//				if(txtMobileNumber.getText().toString().matches("[0-9]{3}-[0-9]{3}-[0-9]{4}")) {
 
 					if(txtPassword.getText().toString().trim().equals(txtConfirmPassword.getText().toString().trim())) {
 						registrationModel.setEmailAddress(txtEmailAddress.getText().toString().trim());
-						registrationModel.setMobileNumber(txtMobileNumber.getText().toString().trim());
+//						registrationModel.setMobileNumber(txtMobileNumber.getText().toString().trim());
 						registrationModel.setPassword(txtPassword.getText().toString());
 						showSetupSecurityPinController();
 					} 
 					else {
 						signUpHandler.sendEmptyMessage(USERREGISTRATION_PASSWORDMISMATCH);
 					}
-				}
-				else {
-					signUpHandler.sendEmptyMessage(USERREGISTRATION_PHONENUMBERFORMATERROR);
-				}
+//				}
+//				else {
+//					signUpHandler.sendEmptyMessage(USERREGISTRATION_PHONENUMBERFORMATERROR);
+//				}
 			}
 		});
 	}
@@ -409,13 +408,9 @@ public class SignUpActivity extends BaseActivity {
 		
 		UserRegistrationRequest request = new UserRegistrationRequest();
 		request.ApiKey = APIKEY;
-		request.DeviceId = deviceId;
+		request.DeviceToken = "";
 		request.UserName = registrationModel.getEmailAddress();
-		request.EmailAddress = registrationModel.getEmailAddress();
-		request.MobileNumber = registrationModel.getMobileNumber();
 		request.Password = registrationModel.getPassword();
-		request.SecurityPin = registrationModel.getSecurityPin();
-		request.RegistrationMethodId = "2";
 		
 		userRegistrationResponse = userService.RegisterUser(request);
 		}

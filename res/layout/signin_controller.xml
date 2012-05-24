@@ -2,98 +2,113 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/background"
     android:orientation="vertical"
-    android:padding="10dip"
-	android:background="@drawable/background">
+    android:padding="10dip" >
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout01" 
-    android:layout_width="fill_parent" 
-    android:layout_height="30dp">
-<ImageView 
-    android:src="@drawable/logo"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:contentDescription="PaidThx Logo"
-    android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
- />
-<TextView android:text="Sign In" 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" 
-            android:layout_alignParentBottom="true"
-            android:textColor="#41924b" />
-</RelativeLayout>   
-<LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dip"
-        android:padding="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/panel_background" >
-                   <LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="280dip"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
 
-                                       <TextView
-        android:id="@+id/textView1"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign In or Create Your Account" 
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="4dp" />
-        <EditText
-            android:id="@+id/txtUserName"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:lines="1"
-            android:maxLength="20"
-            android:maxLines="1"
-            android:hint="Email Address or Mobile #"
-             android:layout_marginBottom="15dp" />
+            android:orientation="vertical" >
 
-        <EditText
-            android:id="@+id/txtPassword"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:lines="1"
-            android:maxLength="20"
-            android:maxLines="1"
-            android:hint="Password"
-             android:layout_marginBottom="15dp"/>
-
-        <Button
-            android:id="@+id/btnFBSignIn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button" />
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/RelativeLayout01"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp" >
 
-            <Button
-                android:id="@+id/btnSignInSubmit"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:contentDescription="PaidThx Logo"
+                    android:src="@drawable/logo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="Sign In"
+                    android:textColor="#41924b" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/relativeLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_sign_in"
-                 android:layout_marginBottom="15dp"/>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/panel_background"
+                android:orientation="vertical"
+                android:padding="10dp" >
 
-<Button
-            android:id="@+id/btnCreateAnAccount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_create_an_account"
-             android:layout_marginBottom="4dp" />
+                <LinearLayout
+                    android:id="@+id/relativeLayout2"
+                    android:layout_width="280dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="vertical" >
 
-</LinearLayout>
-</LinearLayout>
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginTop="4dp"
+                        android:text="Sign In or Create Your Account"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/txtUserName"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:hint="Email Address or Mobile #"
+                        android:inputType="text"
+                        android:lines="1"
+                        android:maxLength="20"
+                        android:maxLines="1" />
+
+                    <EditText
+                        android:id="@+id/txtPassword"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:lines="1"
+                        android:maxLength="20"
+                        android:maxLines="1" />
+
+					<Button
+						android:id="@+id/btnFBSignIn"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="Button" />	
+						
+                    <Button
+                        android:id="@+id/btnSignInSubmit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/btn_sign_in" />
+
+                    <Button
+                        android:id="@+id/btnCreateAnAccount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:background="@drawable/btn_create_an_account" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

@@ -7,12 +7,10 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
-    </uses-permission>
-    <uses-permission android:name="android.permission.SEND_SMS" >
-    </uses-permission>
-    <uses-permission android:name="android.permission.RECEIVE_SMS" >
-    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-sdk
         android:minSdkVersion="3"
@@ -23,13 +21,19 @@
         android:icon="@drawable/paidthx_icon"
         android:label="@string/app_name" >
         <activity
-            android:name=".CustomTabActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
+            android:label="@string/app_name"
+            android:name=".SplashActivity" >
+            <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        
+        
+        <activity
+            android:name=".CustomTabActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".SignUpTabActivity"

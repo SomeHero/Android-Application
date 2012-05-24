@@ -53,6 +53,15 @@
 	android:dividerHeight="1dp"
   >
 </ListView>
+
+<TextView android:text="Your paystream is empty."
+        android:id="@+id/txtEmptyPaystream"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/panel_background" 
+        android:layout_margin="10dp"
+        android:padding="14dp"
+        android:visibility="gone"/>
 		</LinearLayout>
 </LinearLayout>
 </LinearLayout>

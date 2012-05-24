@@ -66,7 +66,7 @@ public class UserService {
 			try {
 				instream = entity.getContent();
 				result = RestClient.convertStreamToString(instream);
-				// Log.i(TAG, "Result of converstion: [" + result +
+				// Log.i(TAG, "Result of conversation: [" + result +
 				// "]");
 			} catch (IllegalStateException e) {
 				// TODO Auto-generated catch block
@@ -309,11 +309,8 @@ public class UserService {
 
 			json.put("apiKey", APIKEY);
 			json.put("userName", userRegistrationRequest.UserName);
-			json.put("emailAddress", userRegistrationRequest.EmailAddress);
 			json.put("password", userRegistrationRequest.Password);
-			json.put("mobileNumber", userRegistrationRequest.MobileNumber);
-			json.put("deviceId", userRegistrationRequest.DeviceId);
-			json.put("securityPin", userRegistrationRequest.SecurityPin);
+			json.put("deviceToken", userRegistrationRequest.DeviceToken);
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);

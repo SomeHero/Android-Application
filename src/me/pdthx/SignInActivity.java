@@ -104,7 +104,7 @@ public class SignInActivity extends BaseActivity {
 			public void onClick(View arg0) {
 
 				if (!signedInViaFacebook) {
-					String[] permissions = {"email"};
+					String[] permissions = {"email", "read_friendlists"};
 
 					facebook.authorize(SignInActivity.this, permissions, 2, new DialogListener() {
 						public void onComplete(Bundle values) {
@@ -150,14 +150,14 @@ public class SignInActivity extends BaseActivity {
 
 	}
 	private void signInRunner() {
-		//ProgressDialog progressDialog = null;
 		Thread thread = null;
 
-		//		progressDialog = new ProgressDialog(getParent());
-		//		//ProgressDialog.Builder progressDialog = new ProgressDialog.Builder(parent);
-		//		progressDialog.setMessage("Authenticating...");
-		//		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		//		progressDialog.show();
+		
+//		progressDialog = new ProgressDialog();
+//		//ProgressDialog.Builder progressDialog = new ProgressDialog.Builder(parent);
+//		progressDialog.setMessage("Authenticating...");
+//		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//		progressDialog.show();
 
 		thread = new Thread(new Runnable() {
 
@@ -169,10 +169,10 @@ public class SignInActivity extends BaseActivity {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				//				progressDialog.dismiss();
+//				progressDialog.dismiss();
 
 				Editor editor = prefs.edit();
-				
+
 				if (!signedInViaFacebook) {
 					if (userSignInResponse.IsValid) {
 

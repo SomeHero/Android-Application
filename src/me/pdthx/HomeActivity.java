@@ -90,13 +90,13 @@ public final class HomeActivity extends BaseActivity {
 			
 			TextView txtUserName = (TextView)findViewById(R.id.txtUserName);
 			
-			if (userResponse.FirstName != null && userResponse.LastName != null ) {
+			if (!userResponse.FirstName.equals("null") && !userResponse.LastName.equals("null") ) {
 				txtUserName.setText(userResponse.FirstName + " " + userResponse.LastName);
 			}
-			else if (userResponse.EmailAddress != "" && userResponse.EmailAddress != null) {
+			else if (!userResponse.EmailAddress.equals("null")) {
 				txtUserName.setText(userResponse.EmailAddress);
 			}
-			else if (userResponse.MobileNumber != "" && userResponse.MobileNumber != null) {
+			else if (!userResponse.MobileNumber.equals("null")) {
 				txtUserName.setText(userResponse.MobileNumber);
 			}
 			else {

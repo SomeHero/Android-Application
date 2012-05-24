@@ -61,8 +61,11 @@ public final class PaystreamActivity extends BaseActivity  {
         prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
+        System.out.println(prefs.getString("userId", ""));
+        System.out.println(prefs.getString("mobileNumber", ""));
+        
 		if(prefs.getString("userId", "").length() == 0 || prefs.getString("mobileNumber", "").length() == 0)		{
-			showSignInActivity();
+			//showSignInActivity();
 		}
 		else {
 			showPaystreamController();
@@ -168,7 +171,7 @@ public final class PaystreamActivity extends BaseActivity  {
     @Override
     public void OnSignOutComplete()
     {
-    	showSignInActivity();
+//    	showSignInActivity();
     }
 
 }

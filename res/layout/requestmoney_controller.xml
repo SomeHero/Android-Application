@@ -3,102 +3,118 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="10dip">
+    android:padding="10dip" >
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout01" 
-    android:layout_width="fill_parent" 
-    android:layout_height="30dp">
-<ImageView 
-    android:src="@drawable/logo"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:contentDescription="PaidThx Logo"
-    android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
- />
-<TextView android:text="Request Money" 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" 
-            android:layout_alignParentBottom="true"
-            android:textColor="#41924b" />
-</RelativeLayout>   
-<LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dip"
-        android:padding="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/panel_background" >
-                   <LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="280dip"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
 
-                           <TextView
-        android:id="@+id/textView1"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Request From:" />
-        <AutoCompleteTextView
-            android:id="@+id/txtRequestMoneyRecipient"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="Recipient Mobile #" >
+            android:orientation="vertical" >
 
-            <requestFocus />
-        </AutoCompleteTextView>
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/RelativeLayout01"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp" >
 
-            <TextView
-        android:id="@+id/textView1"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Amount to Request:" />
-        <EditText
-            android:id="@+id/txtRequestMoneyAmount"
-            android:layout_width="128dp"
-            android:layout_height="wrap_content"
-            android:digits="0123456789."
-            android:inputType="number"
-            android:lines="1"
-            android:maxLength="12"
-            android:maxLines="1"
-            android:text="$0.00" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:contentDescription="PaidThx Logo"
+                    android:src="@drawable/logo" />
 
-            <TextView
-        android:id="@+id/textView1"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Comments:" />
-        <EditText
-            android:id="@+id/txtRequestMoneyComments"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top"
-            android:hint="Comment"
-            android:inputType="textMultiLine"
-            android:lines="3" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="Request Money"
+                    android:textColor="#41924b" />
+            </RelativeLayout>
 
-            <Button
-                android:id="@+id/btnSubmit"
+            <LinearLayout
+                android:id="@+id/relativeLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_request_money" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/panel_background"
+                android:orientation="vertical"
+                android:padding="10dp" >
 
+                <LinearLayout
+                    android:id="@+id/relativeLayout2"
+                    android:layout_width="280dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="vertical" >
 
-</LinearLayout>a
-</LinearLayout>
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Request From:"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/txtRequestMoneyRecipient"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Recipient Mobile #" >
+
+                        <requestFocus />
+                    </AutoCompleteTextView>
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Amount to Request:"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/txtRequestMoneyAmount"
+                        android:layout_width="128dp"
+                        android:layout_height="wrap_content"
+                        android:digits="0123456789."
+                        android:inputType="number"
+                        android:lines="1"
+                        android:maxLength="12"
+                        android:maxLines="1"
+                        android:text="$0.00" />
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Comments:"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/txtRequestMoneyComments"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:hint="Comment"
+                        android:inputType="textMultiLine"
+                        android:lines="3" />
+
+                    <Button
+                        android:id="@+id/btnSubmit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_request_money" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
