@@ -228,7 +228,7 @@ public class UserService {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} 
+		}
 
 		HttpEntity entity = response.getEntity();
 
@@ -265,7 +265,7 @@ public class UserService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			if(jsonResult == null)
 				return null;
 
@@ -323,7 +323,7 @@ public class UserService {
 			try {
 				instream = entity.getContent();
 				result = RestClient.convertStreamToString(instream);
-				// Log.i(TAG, "Result of converstion: [" + result +
+				// Log.i(TAG, "Result of conversion: [" + result +
 				// "]");
 			} catch (IllegalStateException e) {
 				// TODO Auto-generated catch block
@@ -370,7 +370,7 @@ public class UserService {
 	}
 	public UserVerifyMobileDeviceResponse VerifyMobileDevice(UserVerifyMobileDeviceRequest userVerifyMobileDeviceRequest) {
 		UserVerifyMobileDeviceResponse userVerifyMobileDeviceResponse = new UserVerifyMobileDeviceResponse();
-		
+
 		HttpResponse response = null;
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
@@ -444,12 +444,12 @@ public class UserService {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return userVerifyMobileDeviceResponse;
 	}
 	public UserSetupPasswordResponse SetupPassword(UserSetupPasswordRequest userSetupPasswordRequest) {
 		UserSetupPasswordResponse userSetupPasswordResponse = new UserSetupPasswordResponse();
-		
+
 		HttpResponse response = null;
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
@@ -522,14 +522,14 @@ public class UserService {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return userSetupPasswordResponse;
 	}
 	public UserRegistrationResponse RegisterUser(UserRegistrationRequest userRegistrationRequest)
 	{
 		UserRegistrationResponse userRegistrationResponse = new UserRegistrationResponse();
 		HttpResponse response = null;
-		
+
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost request = new HttpPost(ROOTURL + REGISTER_URL);
@@ -543,7 +543,7 @@ public class UserService {
 			json.put("mobileNumber", userRegistrationRequest.MobileNumber);
 			json.put("deviceId", userRegistrationRequest.DeviceId);
 			json.put("securityPin", userRegistrationRequest.SecurityPin);
-			
+
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);
 			request.setHeader("content-type", "application/json");
@@ -591,7 +591,7 @@ public class UserService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			try {
 				userRegistrationResponse.Success = jsonResult.getBoolean("success");
 				userRegistrationResponse.Message = jsonResult.getString("message");
@@ -602,13 +602,13 @@ public class UserService {
 			}
 
 		}
-		
+
 		return userRegistrationResponse;
 
 	}
 	public UserSetupSecurityPinResponse SetupSecurityPin(UserSetupSecurityPinRequest userSetupSecurityPinRequest) {
 		UserSetupSecurityPinResponse userSetupSecurityPinResponse = new UserSetupSecurityPinResponse();
-		
+
 		HttpResponse response = null;
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
@@ -680,7 +680,7 @@ public class UserService {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return userSetupSecurityPinResponse;
 	}
 }

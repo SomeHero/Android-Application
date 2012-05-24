@@ -39,7 +39,7 @@
 	<style name="CustomDialogTheme" parent="@android:style/Theme.Dialog">
 		<item name="android:windowBackground">@color/transparent</item>
 		<item name="android:windowIsFloating">true</item>
-		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowNoTitle">true</item> 
 		<item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
 	</style>

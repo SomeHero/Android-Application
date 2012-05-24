@@ -57,6 +57,7 @@
             <requestFocus />
         </AutoCompleteTextView>
 
+        
             <TextView
         android:id="@+id/textView1"
         android:textColor="#000000"

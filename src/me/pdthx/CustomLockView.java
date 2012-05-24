@@ -1,5 +1,6 @@
 package me.pdthx;
 
+import android.graphics.BlurMaskFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +32,10 @@ public class CustomLockView extends View {
 
 	private Bitmap selected = BitmapFactory.decodeResource(this.getResources(),
 			R.drawable.sel);
+	//private Bitmap line = BitmapFactory.decodeResource(this.getResources(), R.drawable.);
+
 	ZubhiumSDK sdk ;
-	
+
 	public CustomLockView(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
 
@@ -46,7 +49,7 @@ public class CustomLockView extends View {
 		int posY = 0;
 
 		buttonGrid = new ArrayList<GridCell>();
-		
+
 		// row 1
 		buttonGrid.add(new GridCell(posX, posY, width, height));
 		posX += gridLength/gridSize;
@@ -90,7 +93,7 @@ public class CustomLockView extends View {
 			value = width;
 		}
 		gridLength = value;
-		
+
 		setMeasuredDimension(value, value);
 		buildButtonGrid();
 	}
@@ -109,9 +112,9 @@ public class CustomLockView extends View {
 						passcode.add(i+1);
 				}
 			}
-			
+
 			invalidate();
-			
+
 			return true;
 		case MotionEvent.ACTION_MOVE:
 			for (int i = 0; i < buttonGrid.size(); i++) {
@@ -122,14 +125,14 @@ public class CustomLockView extends View {
 				}
 			}
 			invalidate();
-			
+
 			return true;
 		case MotionEvent.ACTION_UP:
 			if(listener != null)
 				listener.onTouch(this, event);
 			return false;
 		}
-		
+
 		return false;
 	}
 	public void setOnTouchListener(OnTouchListener onTouchListener) {
@@ -139,7 +142,7 @@ public class CustomLockView extends View {
 	private void clearSelection() {
 		passcode = new ArrayList<Integer>();
 		for (int i = 0; i < buttonGrid.size(); i++) {
-			buttonGrid.get(i).setSelected(false);	
+			buttonGrid.get(i).setSelected(false);
 		}
 	}
 
@@ -163,17 +166,17 @@ public class CustomLockView extends View {
 	}
 
 	protected void drawGridRow(int row, Canvas canvas, Paint paint) {
-		
-		int index = row*3 + 0;;
-		
+
+		int index = row*3 + 0;
+
 		drawCell(index, canvas, paint);
-		
+
 		index += 1;
 		drawCell(index, canvas, paint);
 
 		index += 1;
 		drawCell(index, canvas, paint);
-		
+
 		offsetX = 0;
 		offsetY += unselected.getHeight();
 	}
@@ -182,10 +185,11 @@ public class CustomLockView extends View {
 
 		if (buttonGrid.get(index).getSelected() == true) {
 			canvas.drawBitmap(selected, offsetX, offsetY, paint);
-			offsetX += gridLength/gridSize;
+	        offsetX += gridLength/gridSize;
 		} else {
 			canvas.drawBitmap(unselected, offsetX, offsetY, paint);
 			offsetX += gridLength/gridSize;
+
 		}
 	}
 	public String getPasscode() {
@@ -193,7 +197,7 @@ public class CustomLockView extends View {
 		for (int i = 0; i < passcode.size(); i++) {
 			result.append(passcode.get(i));
 		}
-		
+
 		return result.toString();
 	}
 

@@ -27,23 +27,23 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class SignInActivity {
-	
+
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
 	private String deviceId= "";
 	private String userName = "";
 	private String password = "";
-	
+
 	private UserRegistrationModel registrationModel;
 	private ACHAccountModel achAccountModel;
-	
+
 	protected UserService userService = new UserService();
 	protected UserSignInResponse userSignInResponse = null;
 	protected UserRegistrationResponse userRegistrationResponse;
 	protected ACHAccountSetupResponse achAccountSetupResponse;
-	
+
 	ProgressDialog progressDialog = null;
 	AlertDialog alertDialog = null;
-	
+
 	final private int USERSIGNIN_INVALID = 0;
 	final private int USERSECURITYPIN_COMPLETE = 1;
 	final private int USERSECURITYPIN_FAILED = 2;
@@ -74,7 +74,7 @@ public class SignInActivity {
 							dialog.dismiss();
 						}
 					});
-					
+
 					alertDialog.show();
 					break;
 	        	case(USERSECURITYPIN_COMPLETE):
@@ -91,7 +91,7 @@ public class SignInActivity {
 							dialog.dismiss();
 						}
 					});
-					
+
 					alertDialog.show();
 	        		break;
 	        	case(SETUPACHACCOUNT_FAILED):
@@ -105,7 +105,7 @@ public class SignInActivity {
 							dialog.dismiss();
 						}
 					});
-					
+
 					alertDialog.show();
 	        		break;
 	        	case(USERREGISTRATION_FAILED):
@@ -119,7 +119,7 @@ public class SignInActivity {
 							dialog.dismiss();
 						}
 					});
-					
+
 					alertDialog.show();
 	        		break;
 	        	case(USERSECURITYPIN_CONFIRMMISMATCH):
@@ -133,10 +133,10 @@ public class SignInActivity {
 							dialog.dismiss();
 						}
 					});
-					
+
 					alertDialog.show();
 	        		break;
-	        		
+
 	        	case(USERREGISTRATION_PASSWORDMISMATCH):
 	        		alertDialog = new AlertDialog.Builder(parent)
 				.create();
@@ -148,47 +148,47 @@ public class SignInActivity {
 						dialog.dismiss();
 					}
 				});
-				
+
 				alertDialog.show();
         		break;
-        	}	
-			
+        	}
+
         }
-        
+
 	};
-	
+
 	public SignInActivity(Activity parentActivity, Handler handler, SharedPreferences prefs) {
 		parent = parentActivity;
 		_handler = handler;
 		_prefs = prefs;
 	}
-	
+
     public void showSignInActivity() {
     	signInView = View.inflate(parent, R.layout.signin_controller, null);
         parent.setContentView(signInView);
 
 		//deviceId = Secure.getString(getBaseContext().getContentResolver(),
 				//Secure.ANDROID_ID);
-	    
+
 		Button btnSignIn = (Button)parent.findViewById(R.id.btnSignInSubmit);
-		
+
 		btnSignIn.setOnClickListener(new OnClickListener() {
 			public void onClick(View argO) {
 				EditText txtUserName = (EditText) parent.findViewById(R.id.txtUserName);
 				EditText txtPassword = (EditText) parent.findViewById(R.id.txtPassword);
-					
+
 				userName = txtUserName.getText().toString();
 				password = txtPassword.getText().toString();
-				
+
 				//ProgressDialog progressDialog = null;
 				Thread thread = null;
-				
+
 				progressDialog = new ProgressDialog(parent);
 				//ProgressDialog.Builder progressDialog = new ProgressDialog.Builder(parent);
 				progressDialog.setMessage("Authenticating...");
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				progressDialog.show();
-				
+
 				thread = new Thread(new Runnable() {
 
 					@Override
@@ -200,7 +200,7 @@ public class SignInActivity {
 							e.printStackTrace();
 						}
 						progressDialog.dismiss();
-						
+
 						if(userSignInResponse.IsValid) {
 							Editor editor = _prefs.edit();
 
@@ -215,7 +215,7 @@ public class SignInActivity {
 						}
 						else {
 							signInHandler.sendEmptyMessage(USERSIGNIN_INVALID);
-							
+
 						}
 					}
 
@@ -223,9 +223,9 @@ public class SignInActivity {
 				thread.start();
 			}
 		});
-		
+
 		Button btnSetupAccount = (Button)parent.findViewById(R.id.btnCreateAnAccount);
-		
+
 		btnSetupAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View argO) {
 				showSetupAccountController();
@@ -234,24 +234,24 @@ public class SignInActivity {
 	}
 	private void showSetupAccountController() {
 		parent.setContentView(R.layout.setup_account);
-		
+
 		Button btnCreateAccount = (Button)parent.findViewById(R.id.btnCreateAnAccount);
-		
+
 		btnCreateAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View argO) {
-				
+
 				EditText txtEmailAddress = (EditText)parent.findViewById(R.id.txtEmailAddress);
 				EditText txtMobileNumber = (EditText)parent.findViewById(R.id.txtMobileNumber);
 				EditText txtPassword = (EditText)parent.findViewById(R.id.txtPassword);
 				EditText txtConfirmPassword = (EditText)parent.findViewById(R.id.txtConfirmPassword);
-				
+
 				if(txtPassword.getText().toString().equals(txtConfirmPassword.getText().toString())) {
 					registrationModel = new UserRegistrationModel();
 					registrationModel.setEmailAddress(txtEmailAddress.getText().toString());
 
 					registrationModel.setMobileNumber(txtMobileNumber.getText().toString());
 					registrationModel.setPassword(txtPassword.getText().toString());
-					 
+
 					showSetupSecurityPinController();
 				} else {
 					signInHandler.sendEmptyMessage(USERREGISTRATION_PASSWORDMISMATCH);
@@ -261,9 +261,9 @@ public class SignInActivity {
 	}
 	private void showSetupSecurityPinController() {
 		parent.setContentView(R.layout.setup_security_controller);
-		
+
 		Button btnSetupPin = (Button)parent.findViewById(R.id.btnSetupSecurityPin);
-		
+
 		btnSetupPin.setOnClickListener(new OnClickListener() {
 			public void onClick(View argO) {
 				showSecurityPinDialog();
@@ -283,23 +283,23 @@ public class SignInActivity {
 		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				
+
 				String passcode = ctrlSecurityPin.getPasscode();
 
 				if (passcode.length() > 3) {
 					registrationModel.setSecurityPin(passcode);
 					d.dismiss();
-					
+
 					showConfirmSecurityPinDialog();
 				} else
 					signInHandler.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
-				
+
 				return false;
 
 			}
 		});
 	}
-	
+
 	private void showConfirmSecurityPinDialog() {
 		final Dialog d = new Dialog(parent, R.style.CustomDialogTheme);
 		d.setContentView(R.layout.confirm_security_dialog);
@@ -313,18 +313,18 @@ public class SignInActivity {
 		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				
+
 				String passcode = ctrlSecurityPin.getPasscode();
 
 				if (passcode.length() > 3  && passcode.equals(registrationModel.getSecurityPin())) {
 					d.dismiss();
-					
+
 					progressDialog = new ProgressDialog(parent);
 					//ProgressDialog.Builder progressDialog = new ProgressDialog.Builder(parent);
 					progressDialog.setMessage("Setting up your PaidThx Account...");
 					progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 					progressDialog.show();
-					
+
 					Thread thread = new Thread(new Runnable() {
 
 						@Override
@@ -336,7 +336,7 @@ public class SignInActivity {
 								e.printStackTrace();
 							}
 							progressDialog.dismiss();
-							
+
 							if(userRegistrationResponse.Success) {
 								Editor editor = _prefs.edit();
 
@@ -345,51 +345,51 @@ public class SignInActivity {
 								editor.putString("paymentAccountId", "");
 								editor.putBoolean("setupPassword", true);
 								editor.putBoolean("setupSecurityPin", true);
-								
+
 								editor.commit();
 
 								signInHandler.sendEmptyMessage(USERSECURITYPIN_COMPLETE);
 							}
 							else {
 								signInHandler.sendEmptyMessage(USERSECURITYPIN_FAILED);
-								
+
 							}
 						}
 
 					});
 					thread.start();
-					
+
 				} else
 					signInHandler.sendEmptyMessage(USERSECURITYPIN_CONFIRMMISMATCH);
-				
+
 				return false;
 			}
 		});
-	}	
+	}
 	private void showSetupACHController() {
 		parent.setContentView(R.layout.setup_achaccount_controller);
-		
+
 		Button btnEnablePayments = (Button)parent.findViewById(R.id.btnSubmitACHAccount);
 		btnEnablePayments.setOnClickListener(new OnClickListener() {
 			public void onClick(View argO) {
-				
+
 				EditText txtNameOnAccount = (EditText)parent.findViewById(R.id.txtNameOnAccount);
 				EditText txtRoutingNumber = (EditText)parent.findViewById(R.id.txtRoutingNumber);
 				EditText txtAccountNumber = (EditText)parent.findViewById(R.id.txtAccountNumber);
 				EditText txtConfirmAccountNumber = (EditText)parent.findViewById(R.id.txtConfirmAccountNumber);
-				
+
 				achAccountModel = new ACHAccountModel();
 				achAccountModel.NameOnAccount = txtNameOnAccount.getText().toString();
 				achAccountModel.RoutingNumber = txtRoutingNumber.getText().toString();
 				achAccountModel.AccountNumber = txtAccountNumber.getText().toString();
 				achAccountModel.AccountType = "Savings";
-				
+
 				progressDialog = new ProgressDialog(parent);
 				//ProgressDialog.Builder progressDialog = new ProgressDialog.Builder(parent);
 				progressDialog.setMessage("Setting up ACH Account...");
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				progressDialog.show();
-				
+
 				Thread thread = new Thread(new Runnable() {
 
 					@Override
@@ -401,7 +401,7 @@ public class SignInActivity {
 							e.printStackTrace();
 						}
 						progressDialog.dismiss();
-						
+
 						if(achAccountSetupResponse.Success) {
 							Editor editor = _prefs.edit();
 
@@ -412,7 +412,7 @@ public class SignInActivity {
 						}
 						else {
 							signInHandler.sendEmptyMessage(SETUPACHACCOUNT_FAILED);
-							
+
 						}
 					}
 
@@ -425,7 +425,6 @@ public class SignInActivity {
 		UserSignInRequest userSignInRequest = new UserSignInRequest();
 		userSignInRequest.UserName = userName;
 		userSignInRequest.Password = password;
-		
 		userSignInResponse = userService.SignInUser(userSignInRequest);
 	}
 	private void registerUser() {
@@ -438,18 +437,18 @@ public class SignInActivity {
 		request.Password = registrationModel.getPassword();
 		request.SecurityPin = registrationModel.getSecurityPin();
 		request.RegistrationMethodId = "2";
-		
+
 		userRegistrationResponse = userService.RegisterUser(request);
 	}
 	private void setupACHAccount() {
 		ACHAccountSetupRequest request = new ACHAccountSetupRequest();
-		
+
 		request.UserId = _prefs.getString("userId", "");
 		request.AccountNumber = achAccountModel.AccountNumber;
 		request.AccountType = achAccountModel.AccountType;
 		request.NameOnAccount = achAccountModel.NameOnAccount;
 		request.RoutingNumber = achAccountModel.RoutingNumber;
-		
+
 		achAccountSetupResponse = userService.SetupACHAccount(request);
 	}
 }

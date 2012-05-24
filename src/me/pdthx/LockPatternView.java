@@ -29,14 +29,14 @@ public class LockPatternView extends View {
 	public static final double MIDDLE_SIZE_RATIO = 0.90;
 	public static final double INNER_SIZE_RATIO = 0.33;
 
-	public static final int SELECTED_COLOR = 0xff00dd00;
-	public static final int FIRST_SELECTED_COLOR = 0xff00ddcc;
-	public static final int UNSELECTED_COLOR = 0xff999999;
-	public static final int MANTLE_COLOR = 0xff000000;
-	public static final int CORE_COLOR = 0xffffffff;
-	public static final int PATH_COLOR = 0xffcccccc;
-	public static final int INCORRECT_COLOR = 0xffdd1111;
-	public static final int CORRECT_COLOR = 0xff1111ff;
+	public static final int SELECTED_COLOR = 0xff00dd00;//0xff00dd00
+	public static final int FIRST_SELECTED_COLOR = 0xff00ddcc;//0xff00ddcc
+	public static final int UNSELECTED_COLOR = 0xff999999;//0xff999999
+	public static final int MANTLE_COLOR = 0xff000000;//0xff000000
+	public static final int CORE_COLOR = 0xffffffff;//0xffffffff
+	public static final int PATH_COLOR = 0xffcccccc;//0xffcccccc
+	public static final int INCORRECT_COLOR = 0xffdd1111;//0xffdd1111
+	public static final int CORRECT_COLOR = 0xff1111ff;//0xff1111ff
 
 	private final ScheduledExecutorService scheduler = Executors
 			.newScheduledThreadPool(1);
@@ -70,7 +70,7 @@ public class LockPatternView extends View {
 	private int arrowPointRadius;
 	private int arrowBaseRadius;
 	private int arrowBaseHalfLength;
-	
+
 	ZubhiumSDK sdk ;
 
 	public LockPatternView(Context context, AttributeSet attributeSet) {
@@ -254,14 +254,14 @@ public class LockPatternView extends View {
 			else
 				outerCircles[e].getPaint().setColor(activeColor);
 			tempPasscode.append(e);
-			
+
 			pathOrder.offer(new Integer(e));
 		}
 
 		while (pathIterator.hasNext()) {
 			int e = pathIterator.next().intValue();
 			outerCircles[e].getPaint().setColor(activeColor);
-			
+
 			tempPasscode.append(e);
 			pathOrder.offer(new Integer(e));
 		}

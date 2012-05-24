@@ -49,6 +49,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -69,7 +70,7 @@ public final class MakePaymentActivity extends BaseActivity {
 	private AutoCompleteTextView txtRecipientUri;
 	private EditText txtAmount;
 	private EditText txtComments;
-	//private ContactList contactList;
+	private ContactList contactList;
 	private Button btnSendMoney;
 	private String passcode = "";
 
@@ -151,7 +152,7 @@ public final class MakePaymentActivity extends BaseActivity {
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		userId = prefs.getString("userId", "");
 		mobileNumber = prefs.getString("mobileNumber", "");
-		//contactList = new ContactList(getBaseContext());
+		contactList = new ContactList(getBaseContext());
 
 		
 		launchSendMoneyView();
@@ -209,9 +210,10 @@ public final class MakePaymentActivity extends BaseActivity {
 			alertDialog.setMessage(String.format(
 					"Your payment for %s was sent to %s.", nf.format(amount),
 					recipientUri));
-
+			
 			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
+					removeDialog(4);	
 					dialog.dismiss();
 
 					txtRecipientUri.setText("");
@@ -274,7 +276,14 @@ public final class MakePaymentActivity extends BaseActivity {
 		sendMoneyView = View.inflate(this, R.layout.contactmanager, null);
 		setContentView(sendMoneyView);
 
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_dropdown_item_1line, contactList.getContacts().toArray(
+						new String[0]));
+
 		txtRecipientUri = (AutoCompleteTextView) findViewById(R.id.txtSendMoneyRecipient);
+		txtRecipientUri.setAdapter(adapter);
+		
+		//txtRecipientUri = (AutoCompleteTextView) findViewById(R.id.txtSendMoneyRecipient);
 		txtAmount = (EditText) findViewById(R.id.txtAmount);
 		txtComments = (EditText) findViewById(R.id.txtComments);
 		btnSendMoney = (Button) findViewById(R.id.btnSubmitPaymentRequest);
@@ -362,8 +371,8 @@ public final class MakePaymentActivity extends BaseActivity {
 		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
 		TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
 		
-		txtConfirmHeader.setText("Confirm Your Payment");
-		txtConfirmBody.setText(String.format("To confirm your payment of %s to %s, swipe you pin below.", txtAmount.getText(), txtRecipientUri.getText()));
+		txtConfirmHeader.setText("Confirm Your Payment");  
+		txtConfirmBody.setText(String.format("To confirm your payment of %s to %s, swipe you pin below." , txtAmount.getText(), txtRecipientUri.getText()));
 		
 		Button btnCancel = (Button) d.findViewById(R.id.btnCancelSendMoney);
 		btnCancel.setOnClickListener(new View.OnClickListener() {

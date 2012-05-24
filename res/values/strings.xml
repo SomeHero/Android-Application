@@ -56,5 +56,10 @@
     <string name="secret_key">4f022fe0e228c88d286b</string>
      <string name="tab_words">Words</string>
     <string name="tab_numbers">Numbers</string>
-  
-</resources>
+  	
+    
+    <string name ="lockscreen_access_pattern_cell_added">added</string>
+    <string name = "lockscreen_access_pattern_start">start</string>
+    <string name = "lockscreen_access_pattern_detected">detected</string>
+    <string name = "lockscreen_access_pattern_cleared">cleared</string>
+    </resources>

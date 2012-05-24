@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +49,8 @@ public class RequestMoneyActivity extends BaseActivity {
 	private EditText txtComments;
 	private Button btnSendMoney;
 	private String passcode = "";
+	
+
 
 	final private int SUBMITREQUEST_DIALOG = 0;
 	final private int NORECIPIENTSPECIFIED_DIALOG = 1;
@@ -64,9 +67,13 @@ public class RequestMoneyActivity extends BaseActivity {
 
 	ZubhiumSDK sdk ;
 	private static final String TAG = "RequestMoneyActivity";
-	
-	//private ContactList contactList = null;
-	
+	private String[] recipient = 
+		{
+		"8042529304",
+		"Pro Android Games - Vladimir Silva",
+		};
+	private ContactList contactList = null;
+
 	Handler mHandler = new Handler() {
 
         @Override
@@ -83,7 +90,7 @@ public class RequestMoneyActivity extends BaseActivity {
 	    			break;
 	    	}
         }
-        
+
 	};
 
 	private Dialog dialog = null;
@@ -110,11 +117,11 @@ public class RequestMoneyActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sdk = ZubhiumSDK.getZubhiumSDKInstance(RequestMoneyActivity.this, getString(R.string.secret_key));
-		
+
 	    if(sdk != null){
 	    	sdk.setCrashReportingMode(CrashReportingMode.SILENT);
 	    }
-	    
+
 		setTitle("Request Money");
 
 		deviceId = Secure.getString(getBaseContext().getContentResolver(),
@@ -122,9 +129,14 @@ public class RequestMoneyActivity extends BaseActivity {
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		userId = prefs.getString("userId", "");
 		mobileNumber = prefs.getString("mobileNumber", "");
-		//contactList = new ContactList(getBaseContext());
-
+		contactList = new ContactList(getBaseContext());
 		launchRequestMoneyView();
+		
+		/*ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,recipient);
+		AutoCompleteTextView acTextView = (AutoCompleteTextView)findViewById(R.id.txtRequestMoneyRecipient);
+		acTextView.setAdapter(adapter);*/
+		
+		
 	}
 
 	protected android.app.Dialog onCreateDialog(int id) {
@@ -234,7 +246,7 @@ public class RequestMoneyActivity extends BaseActivity {
 			return alertDialog;
 
 		}
-		
+
 		return null;
 	}
 
@@ -243,12 +255,12 @@ public class RequestMoneyActivity extends BaseActivity {
 		sendRequestView = View.inflate(this, R.layout.requestmoney_controller, null);
 		setContentView(sendRequestView);
 
-		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-		//		R.layout.list_item, contactList.getContacts().toArray(
-		//				new String[0]));
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_dropdown_item_1line, contactList.getContacts().toArray(
+						new String[0]));
 
 		txtRequestMoneyRecipient = (AutoCompleteTextView) findViewById(R.id.txtRequestMoneyRecipient);
-		//txtRequestMoneyRecipient.setAdapter(adapter);
+		txtRequestMoneyRecipient.setAdapter(adapter);
 
 		txtAmount = (EditText) findViewById(R.id.txtRequestMoneyAmount);
 		txtAmount.addTextChangedListener(new TextWatcher() {
@@ -277,18 +289,18 @@ public class RequestMoneyActivity extends BaseActivity {
 
 			@Override
 			public void afterTextChanged(Editable arg0) {
-				
+
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1,
 					int arg2, int arg3) {
-				
+
 			}
 		});
 		txtComments = (EditText) findViewById(R.id.txtRequestMoneyComments);
 		btnSendMoney = (Button) findViewById(R.id.btnSubmit);
-		
+
 		btnSendMoney.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -332,17 +344,18 @@ public class RequestMoneyActivity extends BaseActivity {
 
 		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
 		TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
-		
+
 		txtConfirmHeader.setText("Confirm Your Request");
 		txtConfirmBody.setText(String.format("To confirm your request for %s from %s, swipe you pin below.", txtAmount.getText(), txtRequestMoneyRecipient.getText()));
-		
+
 		Button btnCancel = (Button) d.findViewById(R.id.btnCancelSendMoney);
 		btnCancel.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
 		        d.dismiss();
 		    }
 		});
-	    
+
+		//final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
 		final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
 		ctrlSecurityPin.invalidate();
 		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
@@ -359,7 +372,7 @@ public class RequestMoneyActivity extends BaseActivity {
 					passcode = ctrlSecurityPin.getPasscode();
 
 					d.dismiss();
-					
+
 					showDialog(SUBMITREQUEST_DIALOG);
 				} else
 					showDialog(INVALIDPASSCODELENGTH_DIALOG);
