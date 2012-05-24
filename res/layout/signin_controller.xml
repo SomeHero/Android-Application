@@ -72,7 +72,12 @@
             android:maxLines="1"
             android:hint="Password"
              android:layout_marginBottom="15dp"/>
-
+
+        <Button
+            android:id="@+id/btnFBSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
 
             <Button
                 android:id="@+id/btnSignInSubmit"

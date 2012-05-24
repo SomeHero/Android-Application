@@ -7,10 +7,10 @@ public class SubmitPaymentRequest {
 	public String ApiKey = "";
 	public String UserId = "";
 	public String SecurityPin = "";
-	public String FromMobileNumber = "";
+	public String SenderUri = "";
 	public Double Amount = (double) 0;
-	public String Recipient = "";
+	public String RecipientUri = "";
 	public String Comments = "";
-	public String PaymentAccountId = "";
+	public String SenderAccountId = "";
 	
 }

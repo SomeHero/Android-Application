@@ -2,7 +2,6 @@ package me.pdthx;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 import com.zubhium.ZubhiumSDK;
@@ -15,6 +14,7 @@ import me.pdthx.Responses.TransactionResponse;
 import me.pdthx.Services.TransactionService;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-@SuppressWarnings("deprecation")
 public final class PaystreamActivity extends BaseActivity  {
 	
 	private ProgressDialog m_ProgressDialog = null; 
@@ -71,15 +70,22 @@ public final class PaystreamActivity extends BaseActivity  {
     }
 
 	protected void showSignInActivity() {
-		SignInActivity signInActivity = new SignInActivity(this, mHandler, prefs);
-		signInActivity.showSignInActivity();
+//		SignInActivity signInActivity = new SignInActivity(this, mHandler, prefs);
+//		signInActivity.showSignInActivity();
+		startActivityForResult(new Intent(this, SignInActivity.class), 1);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 1 && resultCode == RESULT_OK) {
+			showPaystreamController();
+		}
 	}
 
     private void showPaystreamController() {
     	setContentView(R.layout.paystream_controller);
         m_transactions = new ArrayList<PaystreamTransaction>();
         mListView = (ListView) findViewById(R.id.lvPaystream);
-        mEmptyTextView = (TextView)findViewById(R.id.txtEmptyPaystream);
         m_adapter = new PaystreamAdapter(this, R.layout.transaction_item, m_transactions);
         mListView.setAdapter(m_adapter);
         
@@ -136,18 +142,9 @@ public final class PaystreamActivity extends BaseActivity  {
         	  
               PaystreamTransaction o1 = new PaystreamTransaction();
               o1.setTransactionId(currentTransaction.TransactionId);
-              o1.setPaymentId(currentTransaction.PaymentId);
               o1.setSenderUri(currentTransaction.SenderUri);
               o1.setRecipientUri(currentTransaction.RecipientUri);
-              o1.setAmount(currentTransaction.Amount);  
-              o1.setACHTransactionId(currentTransaction.ACHTransactionId);
-              o1.setTransactionStatus(currentTransaction.TransactionStatus);
-              o1.setTransactionCategory(currentTransaction.TransactionCategory);
-              o1.setTransactionType(currentTransaction.TransactionType);
-              o1.setStandardEntryClass(currentTransaction.StandardEntryClass);
-              o1.setPaymentChannel(currentTransaction.PaymentChannel);
-              o1.setTransactionBatchId(currentTransaction.TransactionBatchId);
-              o1.setTransactionSentDate(currentTransaction.TransactionSentDate);
+              o1.setAmount(currentTransaction.Amount);
               o1.setCreateDate(currentTransaction.CreateDate);
               o1.setLastUpdateDate(currentTransaction.LastUpdatedDate);
 

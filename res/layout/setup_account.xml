@@ -62,17 +62,18 @@
             android:hint="Enter Your Email Address"
             android:layout_marginBottom="10dp" 
             />
-
+
         <EditText
             android:id="@+id/txtMobileNumber"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:lines="1"
-            android:maxLength="20"
-            android:maxLines="1"
+            android:layout_marginBottom="10dp"
             android:hint="Enter Your Mobile #"
-             android:layout_marginBottom="10dp"/>
+            android:inputType="phone"
+            android:lines="1"
+            android:maxLength="12"
+            android:maxLines="1" />
+
                 <EditText
             android:id="@+id/txtPassword"
             android:layout_width="fill_parent"
@@ -94,13 +95,14 @@
             android:maxLines="1"
             android:hint="Confirm Your Password"
              android:layout_marginBottom="10dp"/>
-
+
 <Button
-            android:id="@+id/btnCreateAnAccount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_create_an_account"
-             android:layout_marginBottom="4dp" />
+    android:id="@+id/btnCreateAnAccount"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:background="@drawable/btn_create_an_account"
+    android:onClick="btnCreateAnAccountClicked" />
 
 </LinearLayout>
 </LinearLayout>

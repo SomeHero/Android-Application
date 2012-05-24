@@ -5,14 +5,15 @@ import java.text.NumberFormat;
 import com.zubhium.ZubhiumSDK;
 import com.zubhium.ZubhiumSDK.CrashReportingMode;
 
-import me.pdthx.Requests.PaymentRequestRequest;
-import me.pdthx.Responses.PaymentRequestResponse;
-import me.pdthx.Services.PaymentRequestService;
+import me.pdthx.Requests.PaymentRequest;
+import me.pdthx.Responses.PaymentResponse;
+import me.pdthx.Services.RequestPaymentService;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,7 +33,7 @@ import android.widget.TextView;
 
 public class RequestMoneyActivity extends BaseActivity {
 
-	PaymentRequestService paymentRequestService = new PaymentRequestService();
+	RequestPaymentService paymentRequestService = new RequestPaymentService();
 
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
 	private String deviceId;
@@ -60,7 +61,7 @@ public class RequestMoneyActivity extends BaseActivity {
 
 	private View sendRequestView = null;
 	private SharedPreferences prefs;
-	private PaymentRequestResponse paymentRequestResponse;
+	private PaymentResponse paymentRequestResponse;
 
 	ZubhiumSDK sdk ;
 	private static final String TAG = "RequestMoneyActivity";
@@ -99,7 +100,7 @@ public class RequestMoneyActivity extends BaseActivity {
 					showDialog(SUBMITREQUESTSUCCESS_DIALOG);
 
 				} else {
-					errorMessage = paymentRequestResponse.Message;
+					errorMessage = paymentRequestResponse.ReasonPhrase;
 					showDialog(SUBMITREQUESTFAILED_DIALOG);
 				}
 				break;
@@ -311,8 +312,9 @@ public class RequestMoneyActivity extends BaseActivity {
 				}
 				if (isValid) {
 					if(prefs.getString("userId", "").length() == 0 || prefs.getString("mobileNumber", "").length() == 0)		{
-					    SignInActivity signInActivity = new SignInActivity(RequestMoneyActivity.this, mHandler, prefs);
-					    signInActivity.showSignInActivity();
+//					    SignInActivity signInActivity = new SignInActivity(RequestMoneyActivity.this, mHandler, prefs);
+//					    signInActivity.showSignInActivity();
+						startActivityForResult(new Intent(RequestMoneyActivity.this, SignInActivity.class), 1);
 					} else {
 						showSecurityPinDialog();
 					}
@@ -373,9 +375,9 @@ public class RequestMoneyActivity extends BaseActivity {
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 
-		PaymentRequestRequest paymentRequest = new PaymentRequestRequest();
+		PaymentRequest paymentRequest = new PaymentRequest();
 		paymentRequest.ApiKey = APIKEY;
-		paymentRequest.UserId = prefs.getString("userId", "");
+		paymentRequest.SenderAccountId = prefs.getString("userId", "");
 		paymentRequest.DeviceId = deviceId;
 		paymentRequest.RecipientUri = recipientUri;
 		paymentRequest.Amount = amount;

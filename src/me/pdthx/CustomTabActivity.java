@@ -62,7 +62,7 @@ public class CustomTabActivity extends TabActivity {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.ic_tab_home), "Home", intent);
 		
-		intent = new Intent(mTabHost.getContext(), MakePaymentActivity.class);
+		intent = new Intent(mTabHost.getContext(), SubmitPaymentActivity.class);
 		setupTab(res.getDrawable(R.drawable.ic_tab_send), "Send $", intent);
 		
 		if(prefs.getString("paymentAccountId", "").length() == 0) {
@@ -77,7 +77,7 @@ public class CustomTabActivity extends TabActivity {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.ic_tab_stream), "Stream", intent);
 		
-		mTabHost.setCurrentTab(1);
+		mTabHost.setCurrentTab(0);
 		
 		//intent = new Intent(CustomTabActivity.this, VerifyMobileNumberActivity.class);
 		//startActivityForResult(intent, 0);
@@ -144,7 +144,7 @@ public class CustomTabActivity extends TabActivity {
 	        SmsManager sms = SmsManager.getDefault();
 	        
 	        try {
-	        sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);  
+	        //sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);  
 	        }
 	        catch(Exception e)
 	        {

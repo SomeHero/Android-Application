@@ -8,6 +8,7 @@ public class UserSignInResponse {
 	public String UserId = "";
 	public String MobileNumber = "";
 	public boolean SetupSecurityPin = false;
-	public boolean SetupPassword = false;
 	public String PaymentAccountId = "";
+	public int UpperLimit = 0;
+	public String ReasonPhrase = "";
 }
