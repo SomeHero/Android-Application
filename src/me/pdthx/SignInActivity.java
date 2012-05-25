@@ -33,29 +33,29 @@ import android.widget.EditText;
 
 public class SignInActivity extends BaseActivity {
 
-	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
-
 	private String login = "";
 	private String password = "";
 	private String firstName = "";
 	private String lastName = "";
 	private String email = "";
 
-	protected UserService userService = new UserService();
-	protected UserSignInResponse userSignInResponse = null;
+	private final int ACCOUNT_SETUP = 1;
+	private final int FACEBOOK_SETUP = 2;
+	private final int ACHACCOUNT_SETUP = 3;
 
-	ProgressDialog progressDialog = null;
-	AlertDialog alertDialog = null;
+	private UserSignInResponse userSignInResponse;
 
 	final private int USERSIGNIN_INVALID = 0;
+	final private int USERSIGNIN_FAILED = 4;
 
 	//	private Handler _handler = null;
 	//	private Activity parent = this;
-	private View signInView = null;
 	//	private SharedPreferences _prefs;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		setContentView(View.inflate(this, R.layout.signin_controller, null));
 
 		showSignInActivity();
 	}
@@ -79,6 +79,21 @@ public class SignInActivity extends BaseActivity {
 
 			alertDialog.show();
 			break;
+
+			case(USERSIGNIN_FAILED):
+				alertDialog = new AlertDialog.Builder(SignInActivity.this)
+			.create();
+			alertDialog.setTitle("Account Creation Failed.");
+			alertDialog
+			.setMessage("Account creation failed. Please try again.");
+			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+
+			alertDialog.show();
+			break;
 			}
 
 		}
@@ -92,8 +107,6 @@ public class SignInActivity extends BaseActivity {
 	//	}
 
 	public void showSignInActivity() {
-		signInView = View.inflate(this, R.layout.signin_controller, null);
-		setContentView(signInView);
 
 		//deviceId = Secure.getString(getBaseContext().getContentResolver(),
 		//Secure.ANDROID_ID);
@@ -106,7 +119,7 @@ public class SignInActivity extends BaseActivity {
 				if (!signedInViaFacebook) {
 					String[] permissions = {"email", "read_friendlists"};
 
-					facebook.authorize(SignInActivity.this, permissions, 2, new DialogListener() {
+					facebook.authorize(SignInActivity.this, permissions, FACEBOOK_SETUP, new DialogListener() {
 						public void onComplete(Bundle values) {
 							Editor editor = prefs.edit();
 							editor.putString("access_token", facebook.getAccessToken());
@@ -144,17 +157,13 @@ public class SignInActivity extends BaseActivity {
 
 		btnSetupAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				startActivityForResult(new Intent(view.getContext(), SignUpActivity.class), 1);
+				startActivityForResult(new Intent(view.getContext(), SignUpActivity.class), ACCOUNT_SETUP);
 			}
 		});
 
 	}
 	private void signInRunner() {
 		Thread thread = null;
-
-		
-//		progressDialog = new ProgressDialog();
-//		//ProgressDialog.Builder progressDialog = new ProgressDialog.Builder(parent);
 //		progressDialog.setMessage("Authenticating...");
 //		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 //		progressDialog.show();
@@ -169,43 +178,34 @@ public class SignInActivity extends BaseActivity {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-//				progressDialog.dismiss();
+				
+				progressDialog.dismiss();
 
-				Editor editor = prefs.edit();
+				if (userSignInResponse.IsValid) {
 
-				if (!signedInViaFacebook) {
-					if (userSignInResponse.IsValid) {
+					//TODO: Check this.
+					Editor editor = prefs.edit();
+					editor.putString("userId", userSignInResponse.UserId);
+					editor.putString("mobileNumber", userSignInResponse.MobileNumber);
+					editor.putString("paymentAccountId", userSignInResponse.PaymentAccountId);
+					editor.putBoolean("setupSecurityPin", userSignInResponse.SetupSecurityPin);
+					editor.putInt("upperLimit", userSignInResponse.UpperLimit);
+					editor.commit();
+					progressDialog.dismiss();
+					
 
-						editor.putString("userId", userSignInResponse.UserId);
-						editor.putString("mobileNumber", userSignInResponse.MobileNumber);
-						editor.putString("paymentAccountId", userSignInResponse.PaymentAccountId);
-						editor.putBoolean("setupSecurityPin", userSignInResponse.SetupSecurityPin);
-						editor.putInt("upperLimit", userSignInResponse.UpperLimit);
-						editor.commit();
-
-						//					_handler.sendEmptyMessage(R.id.USERSIGNIN_COMPLETE);
-						setResult(RESULT_OK);
-						finish();
+					if (userSignInResponse.PaymentAccountId.equals("")) {
+						startActivityForResult(new Intent(SignInActivity.this, 
+								ACHAccountSetupActivity.class), ACHACCOUNT_SETUP);
 					}
 					else {
-						signInHandler.sendEmptyMessage(USERSIGNIN_INVALID);
+						setResult(RESULT_OK);
+						finish();
 					}
 				}
 				else {
-					if (!userSignInResponse.SetupSecurityPin) {
-						editor.putString("userId", userSignInResponse.UserId);
-						editor.putString("mobileNumber", userSignInResponse.MobileNumber);
-						editor.putString("paymentAccountId", userSignInResponse.PaymentAccountId);
-						editor.putBoolean("setupSecurityPin", userSignInResponse.SetupSecurityPin);
-						editor.putInt("upperLimit", userSignInResponse.UpperLimit);
-						editor.commit();
-						setResult(RESULT_OK);
-						finish();
-					}
-					else {
-						startActivityForResult(new Intent(SignInActivity.this, SignUpActivity.class), 3);
-					}
-
+					progressDialog.dismiss();
+					signInHandler.sendEmptyMessage(USERSIGNIN_INVALID);
 				}
 			}
 
@@ -216,18 +216,23 @@ public class SignInActivity extends BaseActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == 1) {
+
+			if (requestCode == ACCOUNT_SETUP) {
 				login = data.getStringExtra("email");
 				password = data.getStringExtra("password");
 				signInRunner();
 			}
-			else if (requestCode == 3) {
+			else if (requestCode == ACHACCOUNT_SETUP) {
 				setResult(RESULT_OK);
 				finish();
 			}
-			else if (requestCode == 2)
+			else if (requestCode == FACEBOOK_SETUP)
 			{
 				facebook.authorizeCallback(requestCode, resultCode, data);
+				progressDialog.setMessage("Authenticating...");
+				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				progressDialog.show();
+
 				mAsyncRunner.request("me", new RequestListener(){
 
 					@Override
@@ -269,13 +274,21 @@ public class SignInActivity extends BaseActivity {
 					}
 
 				});
+				
+					
 			}
 
+		}
+		else {
+			if (requestCode == ACCOUNT_SETUP && requestCode == FACEBOOK_SETUP) {
+				progressDialog.dismiss();
+				signInHandler.sendEmptyMessage(USERSIGNIN_FAILED);
+			}
 		}
 	}
 
 	private void signInUser() {
-
+		UserService userService = new UserService();
 
 		if (!signedInViaFacebook) {
 			UserSignInRequest userSignInRequest = new UserSignInRequest();
@@ -285,7 +298,6 @@ public class SignInActivity extends BaseActivity {
 		}
 		else {
 			UserFBSignInRequest userFBSignInRequest = new UserFBSignInRequest();
-			userFBSignInRequest.ApiKey = APIKEY;
 			userFBSignInRequest.IDNumber = login;
 			userFBSignInRequest.FirstName = firstName;
 			userFBSignInRequest.LastName = lastName;

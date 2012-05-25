@@ -8,7 +8,6 @@ import com.zubhium.ZubhiumSDK.CrashReportingMode;
 import me.pdthx.Requests.PaymentRequest;
 import me.pdthx.Responses.PaymentResponse;
 import me.pdthx.Services.RequestPaymentService;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -34,11 +33,8 @@ import android.widget.TextView;
 public class RequestMoneyActivity extends BaseActivity {
 
 	RequestPaymentService paymentRequestService = new RequestPaymentService();
-
-	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
+	
 	private String deviceId;
-	private String userId = "";
-	private String mobileNumber = "";
 	private String recipientUri = "";
 	private Double amount = (double) 0;
 	private String comments = "";
@@ -64,7 +60,7 @@ public class RequestMoneyActivity extends BaseActivity {
 	private PaymentResponse paymentRequestResponse;
 
 	ZubhiumSDK sdk ;
-	private static final String TAG = "RequestMoneyActivity";
+	public static final String TAG = "RequestMoneyActivity";
 	
 	//private ContactList contactList = null;
 	
@@ -120,9 +116,6 @@ public class RequestMoneyActivity extends BaseActivity {
 
 		deviceId = Secure.getString(getBaseContext().getContentResolver(),
 				Secure.ANDROID_ID);
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		userId = prefs.getString("userId", "");
-		mobileNumber = prefs.getString("mobileNumber", "");
 		//contactList = new ContactList(getBaseContext());
 
 		launchRequestMoneyView();
@@ -377,7 +370,6 @@ public class RequestMoneyActivity extends BaseActivity {
 				.getDefaultSharedPreferences(getBaseContext());
 
 		PaymentRequest paymentRequest = new PaymentRequest();
-		paymentRequest.ApiKey = APIKEY;
 		paymentRequest.SenderAccountId = prefs.getString("userId", "");
 		paymentRequest.DeviceId = deviceId;
 		paymentRequest.RecipientUri = recipientUri;

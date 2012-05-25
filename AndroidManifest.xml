@@ -40,6 +40,14 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name=".ACHAccountSetupActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".SecurityPinSetupActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name=".AcknowledgeDevice"
             android:label="@string/app_name" >
         </activity>

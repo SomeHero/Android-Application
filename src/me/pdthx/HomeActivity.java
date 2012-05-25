@@ -45,7 +45,7 @@ public final class HomeActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if(prefs.getString("userId", "").length() == 0 || prefs.getString("mobileNumber", "").length() == 0) {
+		if(prefs.getString("userId", "").length() == 0) {
 //			SignInActivity signInActivity = new SignInActivity(this, mHandler, prefs);
 //			signInActivity.showSignInActivity();
 			startActivityForResult(new Intent(this, SignInActivity.class), 1);

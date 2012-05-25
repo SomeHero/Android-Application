@@ -1,7 +1,6 @@
 package me.pdthx.Requests;
 
 public class PaymentRequest {
-	public String ApiKey = "";
 	public String SenderAccountId = "";
 	public String DeviceId = "";
 	public String SenderUri = "";

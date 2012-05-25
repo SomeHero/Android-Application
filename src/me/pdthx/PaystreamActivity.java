@@ -33,7 +33,7 @@ public final class PaystreamActivity extends BaseActivity  {
     private Runnable viewOrders;
     
 	ZubhiumSDK sdk ;
-	private static final String TAG = "PaystreamActivity";
+	public static final String TAG = "PaystreamActivity";
 	private ListView mListView = null;
 	private TextView mEmptyTextView = null;
     

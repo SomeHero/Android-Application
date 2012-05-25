@@ -31,7 +31,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -139,7 +138,6 @@ public final class SubmitPaymentActivity extends BaseActivity {
 
 //		deviceId = Secure.getString(getBaseContext().getContentResolver(),
 //				Secure.ANDROID_ID);
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		userId = prefs.getString("userId", "");
 		mobileNumber = prefs.getString("mobileNumber", "");
 		//contactList = new ContactList(getBaseContext());

@@ -9,7 +9,7 @@ import com.facebook.android.AsyncFacebookRunner.*;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -20,12 +20,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.EditText;
 
 public class BaseActivity extends Activity{
 	protected SharedPreferences prefs;
-	private AlertDialog alertDialog = null;
+	protected AlertDialog alertDialog;
+	protected ProgressDialog progressDialog;
 	
 	final private int INVALID_DOLLAR = 0;
 	final private int TESTING = 1;
@@ -39,6 +38,9 @@ public class BaseActivity extends Activity{
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+		alertDialog = new AlertDialog.Builder(BaseActivity.this).create();
+		progressDialog = new ProgressDialog(BaseActivity.this);
+		
 		validateFBLogin();
 
 
@@ -76,10 +78,12 @@ public class BaseActivity extends Activity{
 		switch (item.getItemId()) {
 		case R.id.signOutMenuItem:
 			if (!facebook.isSessionValid()) {
+				signedInViaFacebook = false;
 				editor.remove("userId");
 				editor.commit();
 			}
 			else {
+				signedInViaFacebook = false;
 				facebookLogout();
 			}
 
@@ -104,7 +108,6 @@ public class BaseActivity extends Activity{
 		mAsyncRunner.logout(this, new RequestListener() {
 			@Override
 			public void onComplete(String response, Object state) {
-				signedInViaFacebook = false;
 				Editor editor = prefs.edit();
 				editor.remove("userId");
 				editor.commit();
@@ -141,7 +144,6 @@ public class BaseActivity extends Activity{
 //				EditText txtMeCode = (EditText) findViewById(R.id.meCode);
 //				if (txtMeCode.getText().toString().charAt(0) != '$')
 //				{
-//					AlertDialog alertDialog = new AlertDialog.Builder(BaseActivity.this).create();
 //					alertDialog.setTitle("Invalid MeCode");
 //					alertDialog.setMessage("The meCode must begin with a '$'. Please try again.");
 //					alertDialog.setButton("OK",
@@ -156,7 +158,6 @@ public class BaseActivity extends Activity{
 //				}
 //				else
 //				{
-//					AlertDialog alertDialog = new AlertDialog.Builder(BaseActivity.this).create();
 //					alertDialog.setTitle("Under Construction");
 //					alertDialog.setMessage("The profile page is under construction.");
 //					alertDialog.setButton("OK",

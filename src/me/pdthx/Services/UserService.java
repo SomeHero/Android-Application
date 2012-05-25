@@ -7,10 +7,12 @@ import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Requests.UserFBSignInRequest;
 import me.pdthx.Requests.UserRegistrationRequest;
 import me.pdthx.Requests.UserRequest;
+import me.pdthx.Requests.SecurityPinSetupRequest;
 import me.pdthx.Requests.UserSignInRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
 import me.pdthx.Responses.UserRegistrationResponse;
 import me.pdthx.Responses.UserResponse;
+import me.pdthx.Responses.SecurityPinSetupResponse;
 import me.pdthx.Responses.UserSignInResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,6 +33,7 @@ public class UserService {
 	private static final String USERSIGNINSERVICE_URL = "/Users/Validate_User?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String USERFBSIGNINSERVICE_URL = "/Users/signin_withfacebook?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String REGISTER_URL = "/Users?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String SETUPSECURITYPIN_URL = "/Users/%s/Setup_SecurityPin?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String SETUPACHACCOUNT_URL = "/Users/%s/PaymentAccounts?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String USER_URL = "/Users/";
 	public UserService() {
@@ -178,21 +181,21 @@ public class UserService {
 			}
 
 			if (response.getStatusLine().getStatusCode() == 200) {
-			
-			try {
-				userSignInResponse.IsValid = true;
-				userSignInResponse.UserId = jsonResult.getString("userId");
-				userSignInResponse.MobileNumber = jsonResult
-						.getString("mobileNumber");
-				userSignInResponse.SetupSecurityPin = jsonResult.getBoolean("setupSecurityPin");
-				userSignInResponse.PaymentAccountId = jsonResult
-						.getString("paymentAccountId");
-				userSignInResponse.UpperLimit = jsonResult.getInt("upperLimit");
 
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				try {
+					userSignInResponse.IsValid = true;
+					userSignInResponse.UserId = jsonResult.getString("userId");
+					userSignInResponse.MobileNumber = jsonResult
+							.getString("mobileNumber");
+					userSignInResponse.SetupSecurityPin = jsonResult.getBoolean("setupSecurityPin");
+					userSignInResponse.PaymentAccountId = jsonResult
+							.getString("paymentAccountId");
+					userSignInResponse.UpperLimit = jsonResult.getInt("upperLimit");
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			else {
 				userSignInResponse.IsValid = false;
@@ -211,7 +214,7 @@ public class UserService {
 			HttpPost request = new HttpPost(ROOTURL + USERFBSIGNINSERVICE_URL);
 
 			JSONObject json = new JSONObject();
-			json.put("apiKey", userFBSignInRequest.ApiKey);
+			json.put("apiKey", APIKEY);
 			json.put("accountId", userFBSignInRequest.IDNumber);
 			json.put("firstName", userFBSignInRequest.FirstName);
 			json.put("lastName", userFBSignInRequest.LastName);
@@ -308,9 +311,10 @@ public class UserService {
 			JSONObject json = new JSONObject();
 
 			json.put("apiKey", APIKEY);
-			json.put("userName", userRegistrationRequest.UserName);
-			json.put("password", userRegistrationRequest.Password);
-			json.put("deviceToken", userRegistrationRequest.DeviceToken);
+			json.put("userName", userRegistrationRequest.getUserName());
+			json.put("emailAddress", userRegistrationRequest.getUserName());
+			json.put("password", userRegistrationRequest.getPassword());
+			json.put("deviceToken", userRegistrationRequest.getDeviceToken());
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);
@@ -361,13 +365,13 @@ public class UserService {
 			}
 
 			if (response.getStatusLine().getStatusCode() == 201) {
-			try {
-				userRegistrationResponse.Success = true;
-				userRegistrationResponse.UserId = jsonResult.getString("userId");
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				try {
+					userRegistrationResponse.Success = true;
+					userRegistrationResponse.UserId = jsonResult.getString("userId");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			else {
 				userRegistrationResponse.Success = false;
@@ -379,7 +383,7 @@ public class UserService {
 		return userRegistrationResponse;
 
 	}
-	public ACHAccountSetupResponse SetupACHAccount(ACHAccountSetupRequest achAccountSetupRequest) {
+	public ACHAccountSetupResponse setupACHAccount(ACHAccountSetupRequest achAccountSetupRequest) {
 		ACHAccountSetupResponse achAccountSetupResponse = new ACHAccountSetupResponse();
 		HttpResponse response = null;
 		try {
@@ -387,7 +391,7 @@ public class UserService {
 			HttpPost request = new HttpPost(ROOTURL + String.format(SETUPACHACCOUNT_URL, achAccountSetupRequest.UserId));
 
 			JSONObject json = new JSONObject();
-			json.put("userId", achAccountSetupRequest.UserId);
+			json.put("apiKey", APIKEY);
 			json.put("nameOnAccount", achAccountSetupRequest.NameOnAccount);
 			json.put("routingNumber", achAccountSetupRequest.RoutingNumber);
 			json.put("accountNumber", achAccountSetupRequest.AccountNumber);
@@ -443,14 +447,14 @@ public class UserService {
 			}
 
 			if (response.getStatusLine().getStatusCode() == 201) {
-			
-			try {
-				achAccountSetupResponse.PaymentAccountId = jsonResult.getString("paymentAccountId");
-				achAccountSetupResponse.Success = true;
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+				try {
+					achAccountSetupResponse.PaymentAccountId = jsonResult.getString("paymentAccountId");
+					achAccountSetupResponse.Success = true;
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			else {
 				achAccountSetupResponse.Success = false;
@@ -460,6 +464,45 @@ public class UserService {
 		}
 
 		return achAccountSetupResponse;
+	}
+	public SecurityPinSetupResponse setupSecurityPin(
+			SecurityPinSetupRequest userSecurityPinRequest) {
+		SecurityPinSetupResponse userSecurityPinResponse = new SecurityPinSetupResponse();
+		HttpResponse response = null;
+		try {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost request = new HttpPost(ROOTURL + String.format(SETUPSECURITYPIN_URL, userSecurityPinRequest.getUserId()));
+
+			JSONObject json = new JSONObject();
+			json.put("securityPin", userSecurityPinRequest.getSecurityPin());
+
+			StringEntity entity = new StringEntity(json.toString());
+			request.setEntity(entity);
+			request.setHeader("content-type", "application/json");
+
+			response = httpClient.execute(request);
+		} catch (ClientProtocolException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		if (response.getStatusLine().getStatusCode() == 200) {
+
+			userSecurityPinResponse.Success = true;
+		}
+		else {
+			userSecurityPinResponse.Success = false;
+			userSecurityPinResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+		}
+
+		return userSecurityPinResponse;
 	}
 
 	//	//Don't use.
