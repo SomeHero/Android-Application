@@ -9,8 +9,11 @@ import com.zubhium.ZubhiumSDK.CrashReportingMode;
 
 import me.pdthx.Adapters.PaystreamAdapter;
 import me.pdthx.Models.PaystreamTransaction;
+import me.pdthx.Requests.MessageRequest;
 import me.pdthx.Requests.TransactionRequest;
+import me.pdthx.Responses.MessageResponse;
 import me.pdthx.Responses.TransactionResponse;
+import me.pdthx.Services.MessageService;
 import me.pdthx.Services.TransactionService;
 
 import android.app.ProgressDialog;
@@ -64,7 +67,7 @@ public final class PaystreamActivity extends BaseActivity  {
         System.out.println(prefs.getString("userId", ""));
         System.out.println(prefs.getString("mobileNumber", ""));
         
-		if(prefs.getString("userId", "").length() == 0 || prefs.getString("mobileNumber", "").length() == 0)		{
+		if(prefs.getString("userId", "").length() == 0)		{
 			//showSignInActivity();
 		}
 		else {
@@ -89,6 +92,7 @@ public final class PaystreamActivity extends BaseActivity  {
     	setContentView(R.layout.paystream_controller);
         m_transactions = new ArrayList<PaystreamTransaction>();
         mListView = (ListView) findViewById(R.id.lvPaystream);
+        mEmptyTextView = (TextView)findViewById(R.id.txtEmptyPaystream);
         m_adapter = new PaystreamAdapter(this, R.layout.transaction_item, m_transactions);
         mListView.setAdapter(m_adapter);
         
@@ -125,31 +129,30 @@ public final class PaystreamActivity extends BaseActivity  {
     private void getOrders()
     {
       try{
-    	  TransactionService transactionService = new TransactionService();
-    	  TransactionRequest transactionRequest = new TransactionRequest();
+    	  MessageService messageService = new MessageService();
+    	  MessageRequest messageRequest = new MessageRequest();
     	  
   		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		String userId = prefs.getString("userId", "");
 		
-    	  transactionRequest.UserId = userId;
-    	  ArrayList<TransactionResponse> transactions = transactionService.GetTransactions(transactionRequest);
+    	  messageRequest.UserId = userId;
+    	  ArrayList<MessageResponse> messages = messageService.GetMessages(messageRequest);
     	  
           m_transactions = new ArrayList<PaystreamTransaction>();
-          
           
           DateFormat df = DateFormat.getDateInstance();
           String previousHeader = "";
           String currentHeader = "";
-          for (Iterator<TransactionResponse> i = transactions.iterator(); i.hasNext();) {
-        	  TransactionResponse currentTransaction = (TransactionResponse)i.next();
+          for (Iterator<MessageResponse> i = messages.iterator(); i.hasNext();) {
+        	  MessageResponse currentTransaction = (MessageResponse)i.next();
         	  
               PaystreamTransaction o1 = new PaystreamTransaction();
-              o1.setTransactionId(currentTransaction.TransactionId);
+              o1.setTransactionId(currentTransaction.MessageId);
               o1.setSenderUri(currentTransaction.SenderUri);
               o1.setRecipientUri(currentTransaction.RecipientUri);
               o1.setAmount(currentTransaction.Amount);
               o1.setCreateDate(currentTransaction.CreateDate);
-              o1.setLastUpdateDate(currentTransaction.LastUpdatedDate);
+              o1.setLastUpdateDate(currentTransaction.CreateDate);
 
               currentHeader = df.format(currentTransaction.CreateDate);
               if(!previousHeader.equals(currentHeader)) {

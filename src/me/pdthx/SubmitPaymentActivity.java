@@ -348,7 +348,7 @@ public final class SubmitPaymentActivity extends BaseActivity {
 				}
 				if (isValid) {
 		
-					if(prefs.getString("userId", "").length() == 0 || prefs.getString("mobileNumber", "").length() == 0)		{
+					if(prefs.getString("userId", "").length() == 0)		{
 //					    SignInActivity signInActivity = new SignInActivity(SubmitPaymentActivity.this, mHandler, prefs);
 //					    signInActivity.showSignInActivity();
 						startActivityForResult(new Intent(SubmitPaymentActivity.this, SignInActivity.class), 1);
