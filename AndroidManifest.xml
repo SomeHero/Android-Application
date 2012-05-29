@@ -7,62 +7,73 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.SEND_SMS">
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
     </uses-permission>
-    <uses-permission android:name="android.permission.RECEIVE_SMS">
+    <uses-permission android:name="android.permission.SEND_SMS" >
     </uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" >
+    </uses-permission>
+
     <uses-sdk
         android:minSdkVersion="3"
         android:targetSdkVersion="4" />
-<uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
+        android:debuggable="true"
         android:icon="@drawable/paidthx_icon"
-        android:label="@string/app_name"
-        android:debuggable="true">
+        android:label="@string/app_name" >
         <activity
-            android:label="@string/app_name"
-            android:name=".SplashActivity" >
-            <intent-filter >
+            android:name=".SplashActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CustomTabActivity"
-                  android:label="@string/app_name">
-        </activity>
-          <activity
-            android:label="@string/app_name"
-            android:name=".SignUpTabActivity" >
-        </activity>
-         <activity
-            android:label="@string/app_name"
-            android:name=".AcknowledgeDevice" >
+        <activity
+            android:name=".CustomTabActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:label="@string/app_name"
-            android:name=".SignInActivity" >
+            android:name=".SignUpTabActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:label="@string/app_name"
-            android:name=".HomeActivity" >
+            android:name=".AcknowledgeDevice"
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:label="@string/app_name"
-            android:name=".MakePaymentActivity" >
+            android:name=".SignInActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:label="@string/app_name"
-            android:name=".GetMoneyActivity" >
+            android:name=".HomeActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:label="@string/app_name"
-            android:name=".RequestMoneyActivity" >
+            android:name=".MakePaymentActivity"
+            android:label="@string/app_name" >
         </activity>
-                <activity
-            android:label="@string/app_name"
-            android:name=".PaystreamActivity" >
+        <activity
+            android:name=".GetMoneyActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".RequestMoneyActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".PaystreamActivity"
+            android:label="@string/app_name" 
+            android:noHistory="true">
+        </activity>
+        <activity
+            android:name=".DialogPaystream"
+            android:label="@string/app_name" 
+            android:theme="@style/PaystreamDialog">  
         </activity>
     </application>
 
