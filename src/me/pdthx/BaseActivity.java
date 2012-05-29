@@ -24,8 +24,8 @@ public class BaseActivity extends Activity {
 	protected SharedPreferences prefs;
 	AlertDialog alertDialog = null;
 	
-	final private int INVALID_DOLLAR = 0;
-	final private int TESTING = 1;
+//	final private int INVALID_DOLLAR = 0;
+//	final private int TESTING = 1;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
