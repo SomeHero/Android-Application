@@ -100,7 +100,7 @@ public final class PaystreamActivity extends BaseActivity  {
 					long arg3) {
 
 				PaystreamTransaction ref = m_transactions.get(arg2);
-				Intent temp = new Intent(PaystreamActivity.this,
+				Intent temp = new Intent(getApplicationContext(),
 						DialogPaystream.class);
 
 				// send information into intent
