@@ -92,4 +92,5 @@
                     android:textSize="10dip" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout></LinearLayout>
+    </LinearLayout>
+</LinearLayout>
