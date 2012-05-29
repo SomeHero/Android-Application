@@ -1,7 +1,6 @@
 package me.pdthx;
 
 import java.text.NumberFormat;
-import java.util.Date;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,13 +23,8 @@ public class DialogPaystream extends Activity implements OnTouchListener {
 	private String recipientUri = "";
 	private Double amount = 0.0;
 	private String transactionStatus = "";
-	private String transactionCategory = "";
 	private String transactionType = "";
-	private String paymentChannel = "";
-	private Date transactionSentDate = null;
 	private String createDate = null;
-	private Date lastUpdateDate = null;
-
 	private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 
 	private ImageView pic;
@@ -42,7 +35,7 @@ public class DialogPaystream extends Activity implements OnTouchListener {
 	private TextView payDate;
 	private TextView payTime;
 	private TextView comments;
-	private EditText sendMessage;
+//	private EditText sendMessage;
 
 	private static final int SWIPE_MIN_DISTANCE = 120;
 	private static final int SWIPE_MAX_OFF_PATH = 250;
@@ -156,7 +149,7 @@ public class DialogPaystream extends Activity implements OnTouchListener {
 		comments = (TextView) findViewById(R.id.pay_comments);
 		comments.setMovementMethod(new ScrollingMovementMethod());
 
-		sendMessage = (EditText) findViewById(R.id.pay_send_msg);
+//		sendMessage = (EditText) findViewById(R.id.pay_send_msg);
 	}
 
 	@Override
@@ -176,7 +169,7 @@ public class DialogPaystream extends Activity implements OnTouchListener {
 		return super.dispatchTouchEvent(ev);
 	}
 
-	class MyGestureDetector extends SimpleOnGestureListener {
+	private class MyGestureDetector extends SimpleOnGestureListener {
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 				float velocityY) {

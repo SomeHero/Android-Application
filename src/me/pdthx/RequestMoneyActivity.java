@@ -36,7 +36,7 @@ public class RequestMoneyActivity extends BaseActivity {
 	
 	private String deviceId;
 	private String recipientUri = "";
-	private Double amount = (double) 0;
+	private double amount = 0;
 	private String comments = "";
 	private String errorMessage = "";
 

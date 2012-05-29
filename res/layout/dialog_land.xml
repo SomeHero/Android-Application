@@ -165,7 +165,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:scrollbars="vertical"
-            android:text="text text text text text text text text text text text text text text text text text text text text text " />
+            android:text="No comments" />
     </LinearLayout>
 
     <LinearLayout

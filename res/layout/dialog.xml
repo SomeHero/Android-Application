@@ -160,7 +160,7 @@
             android:gravity="center"
             android:maxLines="5"
             android:scrollbars="vertical"
-            android:text="text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text " />
+            android:text="No comments"/>
     </LinearLayout>
 
     <LinearLayout

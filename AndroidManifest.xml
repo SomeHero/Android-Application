@@ -40,6 +40,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name=".DialogPaystream"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name=".ACHAccountSetupActivity"
             android:label="@string/app_name" >
         </activity>

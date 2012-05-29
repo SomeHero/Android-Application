@@ -78,7 +78,6 @@
             android:inputType="text"
             android:maxLength="100"
             android:maxLines="1" />
-<<<<<<< HEAD
 
 <Button
     android:id="@+id/btnSaveChanges"
@@ -86,15 +85,6 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
     android:text="Save Changes" />
-=======
-
-<Button
-            android:id="@+id/btnCreateProfile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_create_a_profile"
-             android:layout_marginBottom="4dp" />
->>>>>>> origin/ivy-android
 
 </LinearLayout>
 </LinearLayout>
