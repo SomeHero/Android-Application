@@ -4,7 +4,6 @@
 
 # files for the dex VM
 *.dex
-
 # Java class files
 *.class
 
@@ -15,8 +14,10 @@ libs/
 
 # Local configuration file (sdk path, etc)
 local.properties
-project.properties
 
 # Eclipse project files
 .classpath
 .project
+
+.settings/
+.metadata/
