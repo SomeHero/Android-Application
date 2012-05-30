@@ -21,7 +21,7 @@ import android.util.Log;
 
 public class RequestPaymentService {
 	private static final String ROOTURL = "http://23.21.203.171/api/internal/api";
-	private static final String SUBMITPAYMENTREQUEST_URL = "/Services/PaymentRequestService/PaymentRequests?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String SUBMITPAYMENTREQUEST_URL = "/PayStreamMessages?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
 
 	public PaymentResponse SendPaymentRequest(PaymentRequest paymentRequest) {
@@ -35,11 +35,12 @@ public class RequestPaymentService {
 
 			JSONObject json = new JSONObject();
 			json.put("apiKey", APIKEY);
+			//json.put("userId", paymentRequest.UserId);
 			json.put("securityPin", paymentRequest.SecurityPin);
 			json.put("senderUri", paymentRequest.SenderUri);
 			json.put("recipientUri", paymentRequest.RecipientUri);
 			json.put("amount", paymentRequest.Amount.toString());
-			json.put("comment", paymentRequest.Comments);
+			json.put("comments", paymentRequest.Comments);
 			json.put("senderAccountId", paymentRequest.SenderAccountId);
 			json.put("messageType", "PaymentRequest");
 			

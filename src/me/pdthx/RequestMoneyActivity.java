@@ -111,6 +111,8 @@ public class RequestMoneyActivity extends BaseActivity {
 	    if(sdk != null){
 	    	sdk.setCrashReportingMode(CrashReportingMode.SILENT);
 	    }
+	    prefs = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
 	    
 		setTitle("Request Money");
 
@@ -366,11 +368,10 @@ public class RequestMoneyActivity extends BaseActivity {
 	}
 
 	protected void SubmitRequest() {
-		final SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext());
-
+		
 		PaymentRequest paymentRequest = new PaymentRequest();
-		paymentRequest.SenderAccountId = prefs.getString("userId", "");
+		paymentRequest.SenderAccountId = prefs.getString("paymentAccountId", "");
+		paymentRequest.SenderUri = prefs.getString("mobileNumber", "");
 		paymentRequest.DeviceId = deviceId;
 		paymentRequest.RecipientUri = recipientUri;
 		paymentRequest.Amount = amount;

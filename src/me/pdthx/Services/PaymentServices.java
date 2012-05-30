@@ -44,7 +44,7 @@ public class PaymentServices {
 			json.put("senderUri", submitPaymentRequest.SenderUri);
 			json.put("recipientUri", submitPaymentRequest.RecipientUri);
 			json.put("amount", submitPaymentRequest.Amount);
-			json.put("comment", submitPaymentRequest.Comments);
+			json.put("comments", submitPaymentRequest.Comments);
 			json.put("senderAccountId", submitPaymentRequest.SenderAccountId);
 			json.put("messageType", "Payment");
 

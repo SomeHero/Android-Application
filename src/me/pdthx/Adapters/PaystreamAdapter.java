@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import me.pdthx.R;
 import me.pdthx.Models.PaystreamTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +20,12 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 
     private ArrayList<PaystreamTransaction> items;
     private NumberFormat currencyFormatter =  NumberFormat.getCurrencyInstance();
+    private SharedPreferences prefs;;
     
     public PaystreamAdapter(Context context, int textViewResourceId, ArrayList<PaystreamTransaction> items) {
             super(context, textViewResourceId, items);
             this.items = items;
+            prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Override
@@ -50,17 +54,25 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
                 	txtHeader.setVisibility(View.GONE);
                 }
 
-                if(imgTransactionType != null) {
-                	if(o.getTransactionType().equalsIgnoreCase("Withdrawal"))
+                if(o.getDirection().equalsIgnoreCase("Out"))
+                {
+                	if(o.getTransactionType().equalsIgnoreCase("Payment"))
                 		imgTransactionType.setImageResource(R.drawable.paystream_sent_icon);
                 	else
+                		imgTransactionType.setImageResource(R.drawable.paystream_request_sent_icon);
+                }
+                else
+                {
+                	if(o.getTransactionType().equalsIgnoreCase("Payment"))
                 		imgTransactionType.setImageResource(R.drawable.paystream_received_icon);
+                	else
+                		imgTransactionType.setImageResource(R.drawable.paystream_request_received_icon);
                 }
                 if (txtRecipientUri != null) {
-                	if(o.getTransactionType().equalsIgnoreCase("Withdrawal"))
-                      txtRecipientUri.setText(o.getRecipientUri());  
-                	else
-                		txtRecipientUri.setText(o.getSenderUri());
+                	 if(o.getDirection().equalsIgnoreCase("Out"))
+                		 txtRecipientUri.setText(o.getRecipientUri());  
+	                else
+	                	txtRecipientUri.setText(o.getSenderUri());
                 }
                 if(txtPaymentDate != null) {
                 	txtPaymentDate.setText(timeFormat.format(o.getCreateDate()));
