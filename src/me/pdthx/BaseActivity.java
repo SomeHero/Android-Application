@@ -7,8 +7,6 @@ import java.net.MalformedURLException;
 import me.pdthx.Requests.UserMeCodeRequest;
 import me.pdthx.Services.UserService;
 
-import com.facebook.android.*;
-import com.facebook.android.AsyncFacebookRunner.*;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.Facebook;
@@ -31,15 +29,12 @@ import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.view.animation.AnimationUtils;
 
 public class BaseActivity extends Activity {
 	protected SharedPreferences prefs;
 	protected AlertDialog alertDialog;
 	protected ProgressDialog progressDialog;
 
-	final private int INVALID_DOLLAR = 0;
-	final private int TESTING = 1;
 //	final private int INVALID_DOLLAR = 0;
 //	final private int TESTING = 1;
 
