@@ -2,30 +2,19 @@ package me.pdthx.Services;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.regex.Pattern;
-
 import me.pdthx.RestClient;
-import me.pdthx.Requests.SubmitPaymentRequest;
 import me.pdthx.Requests.TransactionRequest;
-import me.pdthx.Responses.SubmitPaymentResponse;
 import me.pdthx.Responses.TransactionResponse;
-import me.pdthx.helpers.DateTimeUtils;
-import me.pdthx.helpers.ISO8601DateParser;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +26,7 @@ public class TransactionService {
 	public TransactionService() {
 	}
 
-	private static final String ROOTURL = "http://beta.paidthx.com";
+	private static final String ROOTURL = "http://23.21.203.171/api/internal/api";
 	private static final String SERVICE_URL = "/Services/TransactionService/Transactions";
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
 
@@ -50,9 +39,6 @@ public class TransactionService {
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpGet request = new HttpGet(ROOTURL + SERVICE_URL + "/" + transactionRequest.UserId + "?" + APIKEY);
 
-			JSONObject json = new JSONObject();
-
-			StringEntity entity = new StringEntity(json.toString());
 			request.setHeader("content-type", "application/json");
 
 			response = httpClient.execute(request);
@@ -104,6 +90,7 @@ public class TransactionService {
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return null;
 			}
 
 			try{

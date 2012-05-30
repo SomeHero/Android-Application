@@ -3,20 +3,20 @@ package me.pdthx;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import me.pdthx.Models.Friends;
+
 import com.zubhium.ZubhiumSDK;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import android.util.Log;
 
 public class ContactList {
 
 	private ArrayList<String> contactsList = new ArrayList<String>();
+	private ArrayList<Friends> fbFriendList = new ArrayList<Friends>();
 	ZubhiumSDK sdk;
-	private String name = ""; // Temporary variable
-
 	public ContactList(Context context) {
 
 	
@@ -29,7 +29,7 @@ public class ContactList {
 		    if (cur.getCount() > 0) {
 		        if(cur.moveToFirst()) {
 		            do {
-		                Log.i("Test", "---------------------count-------------------" +  cur.getCount());
+		             //   Log.i("Test", "---------------------count-------------------" +  cur.getCount());
 		                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
 		                String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 		                contactsList.add(name);
@@ -50,7 +50,7 @@ public class ContactList {
 
 		    Arrays.sort(nlistString);
 		    
-		    Cursor emailCur = cr.query( 
+		    Cursor emailCur = cr.query( 																		///THIS E-MAIL SECTION DOESN'T DO ANYTHING : (  FIX THIS
 		            ContactsContract.CommonDataKinds.Email.CONTENT_URI, 
 		            null,
 		            ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?", 
@@ -65,7 +65,19 @@ public class ContactList {
 		            contactsList.add(email);
 		        } 
 		        emailCur.close();
-
+		        
+		        for (int x = 0; x < contactsList.size(); x++)
+		        {
+		        	for (int y = 0; y < contactsList.size(); y++)
+		        	{
+		        		if(contactsList.get(x).equals(contactsList.get(y)))
+		        		{
+		        			contactsList.remove(y);
+		        		}
+		        	}
+		        }
+		        
+		      
 		/*
 		 * ContentResolver cr = context.getContentResolver();
 		 * Cursor cur = cr.query(ContactsContact.CONTENT_URI, null, null, null, null);
@@ -106,8 +118,17 @@ public class ContactList {
 		cur.close();*/
 	        
 	}
+	public void addContacts(Friends newContact)
+	{
+		fbFriendList.add(newContact);	//not necessary for testing only
+		contactsList.add(newContact.name);
+		int bleh = contactsList.size();
+		String name = contactsList.get(contactsList.size()-1);
+	}
 
 	public ArrayList<String> getContacts() {
 		return contactsList;
 	}
+
+
 }

@@ -5,6 +5,6 @@ public class UserRegistrationResponse {
 		
 	}
 	public boolean Success = false;
-	public String Message = "";
+	public String ReasonPhrase = "";
 	public String UserId = "";
 }
