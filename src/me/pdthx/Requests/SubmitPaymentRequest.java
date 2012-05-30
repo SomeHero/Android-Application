@@ -7,9 +7,11 @@ public class SubmitPaymentRequest {
 	public String UserId = "";
 	public String SecurityPin = "";
 	public String SenderUri = "";
-	public Double Amount = (double) 0;
+	public double Amount = 0;
 	public String RecipientUri = "";
 	public String Comments = "";
 	public String SenderAccountId = "";
+	public double Latitude = 0;
+	public double Longitude = 0;
 	
 }

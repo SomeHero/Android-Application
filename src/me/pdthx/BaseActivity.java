@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import me.pdthx.Requests.UserMeCodeRequest;
+import me.pdthx.Services.UserService;
+
 import com.facebook.android.*;
 import com.facebook.android.AsyncFacebookRunner.*;
 
@@ -162,18 +165,15 @@ public class BaseActivity extends Activity{
 				}
 				else
 				{
-					//TODO: Setup MeCode UserService, call it.
-					alertDialog.setTitle("Under Construction");
-					alertDialog.setMessage("The profile page is under construction.");
-					alertDialog.setButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									dialog.dismiss();
-								}
-							});
-
-					alertDialog.show();
+					progressDialog.setMessage("Adding Me Code..");
+					progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+					UserService userService = new UserService();
+					UserMeCodeRequest userMeCodeRequest = new UserMeCodeRequest(
+							prefs.getString("userId", ""), txtMeCode.getText().toString().trim());
+					progressDialog.show();
+					userService.createMeCode(userMeCodeRequest);
+					txtMeCode.setText("");
+					progressDialog.dismiss();
 				}
 			}
 		});
