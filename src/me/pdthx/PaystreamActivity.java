@@ -32,7 +32,7 @@ public final class PaystreamActivity extends BaseActivity  {
     private ArrayList<PaystreamTransaction> m_transactions = null;
     private PaystreamAdapter m_adapter;
     private Runnable viewOrders;
-    
+    	
 	ZubhiumSDK sdk ;
 	public static final String TAG = "PaystreamActivity";
 	private ListView mListView = null;
@@ -90,7 +90,6 @@ public final class PaystreamActivity extends BaseActivity  {
     	setContentView(R.layout.paystream_controller);
         m_transactions = new ArrayList<PaystreamTransaction>();
         mListView = (ListView) findViewById(R.id.lvPaystream);
-        mEmptyTextView = (TextView)findViewById(R.id.txtEmptyPaystream);
         m_adapter = new PaystreamAdapter(this, R.layout.transaction_item, m_transactions);
         mListView.setAdapter(m_adapter);
         
