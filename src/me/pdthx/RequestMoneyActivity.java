@@ -5,14 +5,15 @@ import java.text.NumberFormat;
 import com.zubhium.ZubhiumSDK;
 import com.zubhium.ZubhiumSDK.CrashReportingMode;
 
-import me.pdthx.Requests.PaymentRequestRequest;
-import me.pdthx.Responses.PaymentRequestResponse;
-import me.pdthx.Services.PaymentRequestService;
+import me.pdthx.Requests.PaymentRequest;
+import me.pdthx.Responses.PaymentResponse;
+import me.pdthx.Services.RequestPaymentService;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,7 +35,7 @@ import android.widget.TextView;
 
 public class RequestMoneyActivity extends BaseActivity {
 
-	PaymentRequestService paymentRequestService = new PaymentRequestService();
+	RequestPaymentService paymentRequestService = new RequestPaymentService();
 
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
 	private String deviceId;
@@ -48,9 +50,8 @@ public class RequestMoneyActivity extends BaseActivity {
 	private EditText txtAmount;
 	private EditText txtComments;
 	private Button btnSendMoney;
+	private Button btnAddContacts;
 	private String passcode = "";
-	
-
 
 	final private int SUBMITREQUEST_DIALOG = 0;
 	final private int NORECIPIENTSPECIFIED_DIALOG = 1;
@@ -63,17 +64,13 @@ public class RequestMoneyActivity extends BaseActivity {
 
 	private View sendRequestView = null;
 	private SharedPreferences prefs;
-	private PaymentRequestResponse paymentRequestResponse;
+	private PaymentResponse paymentRequestResponse;
 
 	ZubhiumSDK sdk ;
 	private static final String TAG = "RequestMoneyActivity";
-	private String[] recipient = 
-		{
-		"8042529304",
-		"Pro Android Games - Vladimir Silva",
-		};
+	
 	private ContactList contactList = null;
-
+	
 	Handler mHandler = new Handler() {
 
         @Override
@@ -90,7 +87,7 @@ public class RequestMoneyActivity extends BaseActivity {
 	    			break;
 	    	}
         }
-
+        
 	};
 
 	private Dialog dialog = null;
@@ -106,7 +103,7 @@ public class RequestMoneyActivity extends BaseActivity {
 					showDialog(SUBMITREQUESTSUCCESS_DIALOG);
 
 				} else {
-					errorMessage = paymentRequestResponse.Message;
+					errorMessage = paymentRequestResponse.ReasonPhrase;
 					showDialog(SUBMITREQUESTFAILED_DIALOG);
 				}
 				break;
@@ -117,11 +114,11 @@ public class RequestMoneyActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sdk = ZubhiumSDK.getZubhiumSDKInstance(RequestMoneyActivity.this, getString(R.string.secret_key));
-
+		
 	    if(sdk != null){
 	    	sdk.setCrashReportingMode(CrashReportingMode.SILENT);
 	    }
-
+	    
 		setTitle("Request Money");
 
 		deviceId = Secure.getString(getBaseContext().getContentResolver(),
@@ -130,13 +127,8 @@ public class RequestMoneyActivity extends BaseActivity {
 		userId = prefs.getString("userId", "");
 		mobileNumber = prefs.getString("mobileNumber", "");
 		contactList = new ContactList(getBaseContext());
+
 		launchRequestMoneyView();
-		
-		/*ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,recipient);
-		AutoCompleteTextView acTextView = (AutoCompleteTextView)findViewById(R.id.txtRequestMoneyRecipient);
-		acTextView.setAdapter(adapter);*/
-		
-		
 	}
 
 	protected android.app.Dialog onCreateDialog(int id) {
@@ -193,6 +185,7 @@ public class RequestMoneyActivity extends BaseActivity {
 
 			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
+					removeDialog(4);
 					dialog.dismiss();
 
 					txtRequestMoneyRecipient.setText("");
@@ -246,7 +239,7 @@ public class RequestMoneyActivity extends BaseActivity {
 			return alertDialog;
 
 		}
-
+		
 		return null;
 	}
 
@@ -255,13 +248,18 @@ public class RequestMoneyActivity extends BaseActivity {
 		sendRequestView = View.inflate(this, R.layout.requestmoney_controller, null);
 		setContentView(sendRequestView);
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,																	//CURRENTLY WON'T PULL FB CONTACTS
 				android.R.layout.simple_dropdown_item_1line, contactList.getContacts().toArray(
 						new String[0]));
 
+	
 		txtRequestMoneyRecipient = (AutoCompleteTextView) findViewById(R.id.txtRequestMoneyRecipient);
 		txtRequestMoneyRecipient.setAdapter(adapter);
-
+		for (int x = 0; x < contactList.getContacts().size(); x++)
+		{
+			int sizeOfContactsList = contactList.getContacts().size();
+			Log.d(contactList.getContacts().get(x), "people");
+		}
 		txtAmount = (EditText) findViewById(R.id.txtRequestMoneyAmount);
 		txtAmount.addTextChangedListener(new TextWatcher() {
 			String current = "";
@@ -289,18 +287,30 @@ public class RequestMoneyActivity extends BaseActivity {
 
 			@Override
 			public void afterTextChanged(Editable arg0) {
-
+				
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1,
 					int arg2, int arg3) {
-
+				
 			}
 		});
 		txtComments = (EditText) findViewById(R.id.txtRequestMoneyComments);
 		btnSendMoney = (Button) findViewById(R.id.btnSubmit);
+		btnAddContacts = (Button) findViewById(R.id.addRecipient);
+		
+		btnAddContacts.setOnClickListener(new OnClickListener(){
 
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(new Intent(RequestMoneyActivity.this, FriendListActivity.class), 1);//.getContext(),
+						//FriendListActivity.class), 1);				
+			}
+			
+		});
+		btnAddContacts.setVisibility(View.VISIBLE);
+		
 		btnSendMoney.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -323,8 +333,9 @@ public class RequestMoneyActivity extends BaseActivity {
 				}
 				if (isValid) {
 					if(prefs.getString("userId", "").length() == 0 || prefs.getString("mobileNumber", "").length() == 0)		{
-					    SignInActivity signInActivity = new SignInActivity(RequestMoneyActivity.this, mHandler, prefs);
-					    signInActivity.showSignInActivity();
+//					    SignInActivity signInActivity = new SignInActivity(RequestMoneyActivity.this, mHandler, prefs);
+//					    signInActivity.showSignInActivity();
+						startActivityForResult(new Intent(RequestMoneyActivity.this, SignInActivity.class), 1);
 					} else {
 						showSecurityPinDialog();
 					}
@@ -344,18 +355,17 @@ public class RequestMoneyActivity extends BaseActivity {
 
 		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
 		TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
-
+	
 		txtConfirmHeader.setText("Confirm Your Request");
 		txtConfirmBody.setText(String.format("To confirm your request for %s from %s, swipe you pin below.", txtAmount.getText(), txtRequestMoneyRecipient.getText()));
-
+		
 		Button btnCancel = (Button) d.findViewById(R.id.btnCancelSendMoney);
 		btnCancel.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
 		        d.dismiss();
 		    }
 		});
-
-		//final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
+	    
 		final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
 		ctrlSecurityPin.invalidate();
 		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
@@ -372,7 +382,7 @@ public class RequestMoneyActivity extends BaseActivity {
 					passcode = ctrlSecurityPin.getPasscode();
 
 					d.dismiss();
-
+					
 					showDialog(SUBMITREQUEST_DIALOG);
 				} else
 					showDialog(INVALIDPASSCODELENGTH_DIALOG);
@@ -386,9 +396,9 @@ public class RequestMoneyActivity extends BaseActivity {
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 
-		PaymentRequestRequest paymentRequest = new PaymentRequestRequest();
+		PaymentRequest paymentRequest = new PaymentRequest();
 		paymentRequest.ApiKey = APIKEY;
-		paymentRequest.UserId = prefs.getString("userId", "");
+		paymentRequest.SenderAccountId = prefs.getString("userId", "");
 		paymentRequest.DeviceId = deviceId;
 		paymentRequest.RecipientUri = recipientUri;
 		paymentRequest.Amount = amount;

@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 import me.pdthx.RestClient;
 import me.pdthx.Requests.SubmitPaymentRequest;
-import me.pdthx.Responses.SubmitPaymentResponse;
+import me.pdthx.Responses.PaymentResponse;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,13 +23,13 @@ public class PaymentServices {
 	public PaymentServices() {
 	}
 
-	private static final String ROOTURL = "http://beta.paidthx.com";
-	private static final String SUBMITPAYMENT_URL = "/Services/PaymentService/Payments?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String ROOTURL = "http://23.21.203.171/api/internal/api";
+	private static final String SUBMITPAYMENT_URL = "/PayStreamMessages?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
 
-	public SubmitPaymentResponse SubmitPayment(
+	public PaymentResponse SubmitPayment(
 			SubmitPaymentRequest submitPaymentRequest) {
-		SubmitPaymentResponse submitPaymentResponse = new SubmitPaymentResponse();
+		PaymentResponse paymentResponse = new PaymentResponse();
 
 		HttpResponse response = null;
 
@@ -41,11 +41,12 @@ public class PaymentServices {
 			json.put("apiKey", APIKEY);
 			json.put("userId", submitPaymentRequest.UserId);
 			json.put("securityPin", submitPaymentRequest.SecurityPin);
-			json.put("fromMobileNumber", submitPaymentRequest.FromMobileNumber);
-			json.put("toMobileNumber", submitPaymentRequest.Recipient);
+			json.put("senderUri", submitPaymentRequest.SenderUri);
+			json.put("recipientUri", submitPaymentRequest.RecipientUri);
 			json.put("amount", submitPaymentRequest.Amount.toString());
 			json.put("comment", submitPaymentRequest.Comments);
-			json.put("paymentAccountId", submitPaymentRequest.PaymentAccountId);
+			json.put("senderAccountId", submitPaymentRequest.SenderAccountId);
+			json.put("messageType", "Payment");
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);
@@ -91,36 +92,17 @@ public class PaymentServices {
 
 			Log.i("Payment Sumitted Response", result);
 
-			JSONObject jsonResult = null;
-			try {
-				jsonResult = new JSONObject(result);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			if (response.getStatusLine().getStatusCode() == 201) {
+				//Do something
+				paymentResponse.Success = true;
 			}
-
-			boolean success = false;
-			String message = "";
-			try {
-				submitPaymentResponse.Amount = jsonResult.getDouble("amount");
-				submitPaymentResponse.Comment = jsonResult.getString("comment");
-				submitPaymentResponse.FromMobileNumber = jsonResult
-						.getString("fromMobileNumber");
-				submitPaymentResponse.ToMobileNumber = jsonResult
-						.getString("toMobileNumber");
-				submitPaymentResponse.Message = jsonResult.getString("message");
-				submitPaymentResponse.PaymentId = jsonResult
-						.getString("paymentId");
-				submitPaymentResponse.ResponseStatus = jsonResult
-						.getString("responseStatus");
-				submitPaymentResponse.Success = jsonResult.getBoolean("success");
-				submitPaymentResponse.UserId = jsonResult.getString("userId");
-
-			} catch (JSONException e) {
-				e.printStackTrace();
+			else {
+				paymentResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+				paymentResponse.Success = false;
 			}
 		}
 
-		return submitPaymentResponse;
+		return paymentResponse;
 	}
 }
