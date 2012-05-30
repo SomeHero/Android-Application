@@ -42,6 +42,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -66,7 +67,7 @@ public final class SubmitPaymentActivity extends BaseActivity {
 	private AutoCompleteTextView txtRecipientUri;
 	private EditText txtAmount;
 	private EditText txtComments;
-	//private ContactList contactList;
+	private ContactList contactList;
 	private Button btnSendMoney;
 	private String passcode = "";
 
@@ -180,7 +181,7 @@ public final class SubmitPaymentActivity extends BaseActivity {
 		//				Secure.ANDROID_ID);
 		userId = prefs.getString("userId", "");
 		mobileNumber = prefs.getString("mobileNumber", "");
-		//contactList = new ContactList(getBaseContext());
+		contactList = new ContactList(getBaseContext());
 
 
 		launchSendMoneyView();
@@ -337,11 +338,11 @@ public final class SubmitPaymentActivity extends BaseActivity {
 		sendMoneyView = View.inflate(this, R.layout.contactmanager, null);
 		setContentView(sendMoneyView);
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, contactList.getContacts().toArray(
-						new String[0]));
+//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+//				android.R.layout.simple_dropdown_item_1line, contactList.getContacts().toArray(
+//						new String[0]));
 		txtRecipientUri = (AutoCompleteTextView) findViewById(R.id.txtRecipientUri);
-		txtRecipientUri.setAdapter(adapter);
+//		txtRecipientUri.setAdapter(adapter);
 		
 		txtAmount = (EditText) findViewById(R.id.txtAmount);
 		txtComments = (EditText) findViewById(R.id.txtComments);

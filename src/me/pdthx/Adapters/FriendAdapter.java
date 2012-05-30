@@ -36,7 +36,7 @@ public final class FriendAdapter extends ArrayAdapter<Friends> {
 		if (o != null) {
 			TextView txtHeader = (TextView) v
 					.findViewById(R.id.list_header_title);
-			ImageView imgFriend = (ImageView) v.findViewById(R.id.imgFriend);
+			//ImageView imgFriend = (ImageView) v.findViewById(R.id.imgFriend);
 			TextView txtRecipientUri = (TextView) v
 					.findViewById(R.id.txtRecipientUri);
 			// TextView txtPhoneNumber =

@@ -61,6 +61,12 @@
                         android:text="Request From:"
                         android:textColor="#000000"
                         android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/addRecipient"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Add Recipient" />
 
                     <AutoCompleteTextView
                         android:id="@+id/txtRequestMoneyRecipient"

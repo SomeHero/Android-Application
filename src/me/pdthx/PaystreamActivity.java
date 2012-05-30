@@ -178,7 +178,7 @@ public final class PaystreamActivity extends BaseActivity  {
         	  MessageResponse currentTransaction = (MessageResponse)i.next();
         	  
               PaystreamTransaction o1 = new PaystreamTransaction();
-              o1.setTransactionId(currentTransaction.TransactionId);
+              o1.setTransactionId(currentTransaction.MessageId);
               o1.setSenderUri(currentTransaction.SenderUri);
               o1.setRecipientUri(currentTransaction.RecipientUri);
               o1.setAmount(currentTransaction.Amount);
