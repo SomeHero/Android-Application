@@ -184,6 +184,8 @@ public final class PaystreamActivity extends BaseActivity  {
               o1.setAmount(currentTransaction.Amount);
               o1.setCreateDate(currentTransaction.CreateDate);
               o1.setLastUpdateDate(currentTransaction.CreateDate);
+              o1.setTransactionType(currentTransaction.MessageType);
+              o1.setTransactionStatus(currentTransaction.MessageStatus);
 
               currentHeader = df.format(currentTransaction.CreateDate);
               if(!previousHeader.equals(currentHeader)) {

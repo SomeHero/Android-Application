@@ -100,7 +100,7 @@ public final class SubmitPaymentActivity extends BaseActivity {
 	private Handler dialogHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			dialog.dismiss();
-
+			
 			switch (msg.what) {
 			
 			case SUBMITPAYMENT_ACTION:
@@ -146,7 +146,128 @@ public final class SubmitPaymentActivity extends BaseActivity {
 		launchSendMoneyView();
 
 	}
+	@Override
+	  protected void onPrepareDialog(int id, Dialog dialog) {
+		  Thread thread = null;
+		
+	      switch (id) {
+			case SUBMITPAYMENT_DIALOG:
+			
+				((ProgressDialog)dialog).setMessage("Submitting Request...");
+				((ProgressDialog)dialog).setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
+				thread = new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						try {
+							SubmitPaymentRequest();
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						dialogHandler.sendEmptyMessage(SUBMITPAYMENT_ACTION);
+					}
+
+				});
+				dialog = progressDialog;
+				thread.start();
+				
+				break;
+				
+			case SUBMITPAYMENTFAILED_DIALOG:
+				((AlertDialog)dialog).setTitle("Failed");
+
+				((AlertDialog)dialog).setMessage(errorMessage);
+				((AlertDialog)dialog).setButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+
+					}
+				});
+				
+				break;
+
+			case SUBMITPAYMENTSUCCESS_DIALOG:
+				((AlertDialog)dialog).setTitle("Payment Sumitted");
+				NumberFormat nf = NumberFormat.getCurrencyInstance();
+
+				((AlertDialog)dialog).setMessage(String.format(
+						"Your payment for %s was sent to %s.", nf.format(amount),
+						recipientUri));
+
+				((AlertDialog)dialog).setButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						removeDialog(4);
+						dialog.dismiss();
+
+						txtRecipientUri.setText("");
+						txtRecipientUri.requestFocus();
+						txtAmount.setText("$0.00");
+						txtComments.setText("");
+					}
+				});
+				
+				break;
+
+			case NORECIPIENTSPECIFIED_DIALOG:
+
+				((AlertDialog)dialog).setTitle("Please Specify a Recipient");
+				((AlertDialog)dialog)
+						.setMessage("You must specify the recipient's mobile number.");
+
+				((AlertDialog)dialog).setButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+
+				break;
+				
+			case NOAMOUNTSPECIFIED_DIALOG:
+				
+				((AlertDialog)dialog).setTitle("Please Specify an Amount");
+				((AlertDialog)dialog).setMessage("You must specify the amount to send.");
+
+				((AlertDialog)dialog).setButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+
+				break;
+				
+			case INVALIDPASSCODELENGTH_DIALOG:
+
+				((AlertDialog)dialog).setTitle("Invalid Passcode");
+				((AlertDialog)dialog)
+						.setMessage("Your passcode is atleast 4 buttons. Please try again.");
+
+				((AlertDialog)dialog).setButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+
+				break;
+				
+			case PAYMENTEXCEEDSLIMIT_DIALOG:
+
+				((AlertDialog)dialog).setTitle("Exceeds Limit");
+				((AlertDialog)dialog)
+					.setMessage("The payment exceeds your upper limit. Please try again.");
+
+				((AlertDialog)dialog).setButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+
+				break;
+	      }
+
+	}
 	protected android.app.Dialog onCreateDialog(int id) {
 		AlertDialog alertDialog = null;
 		ProgressDialog progressDialog = null;
