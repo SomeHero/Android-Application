@@ -21,26 +21,20 @@
         android:icon="@drawable/paidthx_icon"
         android:label="@string/app_name" >
         <activity
-            android:label="@string/app_name"
-            android:name=".SplashActivity" >
-            <intent-filter >
+            android:name=".SplashActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        
         <activity
             android:name=".CustomTabActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".SignUpTabActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".DialogPaystream"
             android:label="@string/app_name" >
         </activity>
         <activity
@@ -81,7 +75,32 @@
         </activity>
         <activity
             android:name=".PaystreamActivity"
-            android:label="@string/app_name" >
+            android:noHistory="true" >
+        </activity>
+        <activity
+            android:name=".Dialogs.DialogPaystream"
+            android:label="@string/app_name"
+            android:theme="@style/PaystreamDialog" >
+        </activity>
+        <activity
+            android:name=".Dialogs.IncomingPaymentDialog"
+            android:label="@string/app_name"
+            android:theme="@style/PaystreamDialog" >
+        </activity>
+        <activity
+            android:name=".Dialogs.IncomingRequesDialog"
+            android:label="@string/app_name"
+            android:theme="@style/PaystreamDialog" >
+        </activity>
+        <activity
+            android:name=".Dialogs.OutgoingPaymentDialog"
+            android:label="@string/app_name"
+            android:theme="@style/PaystreamDialog" >
+        </activity>
+        <activity
+            android:name=".Dialogs.OutgoingRequestDialog"
+            android:label="@string/app_name"
+            android:theme="@style/PaystreamDialog" >
         </activity>
     </application>
 

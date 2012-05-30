@@ -108,14 +108,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-
+
                 <TextView
                     android:id="@+id/recieved"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
                     android:paddingRight="15dp"
-                    android:text="Recieved:"
+                    android:text="Received:"
                     android:textColor="#000000"
                     android:textStyle="bold" />
 
@@ -126,14 +126,15 @@
                     android:text="May 25, 2012"
                     android:textColor="#000000" />
             </LinearLayout>
-
+
             <TextView
                 android:id="@+id/pay_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="83dp"
+                android:paddingLeft="86dp"
                 android:text="9:51:42 AM"
                 android:textColor="#000000" />
+
         </LinearLayout>
     </RelativeLayout>
 
@@ -200,7 +201,7 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/pay_accept"
+            android:id="@+id/pay_button1"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -211,15 +212,27 @@
             android:text="Accept" />
 
         <Button
-            android:id="@+id/pay_reject"
+            android:id="@+id/pay_button2"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="37dp"
+            android:layout_marginLeft="22dp"
             android:layout_toRightOf="@+id/pay_accept"
             android:minWidth="60dp"
             android:text="Reject" />
+
+        <Button
+            android:id="@+id/pay_button3"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="27dp"
+            android:layout_toRightOf="@+id/pay_reject"
+            android:minWidth="60dp"
+            android:text="Ignore" />
+
     </RelativeLayout>
 
 </LinearLayout>
