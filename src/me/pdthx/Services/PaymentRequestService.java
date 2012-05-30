@@ -34,7 +34,7 @@ public class PaymentRequestService {
 			HttpPost request = new HttpPost(ROOTURL + SUBMITPAYMENTREQUEST_URL);
 
 			JSONObject json = new JSONObject();
-			json.put("apiKey", paymentRequest.ApiKey);
+			json.put("apiKey", APIKEY);
 			json.put("userId", paymentRequest.UserId);
 			json.put("deviceId", paymentRequest.DeviceId);
 			json.put("recipientUri", paymentRequest.RecipientUri);
@@ -94,8 +94,6 @@ public class PaymentRequestService {
 				e.printStackTrace();
 			}
 
-			boolean success = false;
-			String message = "";
 			try {
 				paymentRequestResponse.Success = jsonResult.getBoolean("success");
 				paymentRequestResponse.Message = jsonResult.getString("message");

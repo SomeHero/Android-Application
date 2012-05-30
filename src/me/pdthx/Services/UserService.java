@@ -316,10 +316,10 @@ public class UserService {
 			JSONObject json = new JSONObject();
 
 			json.put("apiKey", APIKEY);
-			json.put("userName", userRegistrationRequest.getUserName());
-			json.put("emailAddress", userRegistrationRequest.getUserName());
-			json.put("password", userRegistrationRequest.getPassword());
-			json.put("deviceToken", userRegistrationRequest.getDeviceToken());
+			json.put("userName", userRegistrationRequest.UserName);
+			json.put("emailAddress", userRegistrationRequest.UserName);
+			json.put("password", userRegistrationRequest.Password);
+			json.put("deviceToken", userRegistrationRequest.DeviceToken);
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);

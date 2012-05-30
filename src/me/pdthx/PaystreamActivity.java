@@ -92,6 +92,7 @@ public final class PaystreamActivity extends BaseActivity  {
         mListView = (ListView) findViewById(R.id.lvPaystream);
         m_adapter = new PaystreamAdapter(this, R.layout.transaction_item, m_transactions);
         mListView.setAdapter(m_adapter);
+        mEmptyTextView = (TextView)findViewById(R.id.txtEmptyPaystream);
         
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override

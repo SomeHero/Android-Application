@@ -37,15 +37,11 @@ public class BaseActivity extends Activity {
 	protected SharedPreferences prefs;
 	protected AlertDialog alertDialog;
 	protected ProgressDialog progressDialog;
-	private AlertDialog alertDialog = null;
 
 	final private int INVALID_DOLLAR = 0;
 	final private int TESTING = 1;
 //	final private int INVALID_DOLLAR = 0;
 //	final private int TESTING = 1;
-	protected Facebook facebook = new Facebook("332189543469634");
-	protected AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(facebook);
-	protected static boolean signedInViaFacebook = false;
 
 	protected Facebook facebook = new Facebook("332189543469634");
 	protected AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(

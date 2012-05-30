@@ -83,7 +83,6 @@
         <activity
             android:name=".PaystreamActivity"
             android:label="@string/app_name"
-            android:name=".PaystreamActivity"
             android:noHistory="true" >
         </activity>
         <activity

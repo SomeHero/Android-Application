@@ -309,11 +309,11 @@ public class SignInActivity extends BaseActivity {
 								  String n = o.getString("name");
 								  String id = o.getString("id");
 								  Friends f = new Friends();
-								  f.email = id;										//f.id = id;
+								  f.id = id;										//f.id = id;
 								  f.name = n;
 								  friendList.add(f);
 								  //fbFriends.addContacts(f);
-								  Log.d(f.name, f.email);			//SWEEETTNNEEESESSS
+								  Log.d(f.name, f.id);			//SWEEETTNNEEESESSS
 
 							  }
 						} catch (JSONException e) {
@@ -363,7 +363,6 @@ public class SignInActivity extends BaseActivity {
 			userSignInResponse = userService.SignInUser(userSignInRequest);
 		} else {
 			UserFBSignInRequest userFBSignInRequest = new UserFBSignInRequest();
-			userFBSignInRequest.ApiKey = APIKEY;
 			userFBSignInRequest.IDNumber = login;
 			userFBSignInRequest.FirstName = firstName;
 			userFBSignInRequest.LastName = lastName;
