@@ -137,7 +137,7 @@ public final class SubmitPaymentActivity extends BaseActivity {
 
 		super.onCreate(savedInstanceState);
 		setTitle("Send Money");
-
+		
 		sdk = ZubhiumSDK.getZubhiumSDKInstance(SubmitPaymentActivity.this, getString(R.string.secret_key));
 
 		if(sdk != null){
@@ -311,8 +311,8 @@ public final class SubmitPaymentActivity extends BaseActivity {
 			});
 
 			return alertDialog;
-
-
+			
+			
 		case PAYMENTEXCEEDSLIMIT_DIALOG:
 			alertDialog = new AlertDialog.Builder(SubmitPaymentActivity.this)
 			.create();
@@ -336,8 +336,13 @@ public final class SubmitPaymentActivity extends BaseActivity {
 	protected void launchSendMoneyView() {
 		sendMoneyView = View.inflate(this, R.layout.contactmanager, null);
 		setContentView(sendMoneyView);
-
-		txtRecipientUri = (AutoCompleteTextView) findViewById(R.id.txtSendMoneyRecipient);
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_dropdown_item_1line, contactList.getContacts().toArray(
+						new String[0]));
+		txtRecipientUri = (AutoCompleteTextView) findViewById(R.id.txtRecipientUri);
+		txtRecipientUri.setAdapter(adapter);
+		
 		txtAmount = (EditText) findViewById(R.id.txtAmount);
 		txtComments = (EditText) findViewById(R.id.txtComments);
 		btnSendMoney = (Button) findViewById(R.id.btnSubmitPaymentRequest);

@@ -309,10 +309,10 @@ public class SignInActivity extends BaseActivity {
 								  String n = o.getString("name");
 								  String id = o.getString("id");
 								  Friends f = new Friends();
-								  f.id = id;										//f.id = id;
+								  f.id = id;
 								  f.name = n;
 								  friendList.add(f);
-								  //fbFriends.addContacts(f);
+								  fbFriends.addContacts(f);
 								  Log.d(f.name, f.id);			//SWEEETTNNEEESESSS
 
 							  }
@@ -363,6 +363,7 @@ public class SignInActivity extends BaseActivity {
 			userSignInResponse = userService.SignInUser(userSignInRequest);
 		} else {
 			UserFBSignInRequest userFBSignInRequest = new UserFBSignInRequest();
+			userFBSignInRequest.ApiKey = APIKEY;
 			userFBSignInRequest.IDNumber = login;
 			userFBSignInRequest.FirstName = firstName;
 			userFBSignInRequest.LastName = lastName;

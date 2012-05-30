@@ -62,15 +62,6 @@
                         android:textColor="#000000"
                         android:textStyle="bold" />
 
-
-
-
-                    <Button
-                        android:id="@+id/addRecipient"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Add Recipient" />
-
                     <AutoCompleteTextView
                         android:id="@+id/txtRequestMoneyRecipient"
                         android:layout_width="fill_parent"
@@ -79,7 +70,6 @@
 
                         <requestFocus />
                     </AutoCompleteTextView>
-              
 
                     <TextView
                         android:id="@+id/textView1"
@@ -125,5 +115,7 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-	</ScrollView>
+    </ScrollView>
+
 </LinearLayout>
+

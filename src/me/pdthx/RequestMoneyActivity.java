@@ -63,7 +63,7 @@ public class RequestMoneyActivity extends BaseActivity {
 	private PaymentResponse paymentRequestResponse;
 
 	ZubhiumSDK sdk ;
-	public static final String TAG = "RequestMoneyActivity";
+	private static final String TAG = "RequestMoneyActivity";
 	
 	private ContactList contactList = null;
 	
