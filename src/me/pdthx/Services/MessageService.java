@@ -119,6 +119,7 @@ public class MessageService {
 					messageResponse.MessageType = jsonResult.getString("messageType");
 					messageResponse.RecipientUri = jsonResult.getString("recipientUri");
 					messageResponse.SenderUri = jsonResult.getString("senderUri");
+					messageResponse.Direction = jsonResult.getString("direction");
 					
 					messageResponses.add(messageResponse);
 				}

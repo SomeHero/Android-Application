@@ -54,7 +54,7 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
                 	txtHeader.setVisibility(View.GONE);
                 }
 
-                if(o.getSenderUri().equalsIgnoreCase(prefs.getString("mobileNumber", "")))
+                if(o.getDirection().equalsIgnoreCase("Out"))
                 {
                 	if(o.getTransactionType().equalsIgnoreCase("Payment"))
                 		imgTransactionType.setImageResource(R.drawable.paystream_sent_icon);
@@ -69,8 +69,8 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
                 		imgTransactionType.setImageResource(R.drawable.paystream_request_received_icon);
                 }
                 if (txtRecipientUri != null) {
-                	if(o.getSenderUri().equalsIgnoreCase(prefs.getString("mobileNumber", "")))
-                		txtRecipientUri.setText(o.getRecipientUri());  
+                	 if(o.getDirection().equalsIgnoreCase("Out"))
+                		 txtRecipientUri.setText(o.getRecipientUri());  
 	                else
 	                	txtRecipientUri.setText(o.getSenderUri());
                 }

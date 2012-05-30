@@ -11,4 +11,5 @@ public class MessageResponse {
 	public Date CreateDate = null;
 	public String MessageStatus = "";
 	public String MessageType = "";
+	public String Direction = "";
 }
