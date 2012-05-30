@@ -24,7 +24,7 @@ public class PaymentRequestService {
 	private static final String SUBMITPAYMENTREQUEST_URL = "/PayStreamMessages?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
 
-	public PaymentRequestResponse SendPaymentRequest(PaymentRequestRequest paymentRequest) {
+	public PaymentRequestResponse sendPaymentRequest(PaymentRequestRequest paymentRequest) {
 		PaymentRequestResponse paymentRequestResponse = new PaymentRequestResponse();
 
 		HttpResponse response = null;
