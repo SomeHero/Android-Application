@@ -21,10 +21,12 @@ import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +46,7 @@ public class RequestMoneyActivity extends BaseActivity {
 	private EditText txtAmount;
 	private EditText txtComments;
 	private Button btnSendMoney;
+	private Button btnAddContacts;
 	private String passcode = "";
 
 	final private int SUBMITREQUEST_DIALOG = 0;
@@ -62,7 +65,7 @@ public class RequestMoneyActivity extends BaseActivity {
 	ZubhiumSDK sdk ;
 	public static final String TAG = "RequestMoneyActivity";
 	
-	//private ContactList contactList = null;
+	private ContactList contactList = null;
 	
 	Handler mHandler = new Handler() {
 
@@ -111,12 +114,14 @@ public class RequestMoneyActivity extends BaseActivity {
 	    if(sdk != null){
 	    	sdk.setCrashReportingMode(CrashReportingMode.SILENT);
 	    }
+	    prefs = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
 	    
 		setTitle("Request Money");
 
 		deviceId = Secure.getString(getBaseContext().getContentResolver(),
 				Secure.ANDROID_ID);
-		//contactList = new ContactList(getBaseContext());
+		contactList = new ContactList(getBaseContext());
 
 		launchRequestMoneyView();
 	}
@@ -238,13 +243,18 @@ public class RequestMoneyActivity extends BaseActivity {
 		sendRequestView = View.inflate(this, R.layout.requestmoney_controller, null);
 		setContentView(sendRequestView);
 
-		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-		//		R.layout.list_item, contactList.getContacts().toArray(
-		//				new String[0]));
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,																	//CURRENTLY WON'T PULL FB CONTACTS
+				android.R.layout.simple_dropdown_item_1line, contactList.getContacts().toArray(
+						new String[0]));
 
+	
 		txtRequestMoneyRecipient = (AutoCompleteTextView) findViewById(R.id.txtRequestMoneyRecipient);
-		//txtRequestMoneyRecipient.setAdapter(adapter);
-
+		txtRequestMoneyRecipient.setAdapter(adapter);
+		for (int x = 0; x < contactList.getContacts().size(); x++)
+		{
+			int sizeOfContactsList = contactList.getContacts().size();
+			Log.d(contactList.getContacts().get(x), "people");
+		}
 		txtAmount = (EditText) findViewById(R.id.txtRequestMoneyAmount);
 		txtAmount.addTextChangedListener(new TextWatcher() {
 			String current = "";
@@ -283,6 +293,18 @@ public class RequestMoneyActivity extends BaseActivity {
 		});
 		txtComments = (EditText) findViewById(R.id.txtRequestMoneyComments);
 		btnSendMoney = (Button) findViewById(R.id.btnSubmit);
+		btnAddContacts = (Button) findViewById(R.id.addRecipient);
+		
+		btnAddContacts.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(new Intent(RequestMoneyActivity.this, FriendListActivity.class), 1);//.getContext(),
+						//FriendListActivity.class), 1);				
+			}
+			
+		});
+		btnAddContacts.setVisibility(View.VISIBLE);
 		
 		btnSendMoney.setOnClickListener(new OnClickListener() {
 
@@ -328,7 +350,7 @@ public class RequestMoneyActivity extends BaseActivity {
 
 		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
 		TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
-		
+	
 		txtConfirmHeader.setText("Confirm Your Request");
 		txtConfirmBody.setText(String.format("To confirm your request for %s from %s, swipe you pin below.", txtAmount.getText(), txtRequestMoneyRecipient.getText()));
 		
@@ -366,11 +388,10 @@ public class RequestMoneyActivity extends BaseActivity {
 	}
 
 	protected void SubmitRequest() {
-		final SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext());
-
+		
 		PaymentRequest paymentRequest = new PaymentRequest();
-		paymentRequest.SenderAccountId = prefs.getString("userId", "");
+		paymentRequest.SenderAccountId = prefs.getString("paymentAccountId", "");
+		paymentRequest.SenderUri = prefs.getString("mobileNumber", "");
 		paymentRequest.DeviceId = deviceId;
 		paymentRequest.RecipientUri = recipientUri;
 		paymentRequest.Amount = amount;

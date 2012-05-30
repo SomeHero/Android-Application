@@ -110,6 +110,7 @@ public class ACHAccountSetupActivity extends BaseActivity {
 				if (txtAccountNumber.getText().toString().trim().equals(((EditText)findViewById(R.id.txtConfirmAccountNumber)).getText().toString().trim())) {
 
 					request = new ACHAccountSetupRequest();
+					request.UserId = prefs.getString("userId", "");
 					request.NameOnAccount = txtNameOnAccount.getText().toString().trim();
 					request.RoutingNumber = txtRoutingNumber.getText().toString().trim();
 					request.AccountNumber = txtAccountNumber.getText().toString().trim();

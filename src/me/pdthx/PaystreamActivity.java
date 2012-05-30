@@ -31,6 +31,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
+<<<<<<< HEAD
 public final class PaystreamActivity extends BaseActivity {
 
 	private ProgressDialog m_ProgressDialog = null;
@@ -39,6 +40,16 @@ public final class PaystreamActivity extends BaseActivity {
 	private Runnable viewOrders;
 
 	ZubhiumSDK sdk;
+=======
+public final class PaystreamActivity extends BaseActivity  {
+	
+	private ProgressDialog m_ProgressDialog = null; 
+    private ArrayList<PaystreamTransaction> m_transactions = null;
+    private PaystreamAdapter m_adapter;
+    private Runnable viewOrders;
+    	
+	ZubhiumSDK sdk ;
+>>>>>>> c5ebc0a1410cb1c778211eaaa70ed03b9f7d7048
 	public static final String TAG = "PaystreamActivity";
 	private ListView mListView = null;
 	private TextView mEmptyTextView = null;
@@ -90,6 +101,7 @@ public final class PaystreamActivity extends BaseActivity {
 		}
 	}
 
+<<<<<<< HEAD
 	private void showPaystreamController() {
 		setContentView(R.layout.paystream_controller);
 		m_transactions = new ArrayList<PaystreamTransaction>();
@@ -99,6 +111,16 @@ public final class PaystreamActivity extends BaseActivity {
 				m_transactions);
 		mListView.setAdapter(m_adapter);
 
+=======
+    private void showPaystreamController() {
+    	setContentView(R.layout.paystream_controller);
+        m_transactions = new ArrayList<PaystreamTransaction>();
+        mListView = (ListView) findViewById(R.id.lvPaystream);
+        m_adapter = new PaystreamAdapter(this, R.layout.transaction_item, m_transactions);
+        mListView.setAdapter(m_adapter);
+        mEmptyTextView = (TextView)findViewById(R.id.txtEmptyPaystream);
+        
+>>>>>>> c5ebc0a1410cb1c778211eaaa70ed03b9f7d7048
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -113,6 +135,94 @@ public final class PaystreamActivity extends BaseActivity {
 				startActivity(temp);
 			}
 		});
+<<<<<<< HEAD
+=======
+		
+		
+        viewOrders = new Runnable(){
+            @Override
+            public void run() {
+                getOrders();
+            }
+        };
+        Thread thread =  new Thread(null, viewOrders, "MagentoBackground");
+        thread.start();
+        m_ProgressDialog = ProgressDialog.show(PaystreamActivity.this,    
+              "Please wait...", "Retrieving your paystream...", true);
+    }
+    private Runnable returnRes = new Runnable() {
+
+        @Override
+        public void run() {
+            if(m_transactions != null && m_transactions.size() > 0){
+            	mEmptyTextView.setVisibility(View.GONE);
+                m_adapter.notifyDataSetChanged();
+                
+                for(int i=0;i<m_transactions.size();i++)
+                	m_adapter.add(m_transactions.get(i));
+            }
+            m_ProgressDialog.dismiss();
+            m_adapter.notifyDataSetChanged();
+            
+            if(m_transactions.isEmpty())
+            	mEmptyTextView.setVisibility(View.VISIBLE);
+            
+        }
+    };
+    private void getOrders()
+    {
+      try{
+    	  MessageService messageService = new MessageService();
+    	  MessageRequest messageRequest = new MessageRequest();
+    	  
+  		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String userId = prefs.getString("userId", "");
+		
+    	  messageRequest.UserId = userId;
+    	  ArrayList<MessageResponse> messages = messageService.GetMessages(messageRequest);
+    	  
+          m_transactions = new ArrayList<PaystreamTransaction>();
+          
+          DateFormat df = DateFormat.getDateInstance();
+          String previousHeader = "";
+          String currentHeader = "";
+          for (Iterator<MessageResponse> i = messages.iterator(); i.hasNext();) {
+        	  MessageResponse currentTransaction = (MessageResponse)i.next();
+        	  
+              PaystreamTransaction o1 = new PaystreamTransaction();
+              o1.setTransactionId(currentTransaction.MessageId);
+              o1.setSenderUri(currentTransaction.SenderUri);
+              o1.setRecipientUri(currentTransaction.RecipientUri);
+              o1.setAmount(currentTransaction.Amount);
+              o1.setCreateDate(currentTransaction.CreateDate);
+              o1.setLastUpdateDate(currentTransaction.CreateDate);
+              o1.setTransactionType(currentTransaction.MessageType);
+              o1.setTransactionStatus(currentTransaction.MessageStatus);
+              o1.setDirection(currentTransaction.Direction);
+
+              currentHeader = df.format(currentTransaction.CreateDate);
+              if(!previousHeader.equals(currentHeader)) {
+            	  o1.setHeader(currentHeader);
+            	  previousHeader = currentHeader;
+              } else {
+            	  o1.setHeader("");
+              }
+              
+              m_transactions.add(o1);
+          }
+         
+          //Log.i("ARRAY", ""+ m_transactions.size());
+        } catch (Exception e) { 
+          Log.e("BACKGROUND_PROC", e.getMessage());
+        }
+        runOnUiThread(returnRes);
+    }
+    @Override
+    public void OnSignOutComplete()
+    {
+//    	showSignInActivity();
+    }
+>>>>>>> c5ebc0a1410cb1c778211eaaa70ed03b9f7d7048
 
 		viewOrders = new Runnable() {
 			@Override

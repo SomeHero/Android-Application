@@ -20,6 +20,7 @@ public class PaystreamTransaction {
 	private Date _transactionSentDate = null;
 	private Date _createDate = null;
 	private Date _lastUpdateDate = null;
+	private String _direction = "";
 	
 	public String getHeader() {
 		return _header;
@@ -117,5 +118,11 @@ public class PaystreamTransaction {
 	}
 	public void setLastUpdateDate(Date lastUpdateDate) {
 		_lastUpdateDate = lastUpdateDate;
+	}
+	public void setDirection(String direction) {
+		_direction = direction;
+	}
+	public String getDirection() {
+		return _direction;
 	}
 }

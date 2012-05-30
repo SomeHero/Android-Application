@@ -64,7 +64,8 @@
                         android:text="Sign In or Create Your Account"
                         android:textColor="#000000"
                         android:textStyle="bold" />
-
+
+
                     <EditText
                         android:id="@+id/txtUserName"
                         android:layout_width="fill_parent"

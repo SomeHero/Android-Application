@@ -3,13 +3,16 @@ package me.pdthx.Services;
 import java.io.IOException;
 import java.io.InputStream;
 import me.pdthx.RestClient;
+import me.pdthx.Models.MeCodeModel;
 import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Requests.UserFBSignInRequest;
+import me.pdthx.Requests.UserMeCodeRequest;
 import me.pdthx.Requests.UserRegistrationRequest;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Requests.SecurityPinSetupRequest;
 import me.pdthx.Requests.UserSignInRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
+import me.pdthx.Responses.UserMeCodeResponse;
 import me.pdthx.Responses.UserRegistrationResponse;
 import me.pdthx.Responses.UserResponse;
 import me.pdthx.Responses.SecurityPinSetupResponse;
@@ -22,6 +25,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +39,7 @@ public class UserService {
 	private static final String REGISTER_URL = "/Users?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String SETUPSECURITYPIN_URL = "/Users/%s/Setup_SecurityPin?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String SETUPACHACCOUNT_URL = "/Users/%s/PaymentAccounts?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String MECODE_URL = "/Users/%s/mecodes";
 	private static final String USER_URL = "/Users/";
 	public UserService() {
 
@@ -311,10 +316,10 @@ public class UserService {
 			JSONObject json = new JSONObject();
 
 			json.put("apiKey", APIKEY);
-			json.put("userName", userRegistrationRequest.getUserName());
-			json.put("emailAddress", userRegistrationRequest.getUserName());
-			json.put("password", userRegistrationRequest.getPassword());
-			json.put("deviceToken", userRegistrationRequest.getDeviceToken());
+			json.put("userName", userRegistrationRequest.UserName);
+			json.put("emailAddress", userRegistrationRequest.UserName);
+			json.put("password", userRegistrationRequest.Password);
+			json.put("deviceToken", userRegistrationRequest.DeviceToken);
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);
@@ -503,6 +508,124 @@ public class UserService {
 		}
 
 		return userSecurityPinResponse;
+	}
+
+	public void createMeCode(UserMeCodeRequest userMeCodeRequest) {
+		HttpResponse response = null;
+		try {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost request = new HttpPost(ROOTURL + String.format(MECODE_URL, userMeCodeRequest.getUserId()));
+
+			JSONObject json = new JSONObject();
+			json.put("MeCode", userMeCodeRequest.getMeCodes().get(0));
+
+			StringEntity entity = new StringEntity(json.toString());
+			request.setEntity(entity);
+			request.setHeader("content-type", "application/json");
+
+			response = httpClient.execute(request);
+		} catch (ClientProtocolException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (response.getStatusLine().getStatusCode() != 201) {
+			System.out.println(response.getStatusLine().getReasonPhrase());
+		}
+	}
+
+	public UserMeCodeResponse getMeCodes(UserRequest userRequest) {
+		UserMeCodeResponse userMeCodeResponse = new UserMeCodeResponse();
+		HttpResponse response = null;
+		try {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost request = new HttpPost(ROOTURL + String.format(MECODE_URL, userRequest.UserId));
+
+			request.setHeader("content-type", "application/json");
+
+			response = httpClient.execute(request);
+		} catch (ClientProtocolException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		HttpEntity entity = response.getEntity();
+
+		if (entity != null) {
+
+			InputStream instream = null;
+			String result = "";
+			try {
+				instream = entity.getContent();
+				result = RestClient.convertStreamToString(instream);
+				// Log.i(TAG, "Result of converstion: [" + result +
+				// "]");
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				instream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			JSONArray jsonArray = null;
+
+			try {
+				jsonArray = new JSONArray(result);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+			int jsonArrayLength = jsonArray.length();
+			if (response.getStatusLine().getStatusCode() == 201) {
+				MeCodeModel[] meCodeArray = new MeCodeModel[jsonArrayLength];
+				try {
+					for (int i = 0; i < jsonArrayLength; i++) {
+						JSONObject jsonObject = jsonArray.getJSONObject(i);
+						MeCodeModel meCodeModel = new MeCodeModel();
+						
+						meCodeModel.setId(jsonObject.getString("Id"));
+						meCodeModel.setApprovedDate(jsonObject.getString("ApprovedDate"));
+						meCodeModel.setCreateDate(jsonObject.getString("CreateDate"));
+						meCodeModel.setActive(jsonObject.getBoolean("IsActive"));
+						meCodeModel.setApproved(jsonObject.getBoolean("IsApproved"));
+						meCodeModel.setMeCode(jsonObject.getString("MeCode"));
+						
+						meCodeArray[i] = meCodeModel;
+					}
+				}
+				catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+				userMeCodeResponse.populateMeCodes(meCodeArray);
+				userMeCodeResponse.setSuccess(true);
+			}
+			else {
+				userMeCodeResponse.setSuccess(false);
+				userMeCodeResponse.setReasonPhrase(response.getStatusLine().getReasonPhrase());
+				return userMeCodeResponse;
+			}
+		}
+		
+		return userMeCodeResponse;
 	}
 
 	//	//Don't use.

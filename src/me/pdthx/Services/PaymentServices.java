@@ -43,8 +43,8 @@ public class PaymentServices {
 			json.put("securityPin", submitPaymentRequest.SecurityPin);
 			json.put("senderUri", submitPaymentRequest.SenderUri);
 			json.put("recipientUri", submitPaymentRequest.RecipientUri);
-			json.put("amount", submitPaymentRequest.Amount.toString());
-			json.put("comment", submitPaymentRequest.Comments);
+			json.put("amount", submitPaymentRequest.Amount);
+			json.put("comments", submitPaymentRequest.Comments);
 			json.put("senderAccountId", submitPaymentRequest.SenderAccountId);
 			json.put("messageType", "Payment");
 

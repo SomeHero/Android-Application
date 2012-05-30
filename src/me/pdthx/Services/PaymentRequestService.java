@@ -20,11 +20,11 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class PaymentRequestService {
-	private static final String ROOTURL = "http://beta.paidthx.com";
-	private static final String SUBMITPAYMENTREQUEST_URL = "/Services/PaymentRequestService/PaymentRequests?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String ROOTURL = "http://23.21.203.171/api/internal/api";
+	private static final String SUBMITPAYMENTREQUEST_URL = "/PayStreamMessages?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
 
-	public PaymentRequestResponse SendPaymentRequest(PaymentRequestRequest paymentRequest) {
+	public PaymentRequestResponse sendPaymentRequest(PaymentRequestRequest paymentRequest) {
 		PaymentRequestResponse paymentRequestResponse = new PaymentRequestResponse();
 
 		HttpResponse response = null;
@@ -34,7 +34,7 @@ public class PaymentRequestService {
 			HttpPost request = new HttpPost(ROOTURL + SUBMITPAYMENTREQUEST_URL);
 
 			JSONObject json = new JSONObject();
-			json.put("apiKey", paymentRequest.ApiKey);
+			json.put("apiKey", APIKEY);
 			json.put("userId", paymentRequest.UserId);
 			json.put("deviceId", paymentRequest.DeviceId);
 			json.put("recipientUri", paymentRequest.RecipientUri);
@@ -94,8 +94,6 @@ public class PaymentRequestService {
 				e.printStackTrace();
 			}
 
-			boolean success = false;
-			String message = "";
 			try {
 				paymentRequestResponse.Success = jsonResult.getBoolean("success");
 				paymentRequestResponse.Message = jsonResult.getString("message");

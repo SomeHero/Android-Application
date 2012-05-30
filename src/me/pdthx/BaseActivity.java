@@ -4,8 +4,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import com.facebook.android.*;
-import com.facebook.android.AsyncFacebookRunner.*;
+import me.pdthx.Requests.UserMeCodeRequest;
+import me.pdthx.Services.UserService;
+
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.AsyncFacebookRunner.RequestListener;
+import com.facebook.android.Facebook;
+import com.facebook.android.FacebookError;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,15 +30,17 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class BaseActivity extends Activity{
+public class BaseActivity extends Activity {
 	protected SharedPreferences prefs;
 	protected AlertDialog alertDialog;
 	protected ProgressDialog progressDialog;
-	
+
 //	final private int INVALID_DOLLAR = 0;
 //	final private int TESTING = 1;
+
 	protected Facebook facebook = new Facebook("332189543469634");
-	protected AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(facebook);
+	protected AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(
+			facebook);
 	protected static boolean signedInViaFacebook = false;
 
 	@Override
@@ -44,7 +51,7 @@ public class BaseActivity extends Activity{
 
 		alertDialog = new AlertDialog.Builder(BaseActivity.this).create();
 		progressDialog = new ProgressDialog(BaseActivity.this);
-		
+
 		validateFBLogin();
 
 
@@ -53,10 +60,10 @@ public class BaseActivity extends Activity{
 	private void validateFBLogin() {
 		String access_token = prefs.getString("access_token", null);
 		long expires = prefs.getLong("access_expires", 0);
-		if(access_token != null) {
+		if (access_token != null) {
 			facebook.setAccessToken(access_token);
 		}
-		if(expires != 0) {
+		if (expires != 0) {
 			facebook.setAccessExpires(expires);
 		}
 	}
@@ -112,32 +119,38 @@ public class BaseActivity extends Activity{
 		mAsyncRunner.logout(this, new RequestListener() {
 			@Override
 			public void onComplete(String response, Object state) {
+				signedInViaFacebook = false;
 				Editor editor = prefs.edit();
 				editor.remove("userId");
 				editor.commit();
 			}
 
 			@Override
-			public void onIOException(IOException e, Object state) {}
+			public void onIOException(IOException e, Object state) {
+			}
 
 			@Override
 			public void onFileNotFoundException(FileNotFoundException e,
-					Object state) {}
+					Object state) {
+			}
 
 			@Override
 			public void onMalformedURLException(MalformedURLException e,
-					Object state) {}
+					Object state) {
+			}
 
 			@Override
-			public void onFacebookError(FacebookError e, Object state) {}
+			public void onFacebookError(FacebookError e, Object state) {
+			}
+
 		});
 	}
-	
-	public void showProfileSetup()
-	{
+
+	public void showProfileSetup() {
 		LayoutInflater inflator = getLayoutInflater();
 		View view = inflator.inflate(R.layout.setup_profile, null, false);
-		view.startAnimation(AnimationUtils.loadAnimation(getBaseContext(), R.anim.slide_left_out));
+		view.startAnimation(AnimationUtils.loadAnimation(getBaseContext(),
+				R.anim.slide_left_out));
 		setContentView(view);
 
 		Button btnCreateProfile = (Button) findViewById(R.id.btnSaveChanges);
@@ -162,18 +175,15 @@ public class BaseActivity extends Activity{
 				}
 				else
 				{
-					//TODO: Setup MeCode UserService, call it.
-					alertDialog.setTitle("Under Construction");
-					alertDialog.setMessage("The profile page is under construction.");
-					alertDialog.setButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									dialog.dismiss();
-								}
-							});
-
-					alertDialog.show();
+					progressDialog.setMessage("Adding Me Code..");
+					progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+					UserService userService = new UserService();
+					UserMeCodeRequest userMeCodeRequest = new UserMeCodeRequest(
+							prefs.getString("userId", ""), txtMeCode.getText().toString().trim());
+					progressDialog.show();
+					userService.createMeCode(userMeCodeRequest);
+					txtMeCode.setText("");
+					progressDialog.dismiss();
 				}
 			}
 		});

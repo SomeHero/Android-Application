@@ -6,6 +6,7 @@ public class MeCodeModel {
 	private boolean isActive;
 	private boolean isApproved;
 	private String meCode;
+	private String id;
 	
 	public MeCodeModel() {
 		
@@ -40,5 +41,13 @@ public class MeCodeModel {
 	}
 	public void setMeCode(String meCode) {
 		this.meCode = meCode;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }
