@@ -39,13 +39,6 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-<<<<<<< HEAD
-=======
-            android:name=".DialogPaystream"
-            android:theme="@style/PaystreamDialog" >
-        </activity>
-        <activity
->>>>>>> c5ebc0a1410cb1c778211eaaa70ed03b9f7d7048
             android:name=".ACHAccountSetupActivity"
             android:label="@string/app_name" >
         </activity>
@@ -83,7 +76,6 @@
         </activity>
         <activity
             android:name=".PaystreamActivity"
-<<<<<<< HEAD
             android:noHistory="true" >
         </activity>
         <activity
@@ -110,14 +102,10 @@
             android:name=".Dialogs.OutgoingRequestDialog"
             android:label="@string/app_name"
             android:theme="@style/PaystreamDialog" >
-=======
-            android:label="@string/app_name"
-            android:noHistory="true" >
         </activity>
         <activity
             android:name=".FriendListActivity"
             android:label="@string/app_name" >
->>>>>>> c5ebc0a1410cb1c778211eaaa70ed03b9f7d7048
         </activity>
     </application>
 

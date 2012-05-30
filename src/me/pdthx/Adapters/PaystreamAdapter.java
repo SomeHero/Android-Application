@@ -18,11 +18,6 @@ import android.widget.TextView;
 
 public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 
-<<<<<<< HEAD
-	private ArrayList<PaystreamTransaction> items;
-	private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-	private SharedPreferences prefs;;
-=======
     private ArrayList<PaystreamTransaction> items;
     private NumberFormat currencyFormatter =  NumberFormat.getCurrencyInstance();
     private SharedPreferences prefs;;
@@ -32,16 +27,6 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
             this.items = items;
             prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
->>>>>>> c5ebc0a1410cb1c778211eaaa70ed03b9f7d7048
-
-	public PaystreamAdapter(Context context, int textViewResourceId,
-			ArrayList<PaystreamTransaction> items) {
-		super(context, textViewResourceId, items);
-		this.items = items;
-		prefs = PreferenceManager.getDefaultSharedPreferences(context);
-	}
-
-<<<<<<< HEAD
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
@@ -73,99 +58,32 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 				txtHeader.setVisibility(View.GONE);
 			}
 
-			if (o.getSenderUri().equalsIgnoreCase(
-					prefs.getString("mobileNumber", ""))) {
-				if (o.getTransactionType().equalsIgnoreCase("Payment"))
-					imgTransactionType
-							.setImageResource(R.drawable.paystream_sent_icon);
-				else
-					imgTransactionType
-							.setImageResource(R.drawable.paystream_request_sent_icon);
-			} else {
-				if (o.getTransactionType().equalsIgnoreCase("Payment"))
-					imgTransactionType
-							.setImageResource(R.drawable.paystream_received_icon);
-				else
-					imgTransactionType
-							.setImageResource(R.drawable.paystream_request_received_icon);
-			}
-			if (txtRecipientUri != null) {
-				if (o.getSenderUri().equalsIgnoreCase(
-						prefs.getString("mobileNumber", "")))
-					txtRecipientUri.setText(o.getRecipientUri());
-				else
-					txtRecipientUri.setText(o.getSenderUri());
-			}
-			if (txtPaymentDate != null) {
-				txtPaymentDate.setText(timeFormat.format(o.getCreateDate()));
-			}
-			if (imgStatus != null) {
-				if (o.getTransactionStatus().toUpperCase() == "SUBMITTED") {
-					imgStatus
-							.setImageResource(R.drawable.transaction_pending_icon);
-				} else if (o.getTransactionStatus().toUpperCase() == "PENDING") {
-					imgStatus
-							.setImageResource(R.drawable.transaction_pending_icon);
-				} else if (o.getTransactionStatus().toUpperCase() == "COMPLETE") {
-					imgStatus
-							.setImageResource(R.drawable.transaction_complete_icon);
-				} else {
-					imgStatus
-							.setImageResource(R.drawable.transaction_pending_icon);
-				}
-				// else if(o.getTransactionStatus().toUpperCase() == "FAILED") {
-				// imgStatus.setImageResource(R.drawable.transaction_failed_icon);
-				// }else if(o.getTransactionStatus().toUpperCase() ==
-				// "RETURNED") {
-				// imgStatus.setImageResource(R.drawable.transaction_returned_icon);
-				// } else if(o.getTransactionStatus().toUpperCase() ==
-				// "CANCELLED") {
-				// imgStatus.setImageResource(R.drawable.transaction_cancelled_icon);
-				// }
-			}
-			if (txtAmount != null) {
-				txtAmount.setText(currencyFormatter.format(o.getAmount()));
-			}
-		}
-		Drawable drawableRow = v.getResources().getDrawable(
-				R.drawable.transaction_row_background);
-		Drawable drawableRowAlt = v.getResources().getDrawable(
-				R.drawable.transaction_rowalt_background);
-		if (position % 2 == 0)
-			v.setBackgroundDrawable(drawableRow);
-		else
-			v.setBackgroundDrawable(drawableRowAlt);
-
-		return v;
-	}
-}
-=======
-                if(o.getDirection().equalsIgnoreCase("Out"))
-                {
-                	if(o.getTransactionType().equalsIgnoreCase("Payment"))
-                		imgTransactionType.setImageResource(R.drawable.paystream_sent_icon);
-                	else
-                		imgTransactionType.setImageResource(R.drawable.paystream_request_sent_icon);
-                }
-                else
-                {
-                	if(o.getTransactionType().equalsIgnoreCase("Payment"))
-                		imgTransactionType.setImageResource(R.drawable.paystream_received_icon);
-                	else
-                		imgTransactionType.setImageResource(R.drawable.paystream_request_received_icon);
-                }
-                if (txtRecipientUri != null) {
-                	 if(o.getDirection().equalsIgnoreCase("Out"))
-                		 txtRecipientUri.setText(o.getRecipientUri());  
+			 if(o.getDirection().equalsIgnoreCase("Out"))
+             {
+             	if(o.getTransactionType().equalsIgnoreCase("Payment"))
+             		imgTransactionType.setImageResource(R.drawable.paystream_sent_icon);
+             	else
+             		imgTransactionType.setImageResource(R.drawable.paystream_request_sent_icon);
+             }
+             else
+             {
+             	if(o.getTransactionType().equalsIgnoreCase("Payment"))
+             		imgTransactionType.setImageResource(R.drawable.paystream_received_icon);
+             	else
+             		imgTransactionType.setImageResource(R.drawable.paystream_request_received_icon);
+             }
+             if (txtRecipientUri != null) {
+             	 if(o.getDirection().equalsIgnoreCase("Out"))
+             		 txtRecipientUri.setText(o.getRecipientUri());  
 	                else
 	                	txtRecipientUri.setText(o.getSenderUri());
-                }
-                if(txtPaymentDate != null) {
-                	txtPaymentDate.setText(timeFormat.format(o.getCreateDate()));
-                }
-                    if(imgStatus != null) {
-                    	if(o.getTransactionStatus().toUpperCase() == "SUBMITTED") {
-                    		imgStatus.setImageResource(R.drawable.transaction_pending_icon);
+             }
+             if(txtPaymentDate != null) {
+             	txtPaymentDate.setText(timeFormat.format(o.getCreateDate()));
+             }
+                 if(imgStatus != null) {
+                 	if(o.getTransactionStatus().toUpperCase() == "SUBMITTED") {
+                 		imgStatus.setImageResource(R.drawable.transaction_pending_icon);
 						} else if(o.getTransactionStatus().toUpperCase() == "PENDING") {
 							imgStatus.setImageResource(R.drawable.transaction_pending_icon);
 						} else if(o.getTransactionStatus().toUpperCase() == "COMPLETE") {
@@ -173,26 +91,26 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 						}else {
 							imgStatus.setImageResource(R.drawable.transaction_pending_icon);
 						}
-                    	//else if(o.getTransactionStatus().toUpperCase() == "FAILED") {
+                 	//else if(o.getTransactionStatus().toUpperCase() == "FAILED") {
 							//imgStatus.setImageResource(R.drawable.transaction_failed_icon);
 						//}else if(o.getTransactionStatus().toUpperCase() == "RETURNED") {
 						//	imgStatus.setImageResource(R.drawable.transaction_returned_icon);
 						//} else if(o.getTransactionStatus().toUpperCase() == "CANCELLED") {
 						//	imgStatus.setImageResource(R.drawable.transaction_cancelled_icon);
 						//}
-                    }
-                    if(txtAmount != null){
-                          txtAmount.setText(currencyFormatter.format(o.getAmount()));
-                    }
-            }
-            Drawable drawableRow=v.getResources().getDrawable(R.drawable.transaction_row_background);
-            Drawable drawableRowAlt = v.getResources().getDrawable(R.drawable.transaction_rowalt_background);
-            if(position % 2 == 0)
-            	v.setBackgroundDrawable(drawableRow);
-            else
-            	v.setBackgroundDrawable(drawableRowAlt);
-            
-            return v;
-    }
+                 }
+                 if(txtAmount != null){
+                       txtAmount.setText(currencyFormatter.format(o.getAmount()));
+                 }
+         }
+         Drawable drawableRow=v.getResources().getDrawable(R.drawable.transaction_row_background);
+         Drawable drawableRowAlt = v.getResources().getDrawable(R.drawable.transaction_rowalt_background);
+         if(position % 2 == 0)
+         	v.setBackgroundDrawable(drawableRow);
+         else
+         	v.setBackgroundDrawable(drawableRowAlt);
+         
+         return v;
+	}
 }
->>>>>>> c5ebc0a1410cb1c778211eaaa70ed03b9f7d7048
+
