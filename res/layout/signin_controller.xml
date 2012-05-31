@@ -64,7 +64,13 @@
                         android:text="Sign In or Create Your Account"
                         android:textColor="#000000"
                         android:textStyle="bold" />
-
+
+                    <Button
+                        android:id="@+id/btnFBSignIn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_facebook"
+                         />
 
                     <EditText
                         android:id="@+id/txtUserName"
@@ -86,13 +92,7 @@
                         android:inputType="textPassword"
                         android:lines="1"
                         android:maxLength="20"
-                        android:maxLines="1" />
-
-					<Button
-						android:id="@+id/btnFBSignIn"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:text="Button" />	
+                        android:maxLines="1" />	
 						
                     <Button
                         android:id="@+id/btnSignInSubmit"

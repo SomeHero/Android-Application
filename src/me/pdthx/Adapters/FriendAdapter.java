@@ -16,12 +16,10 @@ import android.widget.TextView;
 
 public final class FriendAdapter extends ArrayAdapter<Friends> {
 
-	private ArrayList<Friends> items;
 
 	public FriendAdapter(Context context, int textViewResourceId,
 			ArrayList<Friends> items) {
 		super(context, textViewResourceId);
-		this.items = items;
 	}
 
 	@Override
@@ -32,7 +30,7 @@ public final class FriendAdapter extends ArrayAdapter<Friends> {
 					Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.friend_item, null);
 		}
-		Friends o = items.get(position);
+		Friends o = getItem(position);
 		if (o != null) {
 			TextView txtHeader = (TextView) v
 					.findViewById(R.id.list_header_title);

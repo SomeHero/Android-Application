@@ -315,7 +315,7 @@ public class RequestMoneyActivity extends BaseActivity {
 
 				recipientUri = txtRequestMoneyRecipient.getText().toString();
 				amount = Double.parseDouble(txtAmount.getText().toString()
-						.replace("$", ""));
+						.replaceAll("[$,]*", ""));
 				comments = txtComments.getText().toString();
 
 				if (isValid & recipientUri.length() == 0) {

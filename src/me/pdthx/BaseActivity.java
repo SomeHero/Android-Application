@@ -3,7 +3,9 @@ package me.pdthx;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
+import me.pdthx.Models.Friends;
 import me.pdthx.Requests.UserChangeSecurityPinRequest;
 import me.pdthx.Requests.UserMeCodeRequest;
 import me.pdthx.Responses.UserChangeSecurityPinResponse;
@@ -30,10 +32,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.MotionEvent;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,21 +47,23 @@ public class BaseActivity extends Activity {
 	protected ProgressDialog progressDialog;
 	
 	private String message;
-	
+
 	final private int USERSECURITYPIN_COMPLETE = 1;
 	final private int USERSECURITYPIN_FAILED = 2;
 	final private int USERSECURITYPIN_INVALIDLENGTH = 5;
 	final private int USERSECURITYPIN_CONFIRMMISMATCH = 6;
 	final private int INVALID_DOLLAR = 0;
 //	final private int TESTING = 1;
-	
+
 	private UserChangeSecurityPinRequest request;
 	private UserChangeSecurityPinResponse response;
+	
 
 	protected Facebook facebook = new Facebook("332189543469634");
 	protected AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(
 			facebook);
 	protected static boolean signedInViaFacebook = false;
+	protected static ArrayList<Friends> friendList = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -117,10 +121,10 @@ public class BaseActivity extends Activity {
 							dialog.dismiss();
 						}
 					});
-					
+
 					alertDialog.show();
 	        		break;
-	        		
+
 	        	case(USERSECURITYPIN_CONFIRMMISMATCH):
 					alertDialog.setTitle("Security Pins Mismatch.");
 					alertDialog
@@ -130,7 +134,7 @@ public class BaseActivity extends Activity {
 							dialog.dismiss();
 						}
 					});
-					
+
 					alertDialog.show();
 	        		break;
         	}
@@ -152,6 +156,7 @@ public class BaseActivity extends Activity {
 		super.onResume();
 		facebook.extendAccessToken(this, null);
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
@@ -233,7 +238,7 @@ public class BaseActivity extends Activity {
 		setContentView(view);
 
 		Button btnCreateProfile = (Button) findViewById(R.id.btnSaveChanges);
-		
+
 		btnCreateProfile.setOnClickListener(new OnClickListener() {
 			public void onClick(View argO) {
 
@@ -256,40 +261,40 @@ public class BaseActivity extends Activity {
 				}
 			}
 		});
-		
+
 		Button btnChangeSecurityPin = (Button) findViewById(R.id.btnChangeSecurityPin);
-		
+
 		if (prefs.getBoolean("setupSecurityPin", false)) {
-		
+
 		btnChangeSecurityPin.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
+
 				request = new UserChangeSecurityPinRequest();
 				response = new UserChangeSecurityPinResponse();
 				changeSecurityPinCurrent();
 			}
-			
+
 		});
 		}
 		else {
-			
+
 			btnChangeSecurityPin.setText("Setup Security Pin");
 			btnChangeSecurityPin.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					
+
 					startActivity(new Intent(v.getContext(), SecurityPinSetupActivity.class));
 				}
-				
+
 			});
 		}
 	}
-	
+
 	private void changeSecurityPinCurrent() {
 		final Dialog d = new Dialog(this, R.style.CustomDialogTheme);
 		d.setContentView(R.layout.security_dialog);
@@ -299,7 +304,7 @@ public class BaseActivity extends Activity {
 
 		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
 		TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
-	
+
 		txtConfirmHeader.setText("Current Pin");
 		txtConfirmBody.setText("To change your security pin, input your current security pin below.");
 
@@ -309,31 +314,37 @@ public class BaseActivity extends Activity {
 		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				
+
 				String passcode = ctrlSecurityPin.getPasscode();
 
 				if (passcode.length() > 3) {
 					request.CurrentSecurityPin = passcode;
 					d.dismiss();
-					
+
 					changeSecurityPinNew();
-					
+
 				} else
 					BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
-				
+
 				return false;
 
 			}
 		});
-		
+
 	}
-	
+
 	private void changeSecurityPinNew() {
 		final Dialog d = new Dialog(this, R.style.CustomDialogTheme);
-		d.setContentView(R.layout.setup_security_dialog);
+		d.setContentView(R.layout.security_dialog);
 
 	 	d.getWindow().setLayout(400, 600);
 		d.show();
+
+		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
+		TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
+
+		txtConfirmHeader.setText("New Security Pin");
+		txtConfirmBody.setText("To change your security pin, input your new security pin below.");
 
 
 		final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
@@ -341,30 +352,36 @@ public class BaseActivity extends Activity {
 		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				
+
 				String passcode = ctrlSecurityPin.getPasscode();
 
 				if (passcode.length() > 3) {
 					request.NewSecurityPin = passcode;
 					d.dismiss();
-					
+
 					changeSecurityPinConfirmNew();
-					
+
 				} else
 					BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
-				
+
 				return false;
 
 			}
 		});
 	}
-	
+
 	private void changeSecurityPinConfirmNew() {
 		final Dialog d = new Dialog(this, R.style.CustomDialogTheme);
-		d.setContentView(R.layout.confirm_security_dialog);
+		d.setContentView(R.layout.security_dialog);
 
 	 	d.getWindow().setLayout(400, 600);
 		d.show();
+
+		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
+		TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
+
+		txtConfirmHeader.setText("Confirm Security Pin");
+		txtConfirmBody.setText("Put in your new security pin to confirm.");
 
 
 		final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
@@ -372,18 +389,18 @@ public class BaseActivity extends Activity {
 		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				
+
 				String passcode = ctrlSecurityPin.getPasscode();
 
 				if (passcode.length() > 3  && passcode.equals(request.NewSecurityPin)) {
 					d.dismiss();
-					
+
 					progressDialog = new ProgressDialog(v.getContext());
 					//ProgressDialog.Builder progressDialog = new ProgressDialog.Builder(parent);
 					progressDialog.setMessage("Setting up your security pin...");
 					progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 					progressDialog.show();
-					
+
 					Thread thread = new Thread(new Runnable() {
 
 						@Override
@@ -397,7 +414,7 @@ public class BaseActivity extends Activity {
 								e.printStackTrace();
 							}
 							progressDialog.dismiss();
-							
+
 							if(response.Success) {
 
 								BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_COMPLETE);
@@ -405,21 +422,20 @@ public class BaseActivity extends Activity {
 							else {
 								message = response.ReasonPhrase;
 								BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_FAILED);
-								
+
 							}
 						}
 
 					});
 					thread.start();
-					
+
 				} 
 				else {
 					BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_CONFIRMMISMATCH);
 				}
-				
+
 				return false;
 			}
 		});
 	}
-
 }
