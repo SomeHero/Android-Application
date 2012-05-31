@@ -31,7 +31,7 @@ public class SecurityPinSetupActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	
-		setContentView(R.layout.setup_security_controller);
+		setContentView(View.inflate(this, R.layout.setup_security_controller, null));
 		
 		btnSetupPin = (Button)findViewById(R.id.btnSetupSecurityPin);
 		
@@ -172,8 +172,10 @@ public class SecurityPinSetupActivity extends BaseActivity {
 					});
 					thread.start();
 					
-				} else
+				} 
+				else {
 					securityPinSetupHandler.sendEmptyMessage(USERSECURITYPIN_CONFIRMMISMATCH);
+				}
 				
 				return false;
 			}

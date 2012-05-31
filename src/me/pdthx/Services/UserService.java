@@ -5,6 +5,7 @@ import java.io.InputStream;
 import me.pdthx.RestClient;
 import me.pdthx.Models.MeCodeModel;
 import me.pdthx.Requests.ACHAccountSetupRequest;
+import me.pdthx.Requests.UserChangeSecurityPinRequest;
 import me.pdthx.Requests.UserFBSignInRequest;
 import me.pdthx.Requests.UserMeCodeRequest;
 import me.pdthx.Requests.UserRegistrationRequest;
@@ -12,6 +13,7 @@ import me.pdthx.Requests.UserRequest;
 import me.pdthx.Requests.SecurityPinSetupRequest;
 import me.pdthx.Requests.UserSignInRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
+import me.pdthx.Responses.UserChangeSecurityPinResponse;
 import me.pdthx.Responses.UserMeCodeResponse;
 import me.pdthx.Responses.UserRegistrationResponse;
 import me.pdthx.Responses.UserResponse;
@@ -38,6 +40,7 @@ public class UserService {
 	private static final String USERFBSIGNINSERVICE_URL = "/Users/signin_withfacebook?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String REGISTER_URL = "/Users?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String SETUPSECURITYPIN_URL = "/Users/%s/Setup_SecurityPin?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String CHANGESECURITYPIN_URL = "/Users/%s/change_securitypin";
 	private static final String SETUPACHACCOUNT_URL = "/Users/%s/PaymentAccounts?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String MECODE_URL = "/Users/%s/mecodes";
 	private static final String USER_URL = "/Users/";
@@ -508,6 +511,46 @@ public class UserService {
 		}
 
 		return userSecurityPinResponse;
+	}
+	
+	public UserChangeSecurityPinResponse changeSecurityPin(UserChangeSecurityPinRequest userSecurityPinRequest) {
+		UserChangeSecurityPinResponse userChangeSecurityPinResponse = new UserChangeSecurityPinResponse();
+		HttpResponse response = null;
+		try {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost request = new HttpPost(ROOTURL + String.format(CHANGESECURITYPIN_URL, userSecurityPinRequest.UserId));
+
+			JSONObject json = new JSONObject();
+			json.put("currentSecurityPin", userSecurityPinRequest.CurrentSecurityPin);
+			json.put("newSecurityPin", userSecurityPinRequest.NewSecurityPin);
+
+			StringEntity entity = new StringEntity(json.toString());
+			request.setEntity(entity);
+			request.setHeader("content-type", "application/json");
+
+			response = httpClient.execute(request);
+		} catch (ClientProtocolException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		if (response.getStatusLine().getStatusCode() == 200) {
+
+			userChangeSecurityPinResponse.Success = true;
+		}
+		else {
+			userChangeSecurityPinResponse.Success = false;
+			userChangeSecurityPinResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+		}
+
+		return userChangeSecurityPinResponse;
 	}
 
 	public void createMeCode(UserMeCodeRequest userMeCodeRequest) {

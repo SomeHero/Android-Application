@@ -322,7 +322,7 @@ public class RequestMoneyActivity extends BaseActivity {
 					showDialog(NORECIPIENTSPECIFIED_DIALOG);
 					isValid = false;
 				}
-				if (isValid & amount == (double) 0) {
+				if (isValid & amount == 0) {
 					showDialog(NOAMOUNTSPECIFIED_DIALOG);
 					isValid = false;
 				}
@@ -372,7 +372,7 @@ public class RequestMoneyActivity extends BaseActivity {
 					recipientUri = txtRequestMoneyRecipient.getText()
 							.toString();
 					amount = Double.parseDouble(txtAmount.getText().toString()
-							.replace("$", ""));
+							.replaceAll("[$,]*", ""));
 					comments = txtComments.getText().toString();
 					passcode = ctrlSecurityPin.getPasscode();
 

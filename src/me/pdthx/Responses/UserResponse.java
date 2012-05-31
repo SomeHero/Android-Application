@@ -10,6 +10,6 @@ public class UserResponse {
 	public String UserStatus;
 	public String FirstName;
 	public String LastName;
-	public Double TotalMoneySent = 0.0;
-	public Double TotalMoneyReceived = 0.0;
+	public double TotalMoneySent = 0.0;
+	public double TotalMoneyReceived = 0.0;
 }

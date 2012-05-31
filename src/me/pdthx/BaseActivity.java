@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import me.pdthx.Requests.UserChangeSecurityPinRequest;
 import me.pdthx.Requests.UserMeCodeRequest;
+import me.pdthx.Responses.UserChangeSecurityPinResponse;
 import me.pdthx.Services.UserService;
 
 import com.facebook.android.AsyncFacebookRunner;
@@ -14,29 +16,45 @@ import com.facebook.android.FacebookError;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class BaseActivity extends Activity {
 	protected SharedPreferences prefs;
 	protected AlertDialog alertDialog;
 	protected ProgressDialog progressDialog;
-
-//	final private int INVALID_DOLLAR = 0;
+	
+	private String message;
+	
+	final private int USERSECURITYPIN_COMPLETE = 1;
+	final private int USERSECURITYPIN_FAILED = 2;
+	final private int USERSECURITYPIN_INVALIDLENGTH = 5;
+	final private int USERSECURITYPIN_CONFIRMMISMATCH = 6;
+	final private int INVALID_DOLLAR = 0;
 //	final private int TESTING = 1;
+	
+	private UserChangeSecurityPinRequest request;
+	private UserChangeSecurityPinResponse response;
 
 	protected Facebook facebook = new Facebook("332189543469634");
 	protected AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(
@@ -56,6 +74,68 @@ public class BaseActivity extends Activity {
 
 
 	}
+	
+	private Handler BaseActivityHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+        	switch(msg.what) {
+        	
+        		case(USERSECURITYPIN_COMPLETE):
+        			alertDialog.setTitle("Password changed");
+				alertDialog.setMessage("Your passcode was successfully changed.");
+				alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int which) {
+							dialog.dismiss();
+						}
+					});
+
+				alertDialog.show();
+        		break;
+	        	case(INVALID_DOLLAR):
+	        		alertDialog.setTitle("Invalid MeCode");
+					alertDialog.setMessage("The meCode must begin with a '$'. Please try again.");
+					alertDialog.setButton("OK",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss();
+							}
+						});
+
+					alertDialog.show();
+	        		break;
+	        	case(USERSECURITYPIN_FAILED):
+					alertDialog.setTitle("Setup Failed");
+					alertDialog
+							.setMessage("There was an error setting up your security pin: " + 
+									message + " Please try again.");
+					alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+					
+					alertDialog.show();
+	        		break;
+	        		
+	        	case(USERSECURITYPIN_CONFIRMMISMATCH):
+					alertDialog.setTitle("Security Pins Mismatch.");
+					alertDialog
+							.setMessage("The two security pins you just swiped don't match. Please try again.");
+					alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+					
+					alertDialog.show();
+	        		break;
+        	}
+        }
+	};
 
 	private void validateFBLogin() {
 		String access_token = prefs.getString("access_token", null);
@@ -160,17 +240,7 @@ public class BaseActivity extends Activity {
 				EditText txtMeCode = (EditText) findViewById(R.id.meCode);
 				if (txtMeCode.getText().toString().charAt(0) != '$')
 				{
-					alertDialog.setTitle("Invalid MeCode");
-					alertDialog.setMessage("The meCode must begin with a '$'. Please try again.");
-					alertDialog.setButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									dialog.dismiss();
-								}
-							});
-
-					alertDialog.show();
+					BaseActivityHandler.sendEmptyMessage(INVALID_DOLLAR);
 				}
 				else
 				{
@@ -184,6 +254,170 @@ public class BaseActivity extends Activity {
 					txtMeCode.setText("");
 					progressDialog.dismiss();
 				}
+			}
+		});
+		
+		Button btnChangeSecurityPin = (Button) findViewById(R.id.btnChangeSecurityPin);
+		
+		if (prefs.getBoolean("setupSecurityPin", false)) {
+		
+		btnChangeSecurityPin.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				request = new UserChangeSecurityPinRequest();
+				response = new UserChangeSecurityPinResponse();
+				changeSecurityPinCurrent();
+			}
+			
+		});
+		}
+		else {
+			
+			btnChangeSecurityPin.setText("Setup Security Pin");
+			btnChangeSecurityPin.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					
+					startActivity(new Intent(v.getContext(), SecurityPinSetupActivity.class));
+				}
+				
+			});
+		}
+	}
+	
+	private void changeSecurityPinCurrent() {
+		final Dialog d = new Dialog(this, R.style.CustomDialogTheme);
+		d.setContentView(R.layout.security_dialog);
+
+	 	d.getWindow().setLayout(400, 600);
+		d.show();
+
+		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
+		TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
+	
+		txtConfirmHeader.setText("Current Pin");
+		txtConfirmBody.setText("To change your security pin, input your current security pin below.");
+
+
+		final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
+		ctrlSecurityPin.invalidate();
+		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				String passcode = ctrlSecurityPin.getPasscode();
+
+				if (passcode.length() > 3) {
+					request.CurrentSecurityPin = passcode;
+					d.dismiss();
+					
+					changeSecurityPinNew();
+					
+				} else
+					BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
+				
+				return false;
+
+			}
+		});
+		
+	}
+	
+	private void changeSecurityPinNew() {
+		final Dialog d = new Dialog(this, R.style.CustomDialogTheme);
+		d.setContentView(R.layout.setup_security_dialog);
+
+	 	d.getWindow().setLayout(400, 600);
+		d.show();
+
+
+		final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
+		ctrlSecurityPin.invalidate();
+		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				String passcode = ctrlSecurityPin.getPasscode();
+
+				if (passcode.length() > 3) {
+					request.NewSecurityPin = passcode;
+					d.dismiss();
+					
+					changeSecurityPinConfirmNew();
+					
+				} else
+					BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
+				
+				return false;
+
+			}
+		});
+	}
+	
+	private void changeSecurityPinConfirmNew() {
+		final Dialog d = new Dialog(this, R.style.CustomDialogTheme);
+		d.setContentView(R.layout.confirm_security_dialog);
+
+	 	d.getWindow().setLayout(400, 600);
+		d.show();
+
+
+		final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
+		ctrlSecurityPin.invalidate();
+		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				String passcode = ctrlSecurityPin.getPasscode();
+
+				if (passcode.length() > 3  && passcode.equals(request.NewSecurityPin)) {
+					d.dismiss();
+					
+					progressDialog = new ProgressDialog(v.getContext());
+					//ProgressDialog.Builder progressDialog = new ProgressDialog.Builder(parent);
+					progressDialog.setMessage("Setting up your security pin...");
+					progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+					progressDialog.show();
+					
+					Thread thread = new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							try {
+								UserService userService = new UserService();
+								request.UserId = prefs.getString("userId", "");
+								response = userService.changeSecurityPin(request);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							progressDialog.dismiss();
+							
+							if(response.Success) {
+
+								BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_COMPLETE);
+							}
+							else {
+								message = response.ReasonPhrase;
+								BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_FAILED);
+								
+							}
+						}
+
+					});
+					thread.start();
+					
+				} 
+				else {
+					BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_CONFIRMMISMATCH);
+				}
+				
+				return false;
 			}
 		});
 	}

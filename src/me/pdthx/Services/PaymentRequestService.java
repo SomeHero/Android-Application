@@ -38,7 +38,7 @@ public class PaymentRequestService {
 			json.put("userId", paymentRequest.UserId);
 			json.put("deviceId", paymentRequest.DeviceId);
 			json.put("recipientUri", paymentRequest.RecipientUri);
-			json.put("amount", paymentRequest.Amount.toString());
+			json.put("amount", paymentRequest.Amount);
 			json.put("comments", paymentRequest.Comments);
 			json.put("securityPin", paymentRequest.SecurityPin);
 			

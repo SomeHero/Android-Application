@@ -11,6 +11,6 @@ public class SubmitPaymentResponse {
 	public String UserId = "";
 	public String FromMobileNumber = "";
 	public String ToMobileNumber = "";
-	public Double Amount = (double) 0;
+	public double Amount = 0;
 	public String Comment = "";
 }

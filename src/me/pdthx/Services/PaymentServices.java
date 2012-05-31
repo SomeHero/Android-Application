@@ -47,6 +47,8 @@ public class PaymentServices {
 			json.put("comments", submitPaymentRequest.Comments);
 			json.put("senderAccountId", submitPaymentRequest.SenderAccountId);
 			json.put("messageType", "Payment");
+			json.put("latitude", submitPaymentRequest.Latitude);
+			json.put("longitude", submitPaymentRequest.Longitude);
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);

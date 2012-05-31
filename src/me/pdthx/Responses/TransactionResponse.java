@@ -7,7 +7,7 @@ public class TransactionResponse {
 	public String PaymentId = "";
 	public String SenderUri = "";
 	public String RecipientUri = "";
-	public Double Amount = 0.0;
+	public double Amount = 0.0;
 	public Number ACHTransactionId;
 	public String TransactionStatus;
 	public String TransactionCategory;

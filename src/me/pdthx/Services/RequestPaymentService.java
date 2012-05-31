@@ -39,7 +39,7 @@ public class RequestPaymentService {
 			json.put("securityPin", paymentRequest.SecurityPin);
 			json.put("senderUri", paymentRequest.SenderUri);
 			json.put("recipientUri", paymentRequest.RecipientUri);
-			json.put("amount", paymentRequest.Amount.toString());
+			json.put("amount", paymentRequest.Amount);
 			json.put("comments", paymentRequest.Comments);
 			json.put("senderAccountId", paymentRequest.SenderAccountId);
 			json.put("messageType", "PaymentRequest");

@@ -6,7 +6,7 @@ public class PaymentRequest {
 	public String DeviceId = "";
 	public String SenderUri = "";
 	public String RecipientUri = "";
-	public Double Amount = (double) 0;
+	public double Amount = 0;
 	public String Comments = "";
 	public String SecurityPin = "";
 }

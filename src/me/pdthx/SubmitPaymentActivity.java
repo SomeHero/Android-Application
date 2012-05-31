@@ -42,7 +42,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,7 +53,7 @@ public final class SubmitPaymentActivity extends BaseActivity {
 	//	private String deviceId;
 	private String mobileNumber;
 	private String recipientUri = "";
-	private Double amount = (double) 0;
+	private double amount = 0;
 	private String comments = "";
 	private String userId = "";
 	private String senderAccountId = "";
@@ -67,7 +66,7 @@ public final class SubmitPaymentActivity extends BaseActivity {
 	private AutoCompleteTextView txtRecipientUri;
 	private EditText txtAmount;
 	private EditText txtComments;
-	private ContactList contactList;
+	//private ContactList contactList;
 	private Button btnSendMoney;
 	private String passcode = "";
 
@@ -181,7 +180,7 @@ public final class SubmitPaymentActivity extends BaseActivity {
 		//				Secure.ANDROID_ID);
 		userId = prefs.getString("userId", "");
 		mobileNumber = prefs.getString("mobileNumber", "");
-		contactList = new ContactList(getBaseContext());
+		//contactList = new ContactList(getBaseContext());
 
 
 		launchSendMoneyView();
@@ -341,7 +340,7 @@ public final class SubmitPaymentActivity extends BaseActivity {
 //		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 //				android.R.layout.simple_dropdown_item_1line, contactList.getContacts().toArray(
 //						new String[0]));
-		txtRecipientUri = (AutoCompleteTextView) findViewById(R.id.txtRecipientUri);
+		txtRecipientUri = (AutoCompleteTextView) findViewById(R.id.txtSendMoneyRecipient);
 //		txtRecipientUri.setAdapter(adapter);
 		
 		txtAmount = (EditText) findViewById(R.id.txtAmount);
@@ -393,15 +392,15 @@ public final class SubmitPaymentActivity extends BaseActivity {
 				boolean isValid = true;
 
 				recipientUri = txtRecipientUri.getText().toString();
-				amount = Double.parseDouble(txtAmount.getText().toString()
-						.replace("$", ""));
+				amount = Double.parseDouble(txtAmount.getText().toString().trim()
+						.replaceAll("[$,]*", ""));
 				comments = txtComments.getText().toString();
 
 				if (isValid && recipientUri.length() == 0) {
 					showDialog(NORECIPIENTSPECIFIED_DIALOG);
 					isValid = false;
 				}
-				if (isValid && amount == (double) 0) {
+				if (isValid && amount == 0) {
 					showDialog(NOAMOUNTSPECIFIED_DIALOG);
 					isValid = false;
 				}

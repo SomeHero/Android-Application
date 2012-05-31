@@ -7,88 +7,137 @@
 <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
-
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout01" 
-    android:layout_width="fill_parent" 
-    android:layout_height="30dp">
-<ImageView 
-    android:src="@drawable/logo"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:contentDescription="PaidThx Logo"
-    android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
- />
-<TextView android:text="Create a Profile" 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" 
-            android:layout_alignParentBottom="true"
-            android:textColor="#41924b" />
 
-</RelativeLayout>   
-<LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dip"
-        android:padding="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/panel_background" >
-                   <LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="280dip"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical">
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/RelativeLayout01"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp" >
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:contentDescription="PaidThx Logo"
+                    android:src="@drawable/logo" />
 
-                                       <TextView
-                                           android:id="@+id/textView1"
-                                           android:layout_width="wrap_content"
-                                           android:layout_height="wrap_content"
-                                           android:layout_marginBottom="10dp"
-                                           android:layout_marginTop="4dp"
-                                           android:text="Create Your MeCode"
-                                           android:textColor="#000000"
-                                           android:textStyle="bold" />
-        
-                                           <TextView
-                                               android:id="@+id/txtnote"
-                                               android:layout_width="fill_parent"
-                                               android:layout_height="wrap_content"
-                                               android:layout_gravity="fill_horizontal"
-                                               android:gravity="center_horizontal"
-                                               android:text="Your MeCode must begin with a $ sign."
-                                               android:textColor="#000000"
-                                               android:textSize="10dip" />
-    
-        <EditText
-            android:id="@+id/meCode"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="Enter Your MeCode"
-            android:inputType="text"
-            android:maxLength="100"
-            android:maxLines="1" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="Create a Profile"
+                    android:textColor="#41924b" />
+            </RelativeLayout>
 
-<Button
-    android:id="@+id/btnSaveChanges"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
-    android:text="Save Changes" />
+            <LinearLayout
+                android:id="@+id/relativeLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/panel_background"
+                android:orientation="vertical"
+                android:padding="10dp" >
 
-</LinearLayout>
-</LinearLayout>
-</LinearLayout>
+                <LinearLayout
+                    android:id="@+id/relativeLayout2"
+                    android:layout_width="280dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="4dp"
+                        android:text="Create Your MeCode"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtnote"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill_horizontal"
+                        android:gravity="center_horizontal"
+                        android:text="Your MeCode must begin with a $ sign."
+                        android:textColor="#000000"
+                        android:textSize="10dip" />
+
+                    <EditText
+                        android:id="@+id/meCode"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:hint="Enter Your MeCode"
+                        android:inputType="text"
+                        android:maxLength="100"
+                        android:maxLines="1" />
+
+                    <Button
+                        android:id="@+id/btnSaveChanges"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="Save Changes" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/relativeLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/panel_background"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <LinearLayout
+                    android:id="@+id/relativeLayout2"
+                    android:layout_width="280dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="vertical" >
+                    <TextView
+                        android:id="@+id/textViewPin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="4dp"
+                        android:text="Change your Security Pin"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtNotePin"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="Click the button to change your security pin."
+                        android:textColor="#000000"
+                        android:textSize="10dip" />
+
+                    <Button
+                        android:id="@+id/btnChangeSecurityPin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="Change Pin" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
 </ScrollView>
 </LinearLayout>
