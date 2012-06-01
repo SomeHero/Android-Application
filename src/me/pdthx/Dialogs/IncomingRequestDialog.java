@@ -6,7 +6,11 @@ import me.pdthx.R;
 import me.pdthx.R.drawable;
 import me.pdthx.R.id;
 import me.pdthx.R.layout;
+import me.pdthx.Services.MessageService;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -17,6 +21,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,6 +35,7 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 	private Double amount = 0.0;
 	private String transactionStatus = "";
 	private String transactionType = "";
+	private String transactionId = "";
 	private String createDate = null;
 	private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 
@@ -76,6 +82,7 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 		amount = extras.getDouble("amount");
 		transactionType = extras.getString("transactionType");
 		transactionStatus = extras.getString("transactionStat");
+		transactionId = extras.getString("transactionId");
 
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		getWindow().setGravity(Gravity.BOTTOM | Gravity.RIGHT);
@@ -111,13 +118,13 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 
 		payStatusPic = (ImageView) findViewById(R.id.pay_status);
 		if (payStatusPic != null) {
-			if (transactionStatus.toUpperCase() == "SUBMITTED") {
+			if (transactionStatus.toUpperCase().equals("SUBMITTED")) {
 				payStatusPic
 						.setImageResource(R.drawable.transaction_pending_icon);
-			} else if (transactionStatus.toUpperCase() == "PENDING") {
+			} else if (transactionStatus.toUpperCase().equals("PENDING")) {
 				payStatusPic
 						.setImageResource(R.drawable.transaction_pending_icon);
-			} else if (transactionStatus.toUpperCase() == "COMPLETE") {
+			} else if (transactionStatus.toUpperCase().equals("COMPLETE")) {
 				payStatusPic
 						.setImageResource(R.drawable.transaction_complete_icon);
 			} else {
@@ -136,11 +143,11 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 
 		payStatusText = (TextView) findViewById(R.id.pay_status_txt);
 		if (payStatusText != null) {
-			if (transactionStatus.toUpperCase() == "SUBMITTED") {
+			if (transactionStatus.toUpperCase().equals("SUBMITTED")) {
 				payStatusText.setText("Submitted");
-			} else if (transactionStatus.toUpperCase() == "PENDING") {
+			} else if (transactionStatus.toUpperCase().equals("PENDING")) {
 				payStatusText.setText("Pending");
-			} else if (transactionStatus.toUpperCase() == "COMPLETE") {
+			} else if (transactionStatus.toUpperCase().equals("COMPLETE")) {
 				payStatusText.setText("Complete");
 			} else {
 				payStatusText.setText("Pending");
@@ -167,12 +174,146 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 
 		// sendMessage = (EditText) findViewById(R.id.pay_send_msg);
 
+		/*
+		 * Accept: send request to message service that a request was accepted
+		 * 
+		 * Reject: send request to message service that a request was rejected
+		 * 
+		 * Ignore : send request to message serve that a request was ignored
+		 */
+
 		button1 = (Button) findViewById(R.id.pay_button1);
-		button1.setText("Accept");
+		if (button1 != null) {
+			if (transactionStatus.toUpperCase().equals("SUBMITTED")
+					|| transactionStatus.toUpperCase().equals("PENDING")) {
+				button1.setText("Accept");
+				button1.setOnClickListener(new OnClickListener() {
+					public void onClick(View argO) {
+						try {
+							MessageService messageService = new MessageService();
+							int isSuccess = messageService
+									.AcceptRequestMessage(transactionId);
+							// if the message request is a success, then return
+							// to
+							// user
+							// that message was sent
+							if (isSuccess == 200) {
+								Intent intent = new Intent(
+										getApplicationContext(),
+										PaymentAlertDialog.class);
+								intent.putExtra("msg", "Your request with "
+										+ recipientUri + " was sent.");
+								intent.putExtra("title", "Accept...");
+								startActivity(intent);
+								finish();
+							} else {
+								Intent intent = new Intent(
+										getApplicationContext(),
+										PaymentAlertDialog.class);
+								intent.putExtra("msg",
+										"The accept service has not yet been implemented. \n \n Service code " + isSuccess + " occurred.");
+								intent.putExtra("title", "Accept...");
+								startActivity(intent);
+								finish();
+							}
+						} catch (Exception e) {
+							//
+						}
+					}
+				});
+			} else {
+				button1.setVisibility(View.GONE);
+			}
+		}
+
 		button2 = (Button) findViewById(R.id.pay_button2);
-		button2.setText("Reject");
+		if (button2 != null) {
+
+			if (transactionStatus.toUpperCase().equals("SUBMITTED")
+					|| transactionStatus.toUpperCase().equals("PENDING")) {
+				button2.setText("Reject");
+				button2.setOnClickListener(new OnClickListener() {
+					public void onClick(View argO) {
+						try {
+							MessageService messageService = new MessageService();
+							int isSuccess = messageService
+									.RejectRequestMessage(transactionId);
+							// if message succeeded, reject was done.
+
+							if (isSuccess == 200) {
+								Intent intent = new Intent(
+										getApplicationContext(),
+										PaymentAlertDialog.class);
+								intent.putExtra("msg", "Your request with "
+										+ recipientUri + " was rejected.");
+								intent.putExtra("title", "Reject...");
+								startActivity(intent);
+								finish();
+							} else {
+								Intent intent = new Intent(
+										getApplicationContext(),
+										PaymentAlertDialog.class);
+								intent.putExtra("msg",
+										"The reject service has not yet been implemented. \n \n Service code " + isSuccess + " occurred.");
+								intent.putExtra("title", "Reject...");
+								startActivity(intent);
+								finish();
+							}
+						} catch (Exception e) {
+							//
+						}
+					}
+				});
+			} else {
+				button2.setVisibility(View.GONE);
+			}
+		}
 		button3 = (Button) findViewById(R.id.pay_button3);
-		button3.setText("Ignore");
+		if (button3 != null) {
+
+			if (transactionStatus.toUpperCase().equals("SUBMITTED")
+					|| transactionStatus.toUpperCase().equals("PENDING")) {
+				button3.setText("Ignore");
+				button3.setOnClickListener(new OnClickListener() {
+					public void onClick(View argO) {
+						try {
+							MessageService messageService = new MessageService();
+							int isSuccess = messageService
+									.IgnoreRequestMessage(transactionId);
+							// if the message request is a success, then return
+							// to
+							// user
+							// that message was sent
+
+							if (isSuccess == 200) {
+								Intent intent = new Intent(
+										getApplicationContext(),
+										PaymentAlertDialog.class);
+								intent.putExtra("msg", "Your request with "
+										+ recipientUri + " was sent to server.");
+								intent.putExtra("title", "Ignore...");
+								startActivity(intent);
+								finish();
+							} else {
+								Intent intent = new Intent(
+										getApplicationContext(),
+										PaymentAlertDialog.class);
+								intent.putExtra("msg",
+										"The ignore service has not yet been implemented. \n \n Service code "
+												+ isSuccess + " occurred.");
+								intent.putExtra("title", "Ignore...");
+								startActivity(intent);
+								finish();
+							}
+						} catch (Exception e) {
+							//
+						}
+					}
+				});
+			} else {
+				button3.setVisibility(View.GONE);
+			}
+		}
 	}
 
 	@Override
