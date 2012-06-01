@@ -20,7 +20,7 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 
     private ArrayList<PaystreamTransaction> items;
     private NumberFormat currencyFormatter =  NumberFormat.getCurrencyInstance();
-    private SharedPreferences prefs;;
+    private SharedPreferences prefs;
     
     public PaystreamAdapter(Context context, int textViewResourceId, ArrayList<PaystreamTransaction> items) {
             super(context, textViewResourceId, items);

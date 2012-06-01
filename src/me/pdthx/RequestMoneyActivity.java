@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import com.zubhium.ZubhiumSDK;
 import com.zubhium.ZubhiumSDK.CrashReportingMode;
 
+import me.pdthx.Models.Friends;
 import me.pdthx.Requests.PaymentRequest;
 import me.pdthx.Responses.PaymentResponse;
 import me.pdthx.Services.RequestPaymentService;
@@ -21,13 +22,10 @@ import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -41,14 +39,17 @@ public class RequestMoneyActivity extends BaseActivity {
 	private double amount = 0;
 	private String comments = "";
 	private String errorMessage = "";
+	
+	private Friends friend = null;
 
-	private AutoCompleteTextView txtRequestMoneyRecipient;
 	private EditText txtAmount;
 	private EditText txtComments;
 	private Button btnSendMoney;
 	private Button btnAddContacts;
 	private String passcode = "";
 
+	
+	final private int ADDING_FRIEND = 6;
 	final private int SUBMITREQUEST_DIALOG = 0;
 	final private int NORECIPIENTSPECIFIED_DIALOG = 1;
 	final private int NOAMOUNTSPECIFIED_DIALOG = 2;
@@ -63,9 +64,7 @@ public class RequestMoneyActivity extends BaseActivity {
 	private PaymentResponse paymentRequestResponse;
 
 	ZubhiumSDK sdk ;
-	private static final String TAG = "RequestMoneyActivity";
-	
-	private ContactList contactList = null;
+	public static final String TAG = "RequestMoneyActivity";
 	
 	Handler mHandler = new Handler() {
 
@@ -121,7 +120,6 @@ public class RequestMoneyActivity extends BaseActivity {
 
 		deviceId = Secure.getString(getBaseContext().getContentResolver(),
 				Secure.ANDROID_ID);
-		contactList = new ContactList(getBaseContext());
 
 		launchRequestMoneyView();
 	}
@@ -183,8 +181,8 @@ public class RequestMoneyActivity extends BaseActivity {
 					removeDialog(4);
 					dialog.dismiss();
 
-					txtRequestMoneyRecipient.setText("");
-					txtRequestMoneyRecipient.requestFocus();
+					friend = null;
+					btnAddContacts.setText("Add recipient");
 					txtAmount.setText("$0.00");
 					txtComments.setText("");
 				}
@@ -193,9 +191,9 @@ public class RequestMoneyActivity extends BaseActivity {
 		case NORECIPIENTSPECIFIED_DIALOG:
 			alertDialog = new AlertDialog.Builder(RequestMoneyActivity.this)
 					.create();
-			alertDialog.setTitle("Please Specify a Recipient");
+			alertDialog.setTitle("Invalid Recipient");
 			alertDialog
-					.setMessage("You must specify the recipient's mobile number.");
+					.setMessage("Your recipient does not have a valid paypoint.");
 
 			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
@@ -243,18 +241,17 @@ public class RequestMoneyActivity extends BaseActivity {
 		sendRequestView = View.inflate(this, R.layout.requestmoney_controller, null);
 		setContentView(sendRequestView);
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,																	//CURRENTLY WON'T PULL FB CONTACTS
-				android.R.layout.simple_dropdown_item_1line, contactList.getContacts().toArray(
-						new String[0]));
-
-	
-		txtRequestMoneyRecipient = (AutoCompleteTextView) findViewById(R.id.txtRequestMoneyRecipient);
-		txtRequestMoneyRecipient.setAdapter(adapter);
-		for (int x = 0; x < contactList.getContacts().size(); x++)
-		{
-			int sizeOfContactsList = contactList.getContacts().size();
-			Log.d(contactList.getContacts().get(x), "people");
-		}
+//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,																	//CURRENTLY WON'T PULL FB CONTACTS
+//				android.R.layout.simple_dropdown_item_1line, contactList.getContacts().toArray(
+//						new String[0]));
+//
+//	
+//		txtRequestMoneyRecipient = (AutoCompleteTextView) findViewById(R.id.txtRequestMoneyRecipient);
+//		txtRequestMoneyRecipient.setAdapter(adapter);
+//		for (int x = 0; x < contactList.getContacts().size(); x++)
+//		{
+//			Log.d(contactList.getContacts().get(x), "Phone Contacts");
+//		}
 		txtAmount = (EditText) findViewById(R.id.txtRequestMoneyAmount);
 		txtAmount.addTextChangedListener(new TextWatcher() {
 			String current = "";
@@ -299,8 +296,7 @@ public class RequestMoneyActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				startActivityForResult(new Intent(RequestMoneyActivity.this, FriendListActivity.class), 1);//.getContext(),
-						//FriendListActivity.class), 1);				
+				startActivityForResult(new Intent(RequestMoneyActivity.this, FriendListActivity.class), ADDING_FRIEND);			
 			}
 			
 		});
@@ -313,7 +309,6 @@ public class RequestMoneyActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				boolean isValid = true;
 
-				recipientUri = txtRequestMoneyRecipient.getText().toString();
 				amount = Double.parseDouble(txtAmount.getText().toString()
 						.replaceAll("[$,]*", ""));
 				comments = txtComments.getText().toString();
@@ -327,9 +322,7 @@ public class RequestMoneyActivity extends BaseActivity {
 					isValid = false;
 				}
 				if (isValid) {
-					if(prefs.getString("userId", "").length() == 0 || prefs.getString("mobileNumber", "").length() == 0)		{
-//					    SignInActivity signInActivity = new SignInActivity(RequestMoneyActivity.this, mHandler, prefs);
-//					    signInActivity.showSignInActivity();
+					if(prefs.getString("userId", "").length() == 0) {
 						startActivityForResult(new Intent(RequestMoneyActivity.this, SignInActivity.class), 1);
 					} else {
 						showSecurityPinDialog();
@@ -339,6 +332,25 @@ public class RequestMoneyActivity extends BaseActivity {
 		});
 
 		btnSendMoney.setVisibility(View.VISIBLE);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			if (requestCode == ADDING_FRIEND) {
+				Bundle bundle = data.getExtras();
+				friend = friendList.get(bundle.getInt("index"));
+				
+				if (friend.type.equals("Facebook")) {
+					recipientUri = "fb_" + friend.id; 
+				}
+				else {
+					recipientUri = "" + friend.phoneNumber;
+				}
+				
+				btnAddContacts.setText(friend.name + ": " + friend.id);
+			}
+		}
 	}
 
 	protected void showSecurityPinDialog() {
@@ -352,7 +364,7 @@ public class RequestMoneyActivity extends BaseActivity {
 		TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
 	
 		txtConfirmHeader.setText("Confirm Your Request");
-		txtConfirmBody.setText(String.format("To confirm your request for %s from %s, swipe you pin below.", txtAmount.getText(), txtRequestMoneyRecipient.getText()));
+		txtConfirmBody.setText(String.format("To confirm your request for %s from %s, swipe you pin below.", txtAmount.getText(), friend.name));
 		
 		Button btnCancel = (Button) d.findViewById(R.id.btnCancelSendMoney);
 		btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -369,8 +381,7 @@ public class RequestMoneyActivity extends BaseActivity {
 				passcode = ctrlSecurityPin.getPasscode();
 
 				if (passcode.length() > 3) {
-					recipientUri = txtRequestMoneyRecipient.getText()
-							.toString();
+					
 					amount = Double.parseDouble(txtAmount.getText().toString()
 							.replaceAll("[$,]*", ""));
 					comments = txtComments.getText().toString();
@@ -391,7 +402,7 @@ public class RequestMoneyActivity extends BaseActivity {
 		
 		PaymentRequest paymentRequest = new PaymentRequest();
 		paymentRequest.SenderAccountId = prefs.getString("paymentAccountId", "");
-		paymentRequest.SenderUri = prefs.getString("mobileNumber", "");
+		paymentRequest.SenderUri = prefs.getString("login", "");
 		paymentRequest.DeviceId = deviceId;
 		paymentRequest.RecipientUri = recipientUri;
 		paymentRequest.Amount = amount;

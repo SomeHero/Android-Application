@@ -9,4 +9,5 @@ public class PaymentRequest {
 	public double Amount = 0;
 	public String Comments = "";
 	public String SecurityPin = "";
+	
 }

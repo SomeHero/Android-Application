@@ -14,6 +14,7 @@ import android.widget.ImageView;
 public class SplashActivity extends Activity {
 	// Set the display time, in milliseconds (or extract it out as a
 	// configurable parameter)
+	
 	private boolean isActive = true;
 	private final int SPLASH_DISPLAY_LENGTH = 4000;
 	private AnimationDrawable frameAnimation;
@@ -38,6 +39,7 @@ public class SplashActivity extends Activity {
 			@Override
 			public void run(){
 				try{
+					
 					int waited = 0;
 					while(isActive && waited < SPLASH_DISPLAY_LENGTH){
 						sleep(100);

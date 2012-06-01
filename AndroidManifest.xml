@@ -18,6 +18,7 @@
         android:targetSdkVersion="4" />
 
     <application
+        android:screenOrientation="portrait"
         android:debuggable="true"
         android:icon="@drawable/paidthx_icon"
         android:label="@string/app_name" >

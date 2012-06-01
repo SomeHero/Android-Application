@@ -1,19 +1,9 @@
 package me.pdthx;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.Collections;
 
-import com.facebook.android.FacebookError;
-import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.zubhium.ZubhiumSDK;
 import me.pdthx.Adapters.FriendAdapter;
-import me.pdthx.Dialogs.OutgoingRequestDialog;
-import me.pdthx.Models.Friends;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,16 +17,12 @@ import android.widget.AdapterView.OnItemClickListener;
 public final class FriendListActivity extends BaseActivity  {
 	
 	private ProgressDialog m_ProgressDialog = null; 
-    private ArrayList<Friends> m_friends = null;
     private FriendAdapter m_adapter;
-    private Runnable viewOrders;
     //private ArrayList<Friends> friendList = new ArrayList<Friends>();
-    private Intent fbIntent;
 	ZubhiumSDK sdk ;
-	private static final String TAG = "FriendListActivity";
+	public static final String TAG = "FriendListActivity";
 	private ListView mListView = null;
 	private TextView mEmptyTextView = null;
-    
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,21 +102,22 @@ public final class FriendListActivity extends BaseActivity  {
 		m_ProgressDialog = ProgressDialog.show(FriendListActivity.this,    
 	              "Please wait...", "Retrieving your friends...", true);
 		
-		m_friends = new ArrayList<Friends>();
         mListView = (ListView) findViewById(R.id.lvFriends);
        
         mEmptyTextView = (TextView)findViewById(R.id.txtEmptyFriendList);
         
-    	if(friendList != null && friendList.size() > 0) {	
+    	if(friendList != null && friendList.size() > 0) {
+    		Collections.sort(friendList);
         	mEmptyTextView.setVisibility(View.GONE);
         	m_adapter = new FriendAdapter(this, R.layout.friend_item, friendList);
-            mListView.setAdapter(m_adapter);
+        	mListView.setAdapter(m_adapter);
             m_adapter.notifyDataSetChanged();
+            
         }
     	else {
     		Log.e("hi", "way to go dude");
     		//mEmptyTextView.setVisibility(View.VISIBLE);
-    	}        	
+    	}
         
         m_ProgressDialog.dismiss();
         
@@ -139,14 +126,12 @@ public final class FriendListActivity extends BaseActivity  {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-
-				Friends ref = m_friends.get(arg2);
-				// first determine type of transaction
-				// 1) incoming or outgoing
-				// 2) payment or request
-				// then create intent on appropriate dialog class
-				Intent temp = new Intent(getApplicationContext(), OutgoingRequestDialog.class);
-				startActivity(temp);
+				
+				Intent data = new Intent();
+				data.putExtra("index", arg2);
+				
+				setResult(RESULT_OK, data);
+				finish();
 			}
 		});
 		

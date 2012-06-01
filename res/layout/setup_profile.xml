@@ -52,9 +52,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:orientation="vertical" >
-
+
                     <TextView
-                        android:id="@+id/textView1"
+                        android:id="@+id/textMeCode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
@@ -62,9 +62,9 @@
                         android:text="Create Your MeCode"
                         android:textColor="#000000"
                         android:textStyle="bold" />
-
+
                     <TextView
-                        android:id="@+id/txtnote"
+                        android:id="@+id/txtNoteMeCode"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="fill_horizontal"
@@ -108,8 +108,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:orientation="vertical" >
-                    <TextView
-                        android:id="@+id/textViewPin"
+                    <TextView
+                        android:id="@+id/txtViewPin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"

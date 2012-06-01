@@ -22,7 +22,7 @@ import android.widget.TextView;
 public class CustomTabActivity extends TabActivity {
 
 	private TabHost mTabHost;
-	ZubhiumSDK sdk ;
+	ZubhiumSDK sdk;
 	
 //	private void setupTabHost() {
 //		mTabHost = (TabHost) findViewById(android.R.id.tabhost);

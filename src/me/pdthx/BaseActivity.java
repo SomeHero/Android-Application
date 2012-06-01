@@ -48,6 +48,8 @@ public class BaseActivity extends Activity {
 	
 	private String message;
 
+	final private int SETUPSECURITYPIN = 50;
+	
 	final private int USERSECURITYPIN_COMPLETE = 1;
 	final private int USERSECURITYPIN_FAILED = 2;
 	final private int USERSECURITYPIN_INVALIDLENGTH = 5;
@@ -63,7 +65,9 @@ public class BaseActivity extends Activity {
 	protected AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(
 			facebook);
 	protected static boolean signedInViaFacebook = false;
-	protected static ArrayList<Friends> friendList = null;
+	protected static ArrayList<Friends> friendList = new ArrayList<Friends>();
+	private static boolean contactListAdded = false;
+	private ContactList contactList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,12 @@ public class BaseActivity extends Activity {
 
 		alertDialog = new AlertDialog.Builder(BaseActivity.this).create();
 		progressDialog = new ProgressDialog(BaseActivity.this);
+		
+		if (!contactListAdded) {
+			contactList = new ContactList(getBaseContext());
+			friendList.addAll(contactList.getContacts());
+			contactListAdded = true;
+		}
 
 		validateFBLogin();
 
@@ -92,6 +102,7 @@ public class BaseActivity extends Activity {
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int which) {
+							showProfileSetup();
 							dialog.dismiss();
 						}
 					});
@@ -195,8 +206,8 @@ public class BaseActivity extends Activity {
 	}
 
 	public void OnSignOutComplete() {
-		// TODO Auto-generated method stub
-
+		//Do nothing.
+		startActivity(new Intent(this, SignInActivity.class));
 	}
 
 	public void facebookLogout() {
@@ -263,6 +274,8 @@ public class BaseActivity extends Activity {
 		});
 
 		Button btnChangeSecurityPin = (Button) findViewById(R.id.btnChangeSecurityPin);
+		TextView txtViewPin = (TextView) findViewById(R.id.txtViewPin);
+		TextView txtNotePin = (TextView) findViewById(R.id.txtNotePin);
 
 		if (prefs.getBoolean("setupSecurityPin", false)) {
 
@@ -281,6 +294,8 @@ public class BaseActivity extends Activity {
 		}
 		else {
 
+			txtViewPin.setText("Setup Security Pin");
+			txtNotePin.setText("Click the button to setup your security pin.");
 			btnChangeSecurityPin.setText("Setup Security Pin");
 			btnChangeSecurityPin.setOnClickListener(new OnClickListener() {
 
@@ -288,7 +303,8 @@ public class BaseActivity extends Activity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 
-					startActivity(new Intent(v.getContext(), SecurityPinSetupActivity.class));
+					startActivityForResult(new Intent(v.getContext(), 
+							SecurityPinSetupActivity.class), SETUPSECURITYPIN);
 				}
 
 			});

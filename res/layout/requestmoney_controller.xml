@@ -68,15 +68,6 @@
                         android:layout_height="wrap_content"
                         android:text="Add Recipient" />
 
-                    <AutoCompleteTextView
-                        android:id="@+id/txtRequestMoneyRecipient"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Recipient Mobile #" >
-
-                        <requestFocus />
-                    </AutoCompleteTextView>
-
                     <TextView
                         android:id="@+id/textView1"
                         android:layout_width="wrap_content"

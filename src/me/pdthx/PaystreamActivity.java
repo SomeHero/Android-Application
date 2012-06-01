@@ -66,18 +66,12 @@ public final class PaystreamActivity extends BaseActivity  {
         System.out.println(prefs.getString("mobileNumber", ""));
         
 		if(prefs.getString("userId", "").length() == 0)		{
-			//showSignInActivity();
+			startActivityForResult(new Intent(this, SignInActivity.class), 1);
 		}
 		else {
 			showPaystreamController();
 		}
     }
-
-	protected void showSignInActivity() {
-//		SignInActivity signInActivity = new SignInActivity(this, mHandler, prefs);
-//		signInActivity.showSignInActivity();
-		startActivityForResult(new Intent(this, SignInActivity.class), 1);
-	}
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -204,11 +198,6 @@ public final class PaystreamActivity extends BaseActivity  {
           Log.e("BACKGROUND_PROC", e.getMessage());
         }
         runOnUiThread(returnRes);
-    }
-    @Override
-    public void OnSignOutComplete()
-    {
-//    	showSignInActivity();
     }
 
 }

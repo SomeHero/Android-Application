@@ -3,8 +3,6 @@ package me.pdthx;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,13 +33,12 @@ import android.widget.EditText;
 
 public class SignInActivity extends BaseActivity {
 
-	private ArrayList<Friends> friendList = new ArrayList<Friends>();
 	private String login = "";
 	private String password = "";
 	private String firstName = "";
 	private String lastName = "";
 	private String email = "";
-	private ContactList fbFriends = null;
+	
 	private UserSignInResponse userSignInResponse = null;
 
 	private final int ACCOUNT_SETUP = 1;
@@ -59,7 +56,6 @@ public class SignInActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		fbFriends  = new ContactList(getBaseContext());
 		setContentView(View.inflate(this, R.layout.signin_controller, null));
 
 		showSignInActivity();
@@ -200,6 +196,14 @@ public class SignInActivity extends BaseActivity {
 					editor.putString("paymentAccountId", userSignInResponse.PaymentAccountId);
 					editor.putBoolean("setupSecurityPin", userSignInResponse.SetupSecurityPin);
 					editor.putInt("upperLimit", userSignInResponse.UpperLimit);
+					
+					if (signedInViaFacebook) {
+						editor.putString("login", "fb_" + login);
+					}
+					else {
+						editor.putString("login", login);
+					}
+					
 					editor.commit();
 					progressDialog.dismiss();
 
@@ -227,10 +231,11 @@ public class SignInActivity extends BaseActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		if (resultCode == Activity.RESULT_OK) {
-
+			
 			if (requestCode == ACCOUNT_SETUP) {
 				login = data.getStringExtra("email");
 				password = data.getStringExtra("password");
+				
 				signInRunner();
 			}
 			else if (requestCode == ACHACCOUNT_SETUP) {
@@ -304,11 +309,12 @@ public class SignInActivity extends BaseActivity {
 								Friends f = new Friends();
 								f.id = id;
 								f.name = n;
+								f.type = "Facebook";
 								friendList.add(f);
-								fbFriends.addContacts(f);
-								Log.d(f.name, f.id);			//SWEEETTNNEEESESSS
+								Log.d(f.name + ": " + f.id, "Facebook Friends");			//SWEEETTNNEEESESSS
 
 							}
+							
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();      

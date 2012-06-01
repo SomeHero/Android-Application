@@ -51,7 +51,6 @@ public final class SubmitPaymentActivity extends BaseActivity {
 
 	public static final String TAG = "MakePaymentActivity";
 	//	private String deviceId;
-	private String mobileNumber;
 	private String recipientUri = "";
 	private double amount = 0;
 	private String comments = "";
@@ -179,7 +178,6 @@ public final class SubmitPaymentActivity extends BaseActivity {
 		//		deviceId = Secure.getString(getBaseContext().getContentResolver(),
 		//				Secure.ANDROID_ID);
 		userId = prefs.getString("userId", "");
-		mobileNumber = prefs.getString("mobileNumber", "");
 		//contactList = new ContactList(getBaseContext());
 
 
@@ -499,7 +497,7 @@ public final class SubmitPaymentActivity extends BaseActivity {
 			SubmitPaymentRequest submitPaymentRequest = new SubmitPaymentRequest();
 			submitPaymentRequest.UserId = userId;
 			submitPaymentRequest.SecurityPin = passcode;
-			submitPaymentRequest.SenderUri = mobileNumber;
+			submitPaymentRequest.SenderUri = prefs.getString("login", "");
 			submitPaymentRequest.RecipientUri = recipientUri;
 			submitPaymentRequest.Amount = amount;
 			submitPaymentRequest.Comments = comments;

@@ -1,9 +1,10 @@
 package me.pdthx.Models;
 
-public class Friends {
+public class Friends implements Comparable<Friends> {
 	public String name = "";
 	public String id = "";
-	public String _header = "";
+	public String type = "";
+	public int phoneNumber = 0;
 	
 	public String getId()
 	{
@@ -22,12 +23,16 @@ public class Friends {
 		this.name = name;
 	}
 
-	public String getHeader() {
-		return _header;
+	public String getType() {
+		return type;
 	}
 
-	public void setHeader(String header) {
-		_header = header;
+	public void setType(String type) {
+		this.type = type;
+	}
+	@Override
+	public int compareTo(Friends friend) {
+		return this.name.compareTo(friend.name);
 	}
 
 }

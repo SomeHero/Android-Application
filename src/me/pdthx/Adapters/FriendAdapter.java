@@ -4,14 +4,12 @@ package me.pdthx.Adapters;
 import java.util.ArrayList;
 import me.pdthx.R;
 import me.pdthx.Models.Friends;
-import me.pdthx.Models.PaystreamTransaction;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public final class FriendAdapter extends ArrayAdapter<Friends> {
@@ -19,7 +17,7 @@ public final class FriendAdapter extends ArrayAdapter<Friends> {
 
 	public FriendAdapter(Context context, int textViewResourceId,
 			ArrayList<Friends> items) {
-		super(context, textViewResourceId);
+		super(context, textViewResourceId, items);
 	}
 
 	@Override
@@ -41,11 +39,9 @@ public final class FriendAdapter extends ArrayAdapter<Friends> {
 			// (TextView)v.findViewById(R.id.txtPhoneNumber);
 			// TextView txtEmail = (TextView) v.findViewById(R.id.txtEmail);
 
-			if (o.getHeader().length() > 0) {
+			if (o.getType().equals("Facebook")) {
+				//TODO: Do things here.
 				txtHeader.setVisibility(View.VISIBLE);
-				txtHeader.setText(o.getHeader());
-				txtHeader
-						.setBackgroundResource(R.drawable.paystream_header_background);
 			} else {
 				txtHeader.setVisibility(View.GONE);
 			}
