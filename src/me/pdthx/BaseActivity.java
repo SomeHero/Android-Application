@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -111,8 +112,7 @@ public class BaseActivity extends Activity {
 	}
 
 	public void OnSignOutComplete() {
-		// TODO Auto-generated method stub
-
+		//
 	}
 
 	public void facebookLogout() {

@@ -79,17 +79,12 @@
             android:noHistory="true" >
         </activity>
         <activity
-            android:name=".Dialogs.DialogPaystream"
-            android:label="@string/app_name"
-            android:theme="@style/PaystreamDialog" >
-        </activity>
-        <activity
             android:name=".Dialogs.IncomingPaymentDialog"
             android:label="@string/app_name"
             android:theme="@style/PaystreamDialog" >
         </activity>
         <activity
-            android:name=".Dialogs.IncomingRequesDialog"
+            android:name=".Dialogs.IncomingRequestDialog"
             android:label="@string/app_name"
             android:theme="@style/PaystreamDialog" >
         </activity>
@@ -102,6 +97,10 @@
             android:name=".Dialogs.OutgoingRequestDialog"
             android:label="@string/app_name"
             android:theme="@style/PaystreamDialog" >
+        </activity>
+        <activity
+            android:name=".Dialogs.PaymentAlertDialog"
+            android:theme="@style/PaystreamAlertDialog" >
         </activity>
         <activity
             android:name=".FriendListActivity"

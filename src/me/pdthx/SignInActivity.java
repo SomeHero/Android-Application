@@ -102,7 +102,6 @@ public class SignInActivity extends BaseActivity {
 	public void showSignInActivity() {
 		signInView = View.inflate(this, R.layout.signin_controller, null);
 		setContentView(signInView);
-
 		// deviceId = Secure.getString(getBaseContext().getContentResolver(),
 		// Secure.ANDROID_ID);
 
