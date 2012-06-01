@@ -53,15 +53,28 @@ public final class PaystreamActivity extends BaseActivity {
 
 	};
 
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+       
+              sdk = ZubhiumSDK.getZubhiumSDKInstance(PaystreamActivity.this, getString(R.string.secret_key));
+             
+           if(sdk != null){
+              sdk.setCrashReportingMode(CrashReportingMode.SILENT);
+           }
+          
+        prefs = PreferenceManager
+                           .getDefaultSharedPreferences(this);
+ 
         System.out.println(prefs.getString("userId", ""));
         System.out.println(prefs.getString("mobileNumber", ""));
-        
-		if(prefs.getString("userId", "").length() == 0)		{
-			startActivityForResult(new Intent(this, SignInActivity.class), 1);
-		}
-		else {
-			showPaystreamController();
-		}
+       
+              if(prefs.getString("userId", "").length() == 0)        {
+                     startActivityForResult(new Intent(this, SignInActivity.class), 1);
+              }
+              else {
+                     showPaystreamController();
+              }
     }
 	
 	@Override

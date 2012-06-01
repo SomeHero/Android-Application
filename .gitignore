@@ -22,3 +22,6 @@ project.properties
 
 .metadata/
 .settings/
+
+*.orig
+*.java~HEAD
