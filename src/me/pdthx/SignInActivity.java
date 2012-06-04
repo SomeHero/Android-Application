@@ -232,6 +232,7 @@ public class SignInActivity extends BaseActivity {
 
 		if (resultCode == Activity.RESULT_OK) {
 			
+			
 			if (requestCode == ACCOUNT_SETUP) {
 				login = data.getStringExtra("email");
 				password = data.getStringExtra("password");
@@ -245,10 +246,6 @@ public class SignInActivity extends BaseActivity {
 			else if (requestCode == FACEBOOK_SETUP)
 			{
 				facebook.authorizeCallback(requestCode, resultCode, data);
-				progressDialog.setMessage("Authenticating...");
-				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				progressDialog.show();
-
 				mAsyncRunner.request("me", new RequestListener(){
 
 					@Override
@@ -263,7 +260,6 @@ public class SignInActivity extends BaseActivity {
 							lastName = result.getString("last_name");
 							email = result.getString("email");
 							signedInViaFacebook = true;
-							signInRunner();
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -290,8 +286,7 @@ public class SignInActivity extends BaseActivity {
 					}
 
 				});
-
-				facebook.authorizeCallback(requestCode, resultCode, data);
+				
 				mAsyncRunner.request("me/friends", new RequestListener(){
 
 					@Override
@@ -312,8 +307,9 @@ public class SignInActivity extends BaseActivity {
 								f.type = "Facebook";
 								friendList.add(f);
 								Log.d(f.name + ": " + f.id, "Facebook Friends");			//SWEEETTNNEEESESSS
-
+								
 							}
+							signInRunner();
 							
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
