@@ -56,6 +56,7 @@ public class RequestMoneyActivity extends BaseActivity {
 	final private int SUBMITREQUESTFAILED_DIALOG = 3;
 	final private int SUBMITREQUESTSUCCESS_DIALOG = 4;
 	final private int INVALIDPASSCODELENGTH_DIALOG = 5;
+	final private int PAYMENTEXCEEDSLIMIT_DIALOG = 6;
 
 	final private int SUBMITREQUEST_ACTION = 1;
 
@@ -230,6 +231,21 @@ public class RequestMoneyActivity extends BaseActivity {
 			});
 
 			return alertDialog;
+			
+		case PAYMENTEXCEEDSLIMIT_DIALOG:
+			alertDialog = new AlertDialog.Builder(RequestMoneyActivity.this)
+			.create();
+			alertDialog.setTitle("Exceeds Limit");
+			alertDialog
+			.setMessage("The payment exceeds your upper limit. Please try again.");
+
+			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+
+			return alertDialog;
 
 		}
 		
@@ -319,6 +335,10 @@ public class RequestMoneyActivity extends BaseActivity {
 				}
 				if (isValid & amount == 0) {
 					showDialog(NOAMOUNTSPECIFIED_DIALOG);
+					isValid = false;
+				}
+				if (isValid && amount > prefs.getInt("upperLimit", 0)) {
+					showDialog(PAYMENTEXCEEDSLIMIT_DIALOG);
 					isValid = false;
 				}
 				if (isValid) {
