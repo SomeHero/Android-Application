@@ -6,11 +6,7 @@ import me.pdthx.R;
 import me.pdthx.R.drawable;
 import me.pdthx.R.id;
 import me.pdthx.R.layout;
-import me.pdthx.Services.MessageService;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -21,7 +17,6 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -35,7 +30,6 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 	private Double amount = 0.0;
 	private String transactionStatus = "";
 	private String transactionType = "";
-	private String transactionId = "";
 	private String createDate = null;
 	private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 
@@ -47,7 +41,6 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 	private TextView payDate;
 	private TextView payTime;
 	private TextView comments;
-	private TextView sent;
 	// private EditText sendMessage;
 
 	private Button button1;
@@ -81,7 +74,6 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 		amount = extras.getDouble("amount");
 		transactionType = extras.getString("transactionType");
 		transactionStatus = extras.getString("transactionStat");
-		transactionId = extras.getString("transactionId");
 
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		getWindow().setGravity(Gravity.BOTTOM | Gravity.RIGHT);
@@ -115,13 +107,13 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 
 		payStatusPic = (ImageView) findViewById(R.id.pay_status);
 		if (payStatusPic != null) {
-			if (transactionStatus.toUpperCase().equals("SUBMITTED")) {
+			if (transactionStatus.toUpperCase() == "SUBMITTED") {
 				payStatusPic
 						.setImageResource(R.drawable.transaction_pending_icon);
-			} else if (transactionStatus.toUpperCase().equals("PENDING")) {
+			} else if (transactionStatus.toUpperCase() == "PENDING") {
 				payStatusPic
 						.setImageResource(R.drawable.transaction_pending_icon);
-			} else if (transactionStatus.toUpperCase().equals("COMPLETE")) {
+			} else if (transactionStatus.toUpperCase() == "COMPLETE") {
 				payStatusPic
 						.setImageResource(R.drawable.transaction_complete_icon);
 			} else {
@@ -140,11 +132,11 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 
 		payStatusText = (TextView) findViewById(R.id.pay_status_txt);
 		if (payStatusText != null) {
-			if (transactionStatus.toUpperCase().equals("SUBMITTED")) {
+			if (transactionStatus.toUpperCase() == "SUBMITTED") {
 				payStatusText.setText("Submitted");
-			} else if (transactionStatus.toUpperCase().equals("PENDING")) {
+			} else if (transactionStatus.toUpperCase() == "PENDING") {
 				payStatusText.setText("Pending");
-			} else if (transactionStatus.toUpperCase().equals("COMPLETE")) {
+			} else if (transactionStatus.toUpperCase() == "COMPLETE") {
 				payStatusText.setText("Complete");
 			} else {
 				payStatusText.setText("Pending");
@@ -156,11 +148,6 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 			theAmount.setText(currencyFormatter.format(amount));
 		}
 
-		sent = (TextView) findViewById(R.id.recieved);
-		if (sent != null) {
-			sent.setText("Sent: ");
-		}
-
 		payDate = (TextView) findViewById(R.id.pay_date);
 		if (payDate != null) {
 			payDate.setText(header);
@@ -169,7 +156,6 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 		payTime = (TextView) findViewById(R.id.pay_time);
 		if (payTime != null) {
 			payTime.setText(createDate);
-			payTime.setPadding(86, 0, 0, 0);
 		}
 
 		comments = (TextView) findViewById(R.id.pay_comments);
@@ -178,48 +164,7 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 		// sendMessage = (EditText) findViewById(R.id.pay_send_msg);
 
 		button1 = (Button) findViewById(R.id.pay_button1);
-		if (button1 != null) {
-			if (transactionStatus.toUpperCase().equals("SUBMITTED")
-					|| transactionStatus.toUpperCase().equals("PENDING")) {
-				button1.setText("Cancel");
-				button1.setOnClickListener(new OnClickListener() {
-					public void onClick(View argO) {
-						try {
-							MessageService messageService = new MessageService();
-							int isSuccess = messageService
-									.CancelMessage(transactionId);
-							// if the message request is a success, then return
-							// to
-							// user
-							// that message was sent
-							if (isSuccess == 200) {
-								Intent intent = new Intent(
-										getApplicationContext(),
-										PaymentAlertDialog.class);
-								intent.putExtra("msg", "Your payment with "
-										+ recipientUri + " was canceled.");
-								intent.putExtra("title", "Cancel...");
-								startActivity(intent);
-								finish();
-							} else {
-								Intent intent = new Intent(
-										getApplicationContext(),
-										PaymentAlertDialog.class);
-								intent.putExtra("msg",
-										"The cancel service has not yet been implemented. Please try again later.");
-								intent.putExtra("title", "Cancel...");
-								startActivity(intent);
-								finish();
-							}
-						} catch (Exception e) {
-							//
-						}
-					}
-				});
-			} else {
-				button1.setVisibility(View.GONE);
-			}
-		}
+		button1.setText("Cancel");
 		button2 = (Button) findViewById(R.id.pay_button2);
 		button2.setVisibility(View.GONE);
 		button3 = (Button) findViewById(R.id.pay_button3);

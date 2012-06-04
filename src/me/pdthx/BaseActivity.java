@@ -183,6 +183,10 @@ public class BaseActivity extends Activity {
 
 		switch (item.getItemId()) {
 		case R.id.signOutMenuItem:
+			
+			contactListAdded = false;
+			friendList.clear();
+			
 			if (!facebook.isSessionValid()) {
 				signedInViaFacebook = false;
 				editor.remove("userId");

@@ -1,11 +1,6 @@
-package me.pdthx.Dialogs;
+package me.pdthx;
 
 import java.text.NumberFormat;
-
-import me.pdthx.R;
-import me.pdthx.R.drawable;
-import me.pdthx.R.id;
-import me.pdthx.R.layout;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -18,11 +13,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class IncomingRequestDialog extends Activity implements OnTouchListener {
+public class DialogPaystream extends Activity implements OnTouchListener {
 
 	private String header = "";
 	private String senderUri = "";
@@ -41,14 +35,8 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 	private TextView payDate;
 	private TextView payTime;
 	private TextView comments;
-	// private EditText sendMessage;
+//	private EditText sendMessage;
 
-	/**
-	 * In incoming requests, accept, reject, and ignore buttons are made.
-	 */
-	private Button button1;
-	private Button button2;
-	private Button button3;
 	private static final int SWIPE_MIN_DISTANCE = 120;
 	private static final int SWIPE_MAX_OFF_PATH = 250;
 	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
@@ -99,14 +87,19 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 
 	private void setupButtons() {
 		pic = (ImageView) findViewById(R.id.paypic);
-		if (pic != null) {
-			pic.setImageResource(R.drawable.paystream_request_received_icon);
-		}
+        if(pic != null) {
+        	if(transactionType.equalsIgnoreCase("Withdrawal"))
+        		pic.setImageResource(R.drawable.paystream_sent_icon);
+        	else
+        		pic.setImageResource(R.drawable.paystream_received_icon);
+        }
 
 		username = (TextView) findViewById(R.id.pay_username);
-		// since incoming, set text to sender's name
 		if (username != null) {
-			username.setText(senderUri);
+			if (transactionType.equalsIgnoreCase("Withdrawal"))
+				username.setText(recipientUri);
+			else
+				username.setText(senderUri);
 		}
 
 		payStatusPic = (ImageView) findViewById(R.id.pay_status);
@@ -124,27 +117,18 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 				payStatusPic
 						.setImageResource(R.drawable.transaction_pending_icon);
 			}
-			// else if(o.getTransactionStatus().toUpperCase() == "FAILED") {
-			// imgStatus.setImageResource(R.drawable.transaction_failed_icon);
-			// }else if(o.getTransactionStatus().toUpperCase() == "RETURNED") {
-			// imgStatus.setImageResource(R.drawable.transaction_returned_icon);
-			// } else if(o.getTransactionStatus().toUpperCase() == "CANCELLED")
-			// {
-			// imgStatus.setImageResource(R.drawable.transaction_cancelled_icon);
-			// }
+			//else if(o.getTransactionStatus().toUpperCase() == "FAILED") {
+			//imgStatus.setImageResource(R.drawable.transaction_failed_icon);
+			//}else if(o.getTransactionStatus().toUpperCase() == "RETURNED") {
+			//	imgStatus.setImageResource(R.drawable.transaction_returned_icon);
+			//} else if(o.getTransactionStatus().toUpperCase() == "CANCELLED") {
+			//	imgStatus.setImageResource(R.drawable.transaction_cancelled_icon);
+			//}
 		}
 
 		payStatusText = (TextView) findViewById(R.id.pay_status_txt);
 		if (payStatusText != null) {
-			if (transactionStatus.toUpperCase() == "SUBMITTED") {
-				payStatusText.setText("Submitted");
-			} else if (transactionStatus.toUpperCase() == "PENDING") {
-				payStatusText.setText("Pending");
-			} else if (transactionStatus.toUpperCase() == "COMPLETE") {
-				payStatusText.setText("Complete");
-			} else {
-				payStatusText.setText("Pending");
-			}
+			payStatusText.setText(transactionStatus);
 		}
 
 		theAmount = (TextView) findViewById(R.id.pay_amountgiven);
@@ -165,14 +149,7 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 		comments = (TextView) findViewById(R.id.pay_comments);
 		comments.setMovementMethod(new ScrollingMovementMethod());
 
-		// sendMessage = (EditText) findViewById(R.id.pay_send_msg);
-
-		button1 = (Button) findViewById(R.id.pay_button1);
-		button1.setText("Accept");
-		button2 = (Button) findViewById(R.id.pay_button2);
-		button2.setText("Reject");
-		button3 = (Button) findViewById(R.id.pay_button3);
-		button3.setText("Ignore");
+//		sendMessage = (EditText) findViewById(R.id.pay_send_msg);
 	}
 
 	@Override
