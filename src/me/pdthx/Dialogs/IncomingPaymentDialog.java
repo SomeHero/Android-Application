@@ -30,6 +30,7 @@ public class IncomingPaymentDialog extends Activity implements OnTouchListener {
 	private Double amount = 0.0;
 	private String transactionStatus = "";
 	private String transactionType = "";
+	private String transactionId = "";
 	private String createDate = null;
 	private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 
@@ -77,6 +78,7 @@ public class IncomingPaymentDialog extends Activity implements OnTouchListener {
 		amount = extras.getDouble("amount");
 		transactionType = extras.getString("transactionType");
 		transactionStatus = extras.getString("transactionStat");
+		transactionId = extras.getString("transactionId");
 
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		getWindow().setGravity(Gravity.BOTTOM | Gravity.RIGHT);
