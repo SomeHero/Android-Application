@@ -115,8 +115,8 @@ public final class FriendListActivity extends BaseActivity  {
             
         }
     	else {
-    		Log.e("Friend list problem", "Friend List not populated");
-    		mEmptyTextView.setVisibility(View.VISIBLE);
+    		Log.e("hi", "way to go dude");
+    		//mEmptyTextView.setVisibility(View.VISIBLE);
     	}
         
         m_ProgressDialog.dismiss();
