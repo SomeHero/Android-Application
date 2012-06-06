@@ -72,7 +72,7 @@ public final class HomeActivity extends BaseActivity {
 			showHomeController();
 		}
 		else {
-			startActivityForResult(new Intent(this, SignInActivity.class), 1);
+			finish();
 		}
 	}
 	public void switchTabInActivity(int indexTabToSwitchTo){

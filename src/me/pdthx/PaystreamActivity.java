@@ -54,33 +54,38 @@ public final class PaystreamActivity extends BaseActivity {
 	};
 
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-       
-              sdk = ZubhiumSDK.getZubhiumSDKInstance(PaystreamActivity.this, getString(R.string.secret_key));
-             
-           if(sdk != null){
-              sdk.setCrashReportingMode(CrashReportingMode.SILENT);
-           }
-          
-        prefs = PreferenceManager
-                           .getDefaultSharedPreferences(this);
- 
-        System.out.println(prefs.getString("userId", ""));
-        System.out.println(prefs.getString("mobileNumber", ""));
-       
-              if(prefs.getString("userId", "").length() == 0)        {
-                     startActivityForResult(new Intent(this, SignInActivity.class), 1);
-              }
-              else {
-                     showPaystreamController();
-              }
-    }
-	
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		sdk = ZubhiumSDK.getZubhiumSDKInstance(PaystreamActivity.this, getString(R.string.secret_key));
+
+		if(sdk != null){
+			sdk.setCrashReportingMode(CrashReportingMode.SILENT);
+		}
+
+		prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
+		System.out.println(prefs.getString("userId", ""));
+		System.out.println(prefs.getString("mobileNumber", ""));
+
+		if(prefs.getString("userId", "").length() == 0)        {
+			startActivityForResult(new Intent(this, SignInActivity.class), 1);
+		}
+		else {
+			showPaystreamController();
+		}
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 1 && resultCode == RESULT_OK) {
-			showPaystreamController();
+		if (resultCode == RESULT_OK) {
+			if (requestCode == 1) {
+				showPaystreamController();
+			}
+		}
+		else {
+			finish();
 		}
 	}
 
@@ -249,10 +254,5 @@ public final class PaystreamActivity extends BaseActivity {
 			Log.e("BACKGROUND_PROC", e.getMessage());
 		}
 		runOnUiThread(returnRes);
-	}
-
-	@Override
-	public void OnSignOutComplete() {
-		// showSignInActivity();
 	}
 }
