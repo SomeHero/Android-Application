@@ -20,8 +20,14 @@ project.properties
 .classpath
 .project
 
+*.orig
+*.java~HEAD
+
 .metadata/
 .settings/
 
-*.orig
-*.java~HEAD
+.DS_Store
+.checkstyle
+
+lint.xml
+pmd-eclipse.log

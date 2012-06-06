@@ -2,11 +2,9 @@ package me.pdthx.Responses;
 
 import me.pdthx.Models.MeCodeModel;
 
-public class UserMeCodeResponse {
+public class UserMeCodeResponse extends Response{
 	
 	private MeCodeModel[] meCodes;
-	private boolean success;
-	private String reasonPhrase;
 	
 	public UserMeCodeResponse() {
 		
@@ -19,22 +17,6 @@ public class UserMeCodeResponse {
 	
 	public MeCodeModel[] getMeCodes() {
 		return meCodes;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
-	public String getReasonPhrase() {
-		return reasonPhrase;
-	}
-
-	public void setReasonPhrase(String reasonPhrase) {
-		this.reasonPhrase = reasonPhrase;
 	}
 
 }

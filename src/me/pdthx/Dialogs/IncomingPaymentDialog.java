@@ -3,9 +3,6 @@ package me.pdthx.Dialogs;
 import java.text.NumberFormat;
 
 import me.pdthx.R;
-import me.pdthx.R.drawable;
-import me.pdthx.R.id;
-import me.pdthx.R.layout;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Bundle;

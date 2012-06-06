@@ -1,7 +1,8 @@
 package me.pdthx;
 
+import me.pdthx.CustomViews.CustomLockView;
 import me.pdthx.Requests.SecurityPinSetupRequest;
-import me.pdthx.Responses.SecurityPinSetupResponse;
+import me.pdthx.Responses.Response;
 import me.pdthx.Services.UserService;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,7 +22,7 @@ public class SecurityPinSetupActivity extends BaseActivity {
 	
 	private Button btnSetupPin;
 	private SecurityPinSetupRequest request;
-	private SecurityPinSetupResponse response;
+	private Response response;
 	
 	final private int USERSECURITYPIN_COMPLETE = 1;
 	final private int USERSECURITYPIN_FAILED = 2;
@@ -101,7 +102,9 @@ public class SecurityPinSetupActivity extends BaseActivity {
 				String passcode = ctrlSecurityPin.getPasscode();
 
 				if (passcode.length() > 3) {
-					request = new SecurityPinSetupRequest(prefs.getString("userId", ""), passcode);
+					request = new SecurityPinSetupRequest();
+					request.UserId = prefs.getString("userId", "");
+					request.SecurityPin = passcode;
 					d.dismiss();
 					
 					showConfirmSecurityPinDialog();
@@ -130,7 +133,7 @@ public class SecurityPinSetupActivity extends BaseActivity {
 				
 				String passcode = ctrlSecurityPin.getPasscode();
 
-				if (passcode.length() > 3  && passcode.equals(request.getSecurityPin())) {
+				if (passcode.length() > 3  && passcode.equals(request.SecurityPin)) {
 					d.dismiss();
 					
 					progressDialog = new ProgressDialog(v.getContext());
@@ -145,8 +148,7 @@ public class SecurityPinSetupActivity extends BaseActivity {
 						public void run() {
 							// TODO Auto-generated method stub
 							try {
-								UserService userService = new UserService();
-								response = userService.setupSecurityPin(request);
+								response = UserService.setupSecurityPin(request);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

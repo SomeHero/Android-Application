@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,7 +23,7 @@ import android.widget.TextView;
 public class CustomTabActivity extends TabActivity {
 
 	private TabHost mTabHost;
-	ZubhiumSDK sdk;
+	private ZubhiumSDK sdk;
 	
 //	private void setupTabHost() {
 //		mTabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -36,6 +37,8 @@ public class CustomTabActivity extends TabActivity {
 		setContentView(R.layout.main);
 		
 		Resources res = getResources(); 
+		
+		Log.v("things", "got here");
 		
 		mTabHost = getTabHost();  // The activity TabHost
 		mTabHost.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
@@ -52,15 +55,10 @@ public class CustomTabActivity extends TabActivity {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.ic_tab_home), "Home", intent);
 		
-		intent = new Intent(mTabHost.getContext(), SubmitPaymentActivity.class);
+		intent = new Intent(mTabHost.getContext(), SendPaymentActivity.class);
 		setupTab(res.getDrawable(R.drawable.ic_tab_send), "Send $", intent);
 		
-//		if(prefs.getString("paymentAccountId", "").length() == 0) {
-//			intent = new Intent(mTabHost.getContext(), GetMoneyActivity.class);
-//			setupTab(res.getDrawable(R.drawable.ic_tab_home), "Get $", intent);
-//		}
-		
-		intent = new Intent(mTabHost.getContext(), RequestMoneyActivity.class);
+		intent = new Intent(mTabHost.getContext(), RequestPaymentActivity.class);
 		setupTab(res.getDrawable(R.drawable.ic_tab_recv), "Req $", intent);
 		
 		intent = new Intent(mTabHost.getContext(), PaystreamActivity.class);
@@ -68,9 +66,6 @@ public class CustomTabActivity extends TabActivity {
 		setupTab(res.getDrawable(R.drawable.ic_tab_stream), "Stream", intent);
 		
 		mTabHost.setCurrentTab(0);
-		
-		//intent = new Intent(CustomTabActivity.this, VerifyMobileNumberActivity.class);
-		//startActivityForResult(intent, 0);
         
 	}
 	public void switchTab(int tab){

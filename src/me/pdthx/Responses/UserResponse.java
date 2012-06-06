@@ -1,6 +1,6 @@
 package me.pdthx.Responses;
 
-public class UserResponse {
+public class UserResponse extends Response{
 	public UserResponse() {}
 	
 	public String UserId;
@@ -10,6 +10,7 @@ public class UserResponse {
 	public String UserStatus;
 	public String FirstName;
 	public String LastName;
+	public int UpperLimit;
 	public double TotalMoneySent = 0.0;
 	public double TotalMoneyReceived = 0.0;
 }

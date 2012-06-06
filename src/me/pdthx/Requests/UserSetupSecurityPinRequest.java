@@ -1,9 +1,7 @@
 package me.pdthx.Requests;
 
-public class UserSetupSecurityPinRequest {
+public class UserSetupSecurityPinRequest extends UserRequest {
 	public UserSetupSecurityPinRequest() { }
 	
-	public String UserId = "";
-	public String DeviceId = "";
 	public String SecurityPin = "";
 }

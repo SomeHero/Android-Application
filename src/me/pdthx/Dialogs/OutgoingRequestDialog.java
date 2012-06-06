@@ -3,13 +3,8 @@ package me.pdthx.Dialogs;
 import java.text.NumberFormat;
 
 import me.pdthx.R;
-import me.pdthx.R.drawable;
-import me.pdthx.R.id;
-import me.pdthx.R.layout;
-import me.pdthx.Services.MessageService;
+import me.pdthx.Services.PaystreamService;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -185,9 +180,9 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 				button1.setOnClickListener(new OnClickListener() {
 					public void onClick(View argO) {
 						try {
-							MessageService messageService = new MessageService();
+							PaystreamService messageService = new PaystreamService();
 							int isSuccess = messageService
-									.CancelMessage(transactionId);
+									.cancelMessage(transactionId);
 							// if the message request is a success, then return
 							// to
 							// user

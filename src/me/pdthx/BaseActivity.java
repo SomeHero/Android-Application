@@ -5,16 +5,23 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
-import me.pdthx.Models.Friends;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import me.pdthx.CustomViews.CustomLockView;
+import me.pdthx.Models.Friend;
 import me.pdthx.Requests.UserChangeSecurityPinRequest;
 import me.pdthx.Requests.UserMeCodeRequest;
-import me.pdthx.Responses.UserChangeSecurityPinResponse;
+import me.pdthx.Responses.Response;
 import me.pdthx.Services.UserService;
 
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
+import com.zubhium.ZubhiumSDK;
+import com.zubhium.ZubhiumSDK.CrashReportingMode;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,7 +35,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,111 +52,155 @@ public class BaseActivity extends Activity {
 	protected SharedPreferences prefs;
 	protected AlertDialog alertDialog;
 	protected ProgressDialog progressDialog;
-	
-	private String message;
 
 	final private int SETUPSECURITYPIN = 50;
-	
+
 	final private int USERSECURITYPIN_COMPLETE = 1;
 	final private int USERSECURITYPIN_FAILED = 2;
 	final private int USERSECURITYPIN_INVALIDLENGTH = 5;
 	final private int USERSECURITYPIN_CONFIRMMISMATCH = 6;
 	final private int INVALID_DOLLAR = 0;
-//	final private int TESTING = 1;
+	final private int INVALID_MECODE = 3;
+	final private int SUCCESS_MECODE = 4;
+	//	final private int TESTING = 1;
 
 	private UserChangeSecurityPinRequest request;
-	private UserChangeSecurityPinResponse response;
-	
+	private Response response;
+
 
 	protected Facebook facebook = new Facebook("332189543469634");
 	protected AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(
 			facebook);
 	protected static boolean signedInViaFacebook = false;
-	protected static ArrayList<Friends> friendList = new ArrayList<Friends>();
+	protected static ArrayList<Friend> friendsList = new ArrayList<Friend>();
 	private static boolean contactListAdded = false;
+	protected static boolean facebookFriendsAdded = false;
 	private ContactList contactList;
+	
+	private ZubhiumSDK sdk;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		signedInViaFacebook = prefs.getBoolean("signedInViaFacebook", false);
 
 		alertDialog = new AlertDialog.Builder(BaseActivity.this).create();
 		progressDialog = new ProgressDialog(BaseActivity.this);
+
+		sdk = ZubhiumSDK.getZubhiumSDKInstance(this, getString(R.string.secret_key));
+		
+	    if(sdk != null){
+	    	sdk.setCrashReportingMode(CrashReportingMode.SILENT);
+	    }
 		
 		if (!contactListAdded) {
 			contactList = new ContactList(getBaseContext());
-			friendList.addAll(contactList.getContacts());
+			friendsList.addAll(contactList.getContacts());
 			contactListAdded = true;
 		}
 
 		validateFBLogin();
 
+		if (signedInViaFacebook && !facebookFriendsAdded) {
+			requestFacebookFriends();
+		}
 
 	}
-	
+
 	private Handler BaseActivityHandler = new Handler() {
 
-        @Override
-        public void handleMessage(Message msg) {
-        	switch(msg.what) {
-        	
-        		case(USERSECURITYPIN_COMPLETE):
-        			alertDialog.setTitle("Password changed");
-				alertDialog.setMessage("Your passcode was successfully changed.");
-				alertDialog.setButton("OK",
+		@Override
+		public void handleMessage(Message msg) {
+			switch(msg.what) {
+
+			case(USERSECURITYPIN_COMPLETE):
+				alertDialog.setTitle("Password changed");
+			alertDialog.setMessage("Your passcode was successfully changed.");
+			alertDialog.setButton("OK",
 					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int which) {
-							showProfileSetup();
-							dialog.dismiss();
-						}
-					});
+				public void onClick(DialogInterface dialog,
+						int which) {
+					showProfileSetup();
+					dialog.dismiss();
+				}
+			});
 
-				alertDialog.show();
-        		break;
-	        	case(INVALID_DOLLAR):
-	        		alertDialog.setTitle("Invalid MeCode");
-					alertDialog.setMessage("The meCode must begin with a '$'. Please try again.");
-					alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
+			alertDialog.show();
+			break;
+			
+			case(INVALID_MECODE):
+				alertDialog.setTitle("Invalid MeCode");
+			alertDialog.setMessage("There was a problem setting up your MeCode: " 
+				+ response.ReasonPhrase + ". Please try again.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+				}
+			});
 
-					alertDialog.show();
-	        		break;
-	        	case(USERSECURITYPIN_FAILED):
-					alertDialog.setTitle("Setup Failed");
-					alertDialog
-							.setMessage("There was an error setting up your security pin: " + 
-									message + " Please try again.");
-					alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
+			alertDialog.show();
+			break;
+			
+			case(SUCCESS_MECODE):
+				alertDialog.setTitle("MeCode Success");
+			alertDialog.setMessage("MeCode setup successful");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+				}
+			});
 
-					alertDialog.show();
-	        		break;
+			alertDialog.show();
+			break;
+			
+			case(INVALID_DOLLAR):
+				alertDialog.setTitle("Invalid MeCode");
+			alertDialog.setMessage("The meCode must begin with a '$'. Please try again.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+				}
+			});
 
-	        	case(USERSECURITYPIN_CONFIRMMISMATCH):
-					alertDialog.setTitle("Security Pins Mismatch.");
-					alertDialog
-							.setMessage("The two security pins you just swiped don't match. Please try again.");
-					alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
+			alertDialog.show();
+			break;
+			case(USERSECURITYPIN_FAILED):
+				alertDialog.setTitle("Setup Failed");
+			alertDialog
+			.setMessage("There was an error setting up your security pin: " + 
+					response.ReasonPhrase + " Please try again.");
+			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
 
-					alertDialog.show();
-	        		break;
-        	}
-        }
+			alertDialog.show();
+			break;
+
+			case(USERSECURITYPIN_CONFIRMMISMATCH):
+				alertDialog.setTitle("Security Pins Mismatch.");
+			alertDialog
+			.setMessage("The two security pins you just swiped don't match. Please try again.");
+			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+
+			alertDialog.show();
+			break;
+			}
+		}
 	};
 
 	private void validateFBLogin() {
@@ -160,6 +211,71 @@ public class BaseActivity extends Activity {
 		}
 		if (expires != 0) {
 			facebook.setAccessExpires(expires);
+		}
+	}
+
+	private void requestFacebookFriends() {
+
+		if (signedInViaFacebook && !facebookFriendsAdded) {
+			mAsyncRunner.request("me/friends", new RequestListener(){
+
+				@Override
+				public void onComplete(String response, Object state) {
+
+					try {
+						JSONObject json = new JSONObject(response);
+						JSONArray d = json.getJSONArray("data");
+						int l = (d != null ? d.length() : 0);
+						Log.d("Facebook-Example-Friends Request", "d.length(): " + l);
+						for (int i=0; i<l; i++) {
+							JSONObject o = d.getJSONObject(i);
+							String n = o.getString("name");
+							String id = o.getString("id");
+							Friend f = new Friend();
+							f.setId(id);
+							f.setName(n);
+							f.setType("Facebook");
+							friendsList.add(f);
+							Log.d(f.getName() + ": " + f.getId(), "Facebook Friends");			//SWEEETTNNEEESESSS
+
+						}
+
+						facebookFriendsAdded = true;
+
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();      
+					}
+				}
+
+				@Override
+				public void onIOException(IOException e, Object state) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onFileNotFoundException(FileNotFoundException e,
+						Object state) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onMalformedURLException(MalformedURLException e,
+						Object state) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onFacebookError(FacebookError e, Object state) {
+					// TODO Auto-generated method stub
+
+				}
+
+			});
+
 		}
 	}
 
@@ -183,17 +299,23 @@ public class BaseActivity extends Activity {
 
 		switch (item.getItemId()) {
 		case R.id.signOutMenuItem:
-			if (!facebook.isSessionValid()) {
-				signedInViaFacebook = false;
-				editor.remove("userId");
-				editor.commit();
-			}
-			else {
-				signedInViaFacebook = false;
-				facebookLogout();
-			}
+			if (prefs.getString("userId", "").length() != 0) {
+				contactListAdded = false;
+				facebookFriendsAdded = false;
+				friendsList.clear();
 
-			OnSignOutComplete();
+				if (!facebook.isSessionValid()) {
+					signedInViaFacebook = false;
+					editor.remove("userId");
+					editor.commit();
+				}
+				else {
+					signedInViaFacebook = false;
+					facebookLogout();
+				}
+
+				OnSignOutComplete();
+			}
 			break;
 		case R.id.profileMenuItem:
 
@@ -206,8 +328,7 @@ public class BaseActivity extends Activity {
 	}
 
 	public void OnSignOutComplete() {
-		//Do nothing.
-		startActivity(new Intent(this, SignInActivity.class));
+		startActivityForResult(new Intent(this, SignInActivity.class), 1);
 	}
 
 	public void facebookLogout() {
@@ -242,8 +363,7 @@ public class BaseActivity extends Activity {
 	}
 
 	public void showProfileSetup() {
-		LayoutInflater inflator = getLayoutInflater();
-		View view = inflator.inflate(R.layout.setup_profile, null, false);
+		View view = View.inflate(BaseActivity.this, R.layout.setup_profile, null);
 		view.startAnimation(AnimationUtils.loadAnimation(getBaseContext(),
 				R.anim.slide_left_out));
 		setContentView(view);
@@ -259,16 +379,23 @@ public class BaseActivity extends Activity {
 					BaseActivityHandler.sendEmptyMessage(INVALID_DOLLAR);
 				}
 				else
-				{
+				{					
 					progressDialog.setMessage("Adding Me Code..");
 					progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-					UserService userService = new UserService();
 					UserMeCodeRequest userMeCodeRequest = new UserMeCodeRequest(
 							prefs.getString("userId", ""), txtMeCode.getText().toString().trim());
 					progressDialog.show();
-					userService.createMeCode(userMeCodeRequest);
-					txtMeCode.setText("");
-					progressDialog.dismiss();
+					response = UserService.createMeCode(userMeCodeRequest);
+					
+					if (response.Success) {
+						txtMeCode.setText("");
+						progressDialog.dismiss();
+						BaseActivityHandler.sendEmptyMessage(SUCCESS_MECODE);
+					}
+					else {
+						progressDialog.dismiss();
+						BaseActivityHandler.sendEmptyMessage(INVALID_MECODE);
+					}
 				}
 			}
 		});
@@ -279,18 +406,18 @@ public class BaseActivity extends Activity {
 
 		if (prefs.getBoolean("setupSecurityPin", false)) {
 
-		btnChangeSecurityPin.setOnClickListener(new OnClickListener() {
+			btnChangeSecurityPin.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
 
-				request = new UserChangeSecurityPinRequest();
-				response = new UserChangeSecurityPinResponse();
-				changeSecurityPinCurrent();
-			}
+					request = new UserChangeSecurityPinRequest();
+					response = new Response();
+					changeSecurityPinCurrent();
+				}
 
-		});
+			});
 		}
 		else {
 
@@ -315,7 +442,7 @@ public class BaseActivity extends Activity {
 		final Dialog d = new Dialog(this, R.style.CustomDialogTheme);
 		d.setContentView(R.layout.security_dialog);
 
-	 	d.getWindow().setLayout(400, 600);
+		d.getWindow().setLayout(400, 600);
 		d.show();
 
 		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
@@ -353,7 +480,7 @@ public class BaseActivity extends Activity {
 		final Dialog d = new Dialog(this, R.style.CustomDialogTheme);
 		d.setContentView(R.layout.security_dialog);
 
-	 	d.getWindow().setLayout(400, 600);
+		d.getWindow().setLayout(400, 600);
 		d.show();
 
 		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
@@ -390,7 +517,7 @@ public class BaseActivity extends Activity {
 		final Dialog d = new Dialog(this, R.style.CustomDialogTheme);
 		d.setContentView(R.layout.security_dialog);
 
-	 	d.getWindow().setLayout(400, 600);
+		d.getWindow().setLayout(400, 600);
 		d.show();
 
 		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
@@ -423,9 +550,8 @@ public class BaseActivity extends Activity {
 						public void run() {
 							// TODO Auto-generated method stub
 							try {
-								UserService userService = new UserService();
 								request.UserId = prefs.getString("userId", "");
-								response = userService.changeSecurityPin(request);
+								response = UserService.changeSecurityPin(request);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -436,9 +562,7 @@ public class BaseActivity extends Activity {
 								BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_COMPLETE);
 							}
 							else {
-								message = response.ReasonPhrase;
 								BaseActivityHandler.sendEmptyMessage(USERSECURITYPIN_FAILED);
-
 							}
 						}
 

@@ -76,15 +76,12 @@
                         android:text="Send To:"
                         android:textColor="#000000"
                         android:textStyle="bold" />
-
-                    <AutoCompleteTextView
-                        android:id="@+id/txtSendMoneyRecipient"
+
+                    <Button
+                        android:id="@+id/addRecipient"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Recipient Mobile #" >
-
-                        <requestFocus />
-                    </AutoCompleteTextView>
+                        android:text="Add Recipient" />
 
                     <TextView
                         android:id="@+id/textView1"
@@ -96,12 +93,12 @@
 
                     <EditText
                         android:id="@+id/txtAmount"
-                        android:layout_width="128dp"
+                        android:layout_width="136dp"
                         android:layout_height="wrap_content"
                         android:digits="0123456789."
                         android:inputType="number"
                         android:lines="1"
-                        android:maxLength="12"
+                        android:maxLength="14"
                         android:maxLines="1"
                         android:text="$0.00" />
 
