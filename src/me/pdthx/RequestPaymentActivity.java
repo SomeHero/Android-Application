@@ -410,6 +410,12 @@ public class RequestPaymentActivity extends BaseActivity {
 				
 				
 			}
+			else {
+				launchRequestMoneyView();
+			}
+		}
+		else {
+			finish();
 		}
 	}
 

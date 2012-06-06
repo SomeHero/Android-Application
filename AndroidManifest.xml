@@ -52,6 +52,11 @@
             android:label="@string/app_name"
             android:noHistory="true" >
         </activity>
+        <activity 
+            android:name=".ProfileSetupActivity"
+            android:label="@string/app_name"
+            android:noHistory="true">
+        </activity>
         <activity
             android:name=".RequestPaymentActivity"
             android:label="@string/app_name" >

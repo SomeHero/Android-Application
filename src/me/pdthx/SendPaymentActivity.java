@@ -437,6 +437,12 @@ public final class SendPaymentActivity extends BaseActivity {
 				
 				
 			}
+			else {
+				launchSendMoneyView();
+			}
+		}
+		else {
+			finish();
 		}
 	}
 
