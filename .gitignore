@@ -25,3 +25,9 @@ project.properties
 
 .metadata/
 .settings/
+
+.DS_Store
+.checkstyle
+
+lint.xml
+pmd-eclipse.log

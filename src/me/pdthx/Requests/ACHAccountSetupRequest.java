@@ -1,10 +1,9 @@
 package me.pdthx.Requests;
 
-public class ACHAccountSetupRequest {
+public class ACHAccountSetupRequest extends UserRequest {
 	public ACHAccountSetupRequest() {
 		
 	}
-	public String UserId = "";
 	public String NameOnAccount = "";
 	public String RoutingNumber = "";
 	public String AccountNumber = "";

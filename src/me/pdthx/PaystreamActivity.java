@@ -13,9 +13,9 @@ import me.pdthx.Dialogs.IncomingRequestDialog;
 import me.pdthx.Dialogs.OutgoingPaymentDialog;
 import me.pdthx.Dialogs.OutgoingRequestDialog;
 import me.pdthx.Models.PaystreamTransaction;
-import me.pdthx.Requests.MessageRequest;
-import me.pdthx.Responses.MessageResponse;
-import me.pdthx.Services.MessageService;
+import me.pdthx.Requests.UserRequest;
+import me.pdthx.Responses.PaystreamResponse;
+import me.pdthx.Services.PaystreamService;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -204,24 +204,23 @@ public final class PaystreamActivity extends BaseActivity {
 
 	private void getOrders() {
 		try {
-			MessageService messageService = new MessageService();
-			MessageRequest messageRequest = new MessageRequest();
+			UserRequest request = new UserRequest();
 
 			SharedPreferences prefs = PreferenceManager
 					.getDefaultSharedPreferences(this);
 			String userId = prefs.getString("userId", "");
 
-			messageRequest.UserId = userId;
-			ArrayList<MessageResponse> messages = messageService
-					.GetMessages(messageRequest);
+			request.UserId = userId;
+			ArrayList<PaystreamResponse> messages = PaystreamService
+					.getMessages(request);
 
 			m_transactions = new ArrayList<PaystreamTransaction>();
 
 			DateFormat df = DateFormat.getDateInstance();
 			String previousHeader = "";
 			String currentHeader = "";
-			for (Iterator<MessageResponse> i = messages.iterator(); i.hasNext();) {
-				MessageResponse currentTransaction = (MessageResponse) i.next();
+			for (Iterator<PaystreamResponse> i = messages.iterator(); i.hasNext();) {
+				PaystreamResponse currentTransaction = (PaystreamResponse) i.next();
 
 				PaystreamTransaction o1 = new PaystreamTransaction();
 				o1.setTransactionId(currentTransaction.MessageId);

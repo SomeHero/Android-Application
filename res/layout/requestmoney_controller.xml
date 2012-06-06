@@ -78,12 +78,12 @@
 
                     <EditText
                         android:id="@+id/txtRequestMoneyAmount"
-                        android:layout_width="128dp"
+                        android:layout_width="136dp"
                         android:layout_height="wrap_content"
                         android:digits="0123456789."
                         android:inputType="number"
                         android:lines="1"
-                        android:maxLength="12"
+                        android:maxLength="14"
                         android:maxLines="1"
                         android:text="$0.00" />
 

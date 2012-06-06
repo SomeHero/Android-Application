@@ -3,13 +3,8 @@ package me.pdthx.Dialogs;
 import java.text.NumberFormat;
 
 import me.pdthx.R;
-import me.pdthx.R.drawable;
-import me.pdthx.R.id;
-import me.pdthx.R.layout;
-import me.pdthx.Services.MessageService;
+import me.pdthx.Services.PaystreamService;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -20,9 +15,9 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -190,9 +185,9 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 				button1.setOnClickListener(new OnClickListener() {
 					public void onClick(View argO) {
 						try {
-							MessageService messageService = new MessageService();
+							PaystreamService messageService = new PaystreamService();
 							int isSuccess = messageService
-									.AcceptRequestMessage(transactionId);
+									.acceptRequestMessage(transactionId);
 							// if the message request is a success, then return
 							// to
 							// user
@@ -235,9 +230,9 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 				button2.setOnClickListener(new OnClickListener() {
 					public void onClick(View argO) {
 						try {
-							MessageService messageService = new MessageService();
+							PaystreamService messageService = new PaystreamService();
 							int isSuccess = messageService
-									.RejectRequestMessage(transactionId);
+									.rejectRequestMessage(transactionId);
 							// if message succeeded, reject was done.
 
 							if (isSuccess == 200) {
@@ -277,9 +272,9 @@ public class IncomingRequestDialog extends Activity implements OnTouchListener {
 				button3.setOnClickListener(new OnClickListener() {
 					public void onClick(View argO) {
 						try {
-							MessageService messageService = new MessageService();
+							PaystreamService messageService = new PaystreamService();
 							int isSuccess = messageService
-									.IgnoreRequestMessage(transactionId);
+									.ignoreRequestMessage(transactionId);
 							// if the message request is a success, then return
 							// to
 							// user
