@@ -1,10 +1,8 @@
 package me.pdthx.Responses;
 
-public class ACHAccountSetupResponse {
+public class ACHAccountSetupResponse extends Response {
 	public ACHAccountSetupResponse() {
 		
 	}
-	public boolean Success = false;
 	public String PaymentAccountId = "";
-	public String ReasonPhrase = "";
 }

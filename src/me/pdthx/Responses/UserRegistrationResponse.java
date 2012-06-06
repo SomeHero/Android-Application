@@ -1,10 +1,8 @@
 package me.pdthx.Responses;
 
-public class UserRegistrationResponse {
+public class UserRegistrationResponse extends Response {
 	public UserRegistrationResponse() {
 		
 	}
-	public boolean Success = false;
-	public String ReasonPhrase = "";
 	public String UserId = "";
 }
