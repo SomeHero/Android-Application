@@ -4,9 +4,6 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.zubhium.ZubhiumSDK;
-import com.zubhium.ZubhiumSDK.CrashReportingMode;
-
 import me.pdthx.Adapters.PaystreamAdapter;
 import me.pdthx.Dialogs.IncomingPaymentDialog;
 import me.pdthx.Dialogs.IncomingRequestDialog;
@@ -20,8 +17,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -37,34 +32,13 @@ public final class PaystreamActivity extends BaseActivity {
 	private PaystreamAdapter m_adapter;
 	private Runnable viewOrders;
 
-	ZubhiumSDK sdk;
-
 	public static final String TAG = "PaystreamActivity";
 	private ListView mListView = null;
 	private TextView mEmptyTextView = null;
 
-	Handler mHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			showPaystreamController();
-
-		}
-
-	};
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		sdk = ZubhiumSDK.getZubhiumSDKInstance(PaystreamActivity.this, getString(R.string.secret_key));
-
-		if(sdk != null){
-			sdk.setCrashReportingMode(CrashReportingMode.SILENT);
-		}
-
-		prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
 
 		System.out.println(prefs.getString("userId", ""));
 		System.out.println(prefs.getString("mobileNumber", ""));
@@ -74,6 +48,20 @@ public final class PaystreamActivity extends BaseActivity {
 		}
 		else {
 			showPaystreamController();
+			Bundle extras = getIntent().getExtras();
+			
+			if (extras.getString("userId") != null && 
+					prefs.getString("userId", "").equals(
+							extras.getString("userId"))) {
+				PaystreamTransaction transaction = new PaystreamTransaction();
+				transaction.setTransactionId(extras.getString("transactionId"));
+				
+				//Use a fake transaction with the proper id to
+				//get the real transaction.
+				getTransactionDetails(m_transactions.indexOf(transaction));
+				
+				
+			}
 		}
 	}
 
@@ -102,77 +90,7 @@ public final class PaystreamActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				PaystreamTransaction ref = m_transactions.get(arg2);
-
-				DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
-				String date = dateFormat.format(ref.getCreateDate());
-				DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
-				String theTime = timeFormat.format(ref.getCreateDate());
-				String recipient = ref.getRecipientUri();
-				String sender = ref.getSenderUri();
-
-				Double amount = ref.getAmount();
-				String transactionType = ref.getTransactionType();
-				String transactionStat = ref.getTransactionStatus();
-				String transactionId = ref.getTransactionId();
-
-				// first create intent based on what the transaction type is
-				// 1) determine outgoing or incoming
-				// 2) determine payment or request
-				if (ref.getDirection().equalsIgnoreCase("Out")) {
-					if (ref.getTransactionType().equalsIgnoreCase("Payment")) {
-						// imgTransactionType.setImageResource(R.drawable.paystream_sent_icon);
-						Intent temp1 = new Intent(getApplicationContext(),
-								OutgoingPaymentDialog.class);
-						temp1.putExtra("date", date);
-						temp1.putExtra("time", theTime);
-						temp1.putExtra("recipient", recipient);
-						temp1.putExtra("sender", sender);
-						temp1.putExtra("amount", amount);
-						temp1.putExtra("transactionType", transactionType);
-						temp1.putExtra("transactionStat", transactionStat);
-						temp1.putExtra("transactionId", transactionId);
-						startActivity(temp1);
-					} else {
-						Intent temp2 = new Intent(getApplicationContext(),
-								OutgoingRequestDialog.class);
-						temp2.putExtra("date", date);
-						temp2.putExtra("time", theTime);
-						temp2.putExtra("recipient", recipient);
-						temp2.putExtra("sender", sender);
-						temp2.putExtra("amount", amount);
-						temp2.putExtra("transactionType", transactionType);
-						temp2.putExtra("transactionStat", transactionStat);
-						temp2.putExtra("transactionId", transactionId);
-						startActivity(temp2);
-					}
-				} else {
-					if (ref.getTransactionType().equalsIgnoreCase("Payment")) {
-						Intent temp3 = new Intent(getApplicationContext(),
-								IncomingPaymentDialog.class);
-						temp3.putExtra("date", date);
-						temp3.putExtra("time", theTime);
-						temp3.putExtra("recipient", recipient);
-						temp3.putExtra("sender", sender);
-						temp3.putExtra("amount", amount);
-						temp3.putExtra("transactionType", transactionType);
-						temp3.putExtra("transactionStat", transactionStat);
-						temp3.putExtra("transactionId", transactionId);
-						startActivity(temp3);
-					} else {
-						Intent temp4 = new Intent(getApplicationContext(),
-								IncomingRequestDialog.class);
-						temp4.putExtra("date", date);
-						temp4.putExtra("time", theTime);
-						temp4.putExtra("recipient", recipient);
-						temp4.putExtra("sender", sender);
-						temp4.putExtra("amount", amount);
-						temp4.putExtra("transactionType", transactionType);
-						temp4.putExtra("transactionStat", transactionStat);
-						temp4.putExtra("transactionId", transactionId);
-						startActivity(temp4);
-					}
-				}
+				getTransactionDetails(arg2);
 			}
 		});
 		viewOrders = new Runnable() {
@@ -254,5 +172,79 @@ public final class PaystreamActivity extends BaseActivity {
 			Log.e("BACKGROUND_PROC", e.getMessage());
 		}
 		runOnUiThread(returnRes);
+	}
+	
+	private void getTransactionDetails(int index) {
+		PaystreamTransaction ref = m_transactions.get(index);	
+		
+		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
+		String date = dateFormat.format(ref.getCreateDate());
+		DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+		String theTime = timeFormat.format(ref.getCreateDate());
+		String recipient = ref.getRecipientUri();
+		String sender = ref.getSenderUri();
+
+		Double amount = ref.getAmount();
+		String transactionType = ref.getTransactionType();
+		String transactionStat = ref.getTransactionStatus();
+		String transactionId = ref.getTransactionId();
+
+		// first create intent based on what the transaction type is
+		// 1) determine outgoing or incoming
+		// 2) determine payment or request
+		if (ref.getDirection().equalsIgnoreCase("Out")) {
+			if (ref.getTransactionType().equalsIgnoreCase("Payment")) {
+				// imgTransactionType.setImageResource(R.drawable.paystream_sent_icon);
+				Intent temp1 = new Intent(getApplicationContext(),
+						OutgoingPaymentDialog.class);
+				temp1.putExtra("date", date);
+				temp1.putExtra("time", theTime);
+				temp1.putExtra("recipient", recipient);
+				temp1.putExtra("sender", sender);
+				temp1.putExtra("amount", amount);
+				temp1.putExtra("transactionType", transactionType);
+				temp1.putExtra("transactionStat", transactionStat);
+				temp1.putExtra("transactionId", transactionId);
+				startActivity(temp1);
+			} else {
+				Intent temp2 = new Intent(getApplicationContext(),
+						OutgoingRequestDialog.class);
+				temp2.putExtra("date", date);
+				temp2.putExtra("time", theTime);
+				temp2.putExtra("recipient", recipient);
+				temp2.putExtra("sender", sender);
+				temp2.putExtra("amount", amount);
+				temp2.putExtra("transactionType", transactionType);
+				temp2.putExtra("transactionStat", transactionStat);
+				temp2.putExtra("transactionId", transactionId);
+				startActivity(temp2);
+			}
+		} else {
+			if (ref.getTransactionType().equalsIgnoreCase("Payment")) {
+				Intent temp3 = new Intent(getApplicationContext(),
+						IncomingPaymentDialog.class);
+				temp3.putExtra("date", date);
+				temp3.putExtra("time", theTime);
+				temp3.putExtra("recipient", recipient);
+				temp3.putExtra("sender", sender);
+				temp3.putExtra("amount", amount);
+				temp3.putExtra("transactionType", transactionType);
+				temp3.putExtra("transactionStat", transactionStat);
+				temp3.putExtra("transactionId", transactionId);
+				startActivity(temp3);
+			} else {
+				Intent temp4 = new Intent(getApplicationContext(),
+						IncomingRequestDialog.class);
+				temp4.putExtra("date", date);
+				temp4.putExtra("time", theTime);
+				temp4.putExtra("recipient", recipient);
+				temp4.putExtra("sender", sender);
+				temp4.putExtra("amount", amount);
+				temp4.putExtra("transactionType", transactionType);
+				temp4.putExtra("transactionStat", transactionStat);
+				temp4.putExtra("transactionId", transactionId);
+				startActivity(temp4);
+			}
+		}
 	}
 }

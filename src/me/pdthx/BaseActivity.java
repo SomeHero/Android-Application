@@ -19,18 +19,22 @@ import com.zubhium.ZubhiumSDK.CrashReportingMode;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings.Secure;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class BaseActivity extends Activity {
+	
+	public static final String TAG = "BaseActivity";
 	protected SharedPreferences prefs;
 	protected AlertDialog alertDialog;
 	protected ProgressDialog progressDialog;
@@ -43,7 +47,9 @@ public class BaseActivity extends Activity {
 	private static boolean contactListAdded = false;
 	protected static boolean facebookFriendsAdded = false;
 	private ContactList contactList;
-	
+
+	protected int RETURNFROM_PROFILESETUP = 10;
+
 	private ZubhiumSDK sdk;
 
 	@Override
@@ -51,18 +57,23 @@ public class BaseActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
+
 		signedInViaFacebook = prefs.getBoolean("signedInViaFacebook", false);
 
 		alertDialog = new AlertDialog.Builder(BaseActivity.this).create();
 		progressDialog = new ProgressDialog(BaseActivity.this);
+		
+		Editor editor = prefs.edit();
+		editor.putString("deviceToken", Secure.getString(getBaseContext().getContentResolver(),
+				Secure.ANDROID_ID));
+		editor.commit();
 
 		sdk = ZubhiumSDK.getZubhiumSDKInstance(this, getString(R.string.secret_key));
-		
-	    if(sdk != null){
-	    	sdk.setCrashReportingMode(CrashReportingMode.SILENT);
-	    }
-		
+
+		if(sdk != null){
+			sdk.setCrashReportingMode(CrashReportingMode.SILENT);
+		}
+
 		if (!contactListAdded && friendsList.size() == 0) {
 			contactList = new ContactList(getBaseContext());
 			friendsList.addAll(contactList.getContacts());
@@ -76,7 +87,14 @@ public class BaseActivity extends Activity {
 		}
 
 	}
-
+	
+	public void registerPushNotifications() {
+		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 1, new Intent(), 0));
+		registrationIntent.putExtra("sender", "james@paidthx.com");
+		startService(registrationIntent);
+	}
+	
 
 	private void validateFBLogin() {
 		String access_token = prefs.getString("access_token", null);
@@ -101,7 +119,7 @@ public class BaseActivity extends Activity {
 						JSONObject json = new JSONObject(response);
 						JSONArray d = json.getJSONArray("data");
 						int l = (d != null ? d.length() : 0);
-						Log.d("Facebook-Example-Friends Request", "d.length(): " + l);
+						Log.d("Requesting Friends, BaseActivity", "d.length(): " + l);
 						for (int i=0; i<l; i++) {
 							JSONObject o = d.getJSONObject(i);
 							String n = o.getString("name");
@@ -161,10 +179,16 @@ public class BaseActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater menuInflater = getMenuInflater();
-		menuInflater.inflate(R.menu.main_menu, menu);
 
-		return true;
+		if (prefs.getString("userId", "").length() != 0) {
+			MenuInflater menuInflater = getMenuInflater();
+			menuInflater.inflate(R.menu.main_menu, menu);
+
+			return true;
+		}
+
+		return false;
+
 	}
 
 	@Override
@@ -174,34 +198,32 @@ public class BaseActivity extends Activity {
 
 		switch (item.getItemId()) {
 		case R.id.signOutMenuItem:
-			if (prefs.getString("userId", "").length() != 0) {
-				contactListAdded = false;
-				facebookFriendsAdded = false;
-				friendsList.clear();
-				
-				signedInViaFacebook = false;
-				editor.remove("userId");
-				editor.remove("signedInViaFacebook");
-				editor.commit();
-				
+			contactListAdded = false;
+			facebookFriendsAdded = false;
+			friendsList.clear();
 
-				if (!facebook.isSessionValid()) {
-					startActivityForResult(new Intent(this, SignInActivity.class), 1);
-				}
-				else {
-					facebookLogout();
-					
-				}
+			signedInViaFacebook = false;
+			editor.remove("userId");
+			editor.remove("signedInViaFacebook");
+			editor.commit();
+
+
+			if (!facebook.isSessionValid()) {
+				startActivityForResult(new Intent(this, SignInActivity.class), 1);
+			}
+			else {
+				facebookLogout();
 
 			}
+
 			break;
 		case R.id.profileMenuItem:
 
 			startActivity(new Intent(this, ProfileSetupActivity.class));
 
 			break;
-
 		}
+
 		return super.onOptionsItemSelected(item);
 	}
 

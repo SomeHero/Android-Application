@@ -54,12 +54,12 @@ public class SignInActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(View.inflate(this, R.layout.signin_controller, null));
+		setContentView(View.inflate(this, R.layout.signin_controller, null));		
 
 		showSignInActivity();
 	}
 
-	Handler signInHandler = new Handler() {
+	private Handler signInHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -324,7 +324,7 @@ public class SignInActivity extends BaseActivity {
 					JSONObject json = new JSONObject(response);
 					JSONArray d = json.getJSONArray("data");
 					int l = (d != null ? d.length() : 0);
-					Log.d("Facebook-Example-Friends Request", "d.length(): " + l);
+					Log.d("Requesting Friends, Signing In", "d.length(): " + l);
 					for (int i=0; i<l; i++) {
 						JSONObject o = d.getJSONObject(i);
 						String n = o.getString("name");
@@ -391,6 +391,7 @@ public class SignInActivity extends BaseActivity {
 			userFBSignInRequest.FirstName = firstName;
 			userFBSignInRequest.LastName = lastName;
 			userFBSignInRequest.Email = email;
+			userFBSignInRequest.DeviceToken = prefs.getString("deviceToken", "");
 			userSignInResponse = UserService.signInUser(userFBSignInRequest);
 		}
 	}

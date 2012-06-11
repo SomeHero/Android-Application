@@ -4,6 +4,7 @@ public class UserResponse extends Response{
 	public UserResponse() {}
 	
 	public String UserId;
+	public String DeviceToken;
 	public String MobileNumber;
 	public String EmailAddress;
 	public String UserName;

@@ -96,6 +96,7 @@ public class SignUpActivity extends BaseActivity {
 					request = new UserRegistrationRequest();
 					request.UserName = emailAddress;
 					request.Password = password;
+					request.DeviceToken = prefs.getString("deviceToken", "");
 
 					progressDialog.setMessage("Setting up account...");
 					progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
