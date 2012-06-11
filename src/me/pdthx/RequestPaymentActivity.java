@@ -33,16 +33,16 @@ public class RequestPaymentActivity extends BaseActivity {
 
 	public static final String TAG = "RequestMoneyActivity";
 	
-	private String recipientUri = "";
+	private String recipientUri;
 	private double amount = 0;
 	private String comments = "";
 	private String errorMessage = "";
 	
-	private Location location = null;
+	private Location location;
 	private LocationManager locationManager;
 	private LocationListener locationListener;
 	
-	private Friend friend = null;
+	private Friend friend;
 
 	private Button btnAddContacts;
 	private EditText txtAmount;
@@ -63,29 +63,10 @@ public class RequestPaymentActivity extends BaseActivity {
 
 	private View requestMoneyView = null;
 	private Response paymentResponse;
-	
-	Handler mHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-
-        	switch(msg.what) {
-	    		case(R.id.USERSIGNIN_COMPLETE):
-	    			setContentView(requestMoneyView);
-	        		showSecurityPinDialog();
-	    			break;
-	    		case(R.id.USERREGISTRATION_COMPLETE):
-	    			setContentView(requestMoneyView);
-	        		showSecurityPinDialog();
-	    			break;
-	    	}
-        }
-        
-	};
 
 	private Dialog dialog = null;
 	private Handler dialogHandler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
+		public void handleMessage(Message msg) {
 			dialog.dismiss();
 			switch (msg.what) {
 			case SUBMITREQUEST_ACTION:
@@ -415,7 +396,9 @@ public class RequestPaymentActivity extends BaseActivity {
 			}
 		}
 		else {
-			finish();
+			if (requestCode != ADDING_FRIEND) {
+				finish();
+			}
 		}
 	}
 

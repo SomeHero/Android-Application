@@ -7,6 +7,7 @@ import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Requests.UserChangeSecurityPinRequest;
 import me.pdthx.Requests.UserFBSignInRequest;
 import me.pdthx.Requests.UserMeCodeRequest;
+import me.pdthx.Requests.UserPushNotificationRequest;
 import me.pdthx.Requests.UserRegistrationRequest;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Requests.SecurityPinSetupRequest;
@@ -41,6 +42,7 @@ public class UserService {
 	private static final String CHANGESECURITYPIN_URL = "/Users/%s/change_securitypin";
 	private static final String SETUPACHACCOUNT_URL = "/Users/%s/PaymentAccounts?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String MECODE_URL = "/Users/%s/mecodes";
+	private static final String PUSHNOTIFICATION_URL = "/Users/%s/RegisterPushNotifications";
 	private static final String USER_URL = "/Users/";
 	public UserService() {
 
@@ -107,6 +109,7 @@ public class UserService {
 
 			try {
 				userResponse.UserId = jsonResult.getString("userId");
+				userResponse.DeviceToken = jsonResult.getString("deviceToken");
 				userResponse.MobileNumber = jsonResult.getString("mobileNumber");
 				userResponse.EmailAddress = jsonResult.getString("emailAddress");
 				userResponse.UserName = jsonResult.getString("userName");
@@ -226,7 +229,7 @@ public class UserService {
 			json.put("firstName", userFBSignInRequest.FirstName);
 			json.put("lastName", userFBSignInRequest.LastName);
 			json.put("emailAddress", userFBSignInRequest.Email);
-			json.put("deviceToken", "");
+			json.put("deviceToken", userFBSignInRequest.DeviceToken);
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);
@@ -674,5 +677,44 @@ public class UserService {
 		}
 		
 		return userMeCodeResponse;
+	}
+	
+	public static Response registerForPush(UserPushNotificationRequest userRequest) {
+		HttpResponse response = null;
+		Response serverResponse = new Response();
+		try {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost request = new HttpPost(ROOTURL + 
+					String.format(PUSHNOTIFICATION_URL, userRequest.UserId));
+
+			JSONObject json = new JSONObject();
+			json.put("registrationId", userRequest.RegistrationId);
+			json.put("deviceToken", userRequest.DeviceToken);
+
+			StringEntity entity = new StringEntity(json.toString());
+			request.setEntity(entity);
+			request.setHeader("content-type", "application/json");
+
+			response = httpClient.execute(request);
+		} catch (ClientProtocolException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (response.getStatusLine().getStatusCode() == 201) {
+			serverResponse.Success = true;
+		}
+		else {
+			serverResponse.Success = false;
+			serverResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+		}
+		
+		return serverResponse;
 	}
 }
