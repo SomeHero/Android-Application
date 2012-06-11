@@ -125,4 +125,9 @@ public class PaystreamTransaction {
 	public String getDirection() {
 		return _direction;
 	}
+	
+	public boolean equals(Object other) {
+		return other instanceof PaystreamTransaction 
+				&& _transactionId.equals(((PaystreamTransaction) other).getTransactionId());
+	}
 }

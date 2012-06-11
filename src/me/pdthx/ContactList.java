@@ -5,6 +5,7 @@ import me.pdthx.Models.Friend;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.provider.ContactsContract;
 
 public class ContactList {
@@ -27,6 +28,7 @@ public class ContactList {
 					friend.setId(contactId);
 					friend.setName(name);
 					friend.setPhoneNumber(phoneNumber);
+					friend.setPicture(BitmapFactory.decodeResource(context.getResources(), R.drawable.person_icon_small));
 					contactsList.add(friend);
 				} 
 				phones.close(); 

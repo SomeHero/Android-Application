@@ -15,8 +15,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,23 +33,6 @@ public final class HomeActivity extends BaseActivity {
 
     private PendingIntent sentPI;
     private PendingIntent deliveredPI;
-
-	Handler mHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			switch(msg.what) {
-			case(R.id.USERSIGNIN_COMPLETE):
-				showHomeController();
-			break;
-			case(R.id.USERREGISTRATION_COMPLETE):
-				showHomeController();
-			break;
-			}
-
-		}
-
-	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -151,6 +132,11 @@ public final class HomeActivity extends BaseActivity {
 			startActivity(new Intent(this, SignInActivity.class));
 		} 
 		else {
+			if (userResponse.DeviceToken.equals("null") && 
+					!prefs.getString("deviceId", "").equals(userResponse.DeviceToken)) {
+				registerPushNotifications();
+			}
+			
 			if (userResponse.MobileNumber.equals("null")) {
 				
 				setupSMS();
