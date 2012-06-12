@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import me.pdthx.Adapters.PaystreamAdapter;
-import me.pdthx.Dialogs.FilterPayStreamDialog;
 import me.pdthx.Dialogs.IncomingPaymentDialog;
 import me.pdthx.Dialogs.IncomingRequestDialog;
 import me.pdthx.Dialogs.OutgoingPaymentDialog;
 import me.pdthx.Dialogs.OutgoingRequestDialog;
+import me.pdthx.Login.TabUIActivity;
 import me.pdthx.Models.PaystreamTransaction;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Responses.PaystreamResponse;
@@ -21,11 +21,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 public final class PaystreamActivity extends BaseActivity {
@@ -34,8 +32,8 @@ public final class PaystreamActivity extends BaseActivity {
 	private ArrayList<PaystreamTransaction> m_transactions = null;
 	private PaystreamAdapter m_adapter;
 	private Runnable viewOrders;
-//	private SearchView searchView = null;
-	private int FILTER_PAYSTREAM = 1;
+	//	private SearchView searchView = null;
+	//	private int FILTER_PAYSTREAM = 1;
 
 	public static final String TAG = "PaystreamActivity";
 	private ListView mListView = null;
@@ -49,24 +47,24 @@ public final class PaystreamActivity extends BaseActivity {
 		System.out.println(prefs.getString("mobileNumber", ""));
 
 		if(prefs.getString("userId", "").length() == 0)        {
-			startActivityForResult(new Intent(this, SignInActivity.class), 1);
+			startActivityForResult(new Intent(this, TabUIActivity.class), 1);
 		}
 		else {
 			showPaystreamController();
 			Bundle extras = getIntent().getExtras();
-			
-			if (extras.getString("userId") != null && 
+
+			if (extras != null && extras.getString("userId") != null && 
 					prefs.getString("userId", "").equals(
 							extras.getString("userId"))) {
 				PaystreamTransaction transaction = new PaystreamTransaction();
 				transaction.setTransactionId(extras.getString("transactionId"));
-				
+
 				//Use a fake transaction with the proper id to
 				//get the real transaction.
 				getTransactionDetails(m_transactions.indexOf(transaction));
-				
-				
-			}
+		}
+		
+
 		}
 	}
 
@@ -77,14 +75,14 @@ public final class PaystreamActivity extends BaseActivity {
 				showPaystreamController();
 			}
 		}
-//		if(resultCode == FILTER_PAYSTREAM)
-//		{
-//			//Show new view?
-//		}
+		//		if(resultCode == FILTER_PAYSTREAM)
+		//		{
+		//			//Show new view?
+		//		}
 		else {
 			finish();
 		}
-		
+
 	}
 	private void showPaystreamController() {
 		setContentView(R.layout.paystream_controller);
@@ -95,19 +93,19 @@ public final class PaystreamActivity extends BaseActivity {
 		mListView.setAdapter(m_adapter);
 		mEmptyTextView = (TextView) findViewById(R.id.txtEmptyPaystream);
 
-//		searchView = (SearchView)findViewById(R.id.searchBar);
-		
-//		searchView.setOnSearchClickListener(new OnClickListener()
-//		{
-//			@Override
-//			public void onClick(View v) {
-//				startActivityForResult(new Intent(PaystreamActivity.this, FilterPayStreamActivity.class), FILTER_PAYSTREAM);				
-//				
-//			}
-//			
-//		});
-		
-		
+		//		searchView = (SearchView)findViewById(R.id.searchBar);
+
+		//		searchView.setOnSearchClickListener(new OnClickListener()
+		//		{
+		//			@Override
+		//			public void onClick(View v) {
+		//				startActivityForResult(new Intent(PaystreamActivity.this, FilterPayStreamActivity.class), FILTER_PAYSTREAM);				
+		//				
+		//			}
+		//			
+		//		});
+
+
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -197,7 +195,7 @@ public final class PaystreamActivity extends BaseActivity {
 	}
 	private void getTransactionDetails(int index) {
 		PaystreamTransaction ref = m_transactions.get(index);	
-		
+
 		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
 		String date = dateFormat.format(ref.getCreateDate());
 		DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);

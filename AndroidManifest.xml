@@ -60,7 +60,7 @@
             android:label="@string/app_name" >
         </activity>
 	<activity
-            android:name=".FriendListActivity"
+            android:name=".FriendsListActivity"
             android:label="@string/app_name" >
         </activity>
         <activity

@@ -3,6 +3,7 @@ package me.pdthx;
 
 import java.text.NumberFormat;
 
+import me.pdthx.Login.TabUIActivity;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Responses.UserResponse;
 import me.pdthx.Services.UserService;
@@ -129,15 +130,17 @@ public final class HomeActivity extends BaseActivity {
 
 		if(userResponse == null)
 		{
-			startActivity(new Intent(this, SignInActivity.class));
+			startActivity(new Intent(this, TabUIActivity.class));
 		} 
 		else {
-			if (userResponse.DeviceToken.equals("null") && 
+			if (userResponse.DeviceToken != null && 
+					userResponse.DeviceToken.equals("null") && 
 					!prefs.getString("deviceId", "").equals(userResponse.DeviceToken)) {
 				registerPushNotifications();
 			}
 			
-			if (userResponse.MobileNumber.equals("null")) {
+			if (userResponse.MobileNumber != null && 
+					userResponse.MobileNumber.equals("null")) {
 				
 				setupSMS();
 				String message = userResponse.UserId;
@@ -157,7 +160,8 @@ public final class HomeActivity extends BaseActivity {
 			Editor editor = prefs.edit();
 			editor.putInt("upperLimit", userResponse.UpperLimit);
 			
-			if (userResponse.UserName.contains("fb_")) {
+			if (userResponse.UserName != null && 
+					userResponse.UserName.contains("fb_")) {
 				editor.putBoolean("signedInViaFacebook", true);
 			}
 			editor.commit();
