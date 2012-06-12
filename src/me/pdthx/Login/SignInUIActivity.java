@@ -48,10 +48,12 @@ public class SignInUIActivity extends BaseActivity {
 
 	private final int ACCOUNT_SETUP = 1;
 	private final int FACEBOOK_SETUP = 2;
-	private final int ACHACCOUNT_SETUP = 3;
+	private final int ACHACCOUNT_SETUP = 3;	
 
 	final private int USERSIGNIN_INVALID = 0;
 	final private int USERSIGNIN_FAILED = 4;
+	final private int FACEBOOK_SIGNIN = 5;
+	final private int AUTHENTICATE = 6;
 
 	private Button facebookButton;
 	private Button emailacctButton;
@@ -65,43 +67,49 @@ public class SignInUIActivity extends BaseActivity {
 		showSignInActivity();
 	}
 
-	Handler signInHandler = new Handler() {
+	private Handler signInHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case (USERSIGNIN_INVALID):
+			switch(msg.what) {
+			case(USERSIGNIN_INVALID):
 				alertDialog = new AlertDialog.Builder(SignInUIActivity.this)
-						.create();
-				alertDialog.setTitle("Invalid Account Credentials.");
-				alertDialog
-						.setMessage("The username and password you entered were invalid. Please try again. \n \n Note: Username and password are case-sensitive.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
+			.create();
+			alertDialog.setTitle("Invalid Account Credentials.");
+			alertDialog
+			.setMessage("The username and password you entered were invalid. Please try again.");
+			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
 
-				alertDialog.show();
+			alertDialog.show();
+			break;
+
+			case(USERSIGNIN_FAILED):
+				alertDialog = new AlertDialog.Builder(SignInUIActivity.this)
+			.create();
+			alertDialog.setTitle("Account Creation Failed.");
+			alertDialog
+			.setMessage("Account creation failed. Please try again.");
+			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+
+			alertDialog.show();
+			break;
+			
+			case(FACEBOOK_SIGNIN):
+				signInRunner();
 				break;
-
-			case (USERSIGNIN_FAILED):
-				alertDialog = new AlertDialog.Builder(SignInUIActivity.this)
-						.create();
-				alertDialog.setTitle("Account Creation Failed.");
-				alertDialog
-						.setMessage("Account creation failed. Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
-
-				alertDialog.show();
+				
+			case(AUTHENTICATE):
+				progressDialog.setMessage("Logging into PaidThx...");
+				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				progressDialog.show();
 				break;
 			}
 
@@ -163,9 +171,7 @@ public class SignInUIActivity extends BaseActivity {
 
 	private void signInRunner() {
 		Thread thread = null;
-		// progressDialog.setMessage("Authenticating...");
-		// progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		// progressDialog.show();
+		signInHandler.sendEmptyMessage(AUTHENTICATE);
 
 		thread = new Thread(new Runnable() {
 
@@ -220,22 +226,26 @@ public class SignInUIActivity extends BaseActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		if (resultCode == Activity.RESULT_OK) {
-
+			
 			if (requestCode == ACCOUNT_SETUP) {
+								
 				login = data.getStringExtra("email");
 				password = data.getStringExtra("password");
 
 				signInRunner();
-			} else if (requestCode == ACHACCOUNT_SETUP) {
+			}
+			else if (requestCode == ACHACCOUNT_SETUP) {
 				setResult(RESULT_OK);
 				finish();
-			} else if (requestCode == FACEBOOK_SETUP) {
-				facebook.authorizeCallback(requestCode, resultCode, data);
-				progressDialog.setMessage("Authenticating...");
+			}
+			else if (requestCode == FACEBOOK_SETUP)
+			{
+				progressDialog.setMessage("Requesting information from Facebook...");
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				progressDialog.show();
-
-				mAsyncRunner.request("me", new RequestListener() {
+				
+				facebook.authorizeCallback(requestCode, resultCode, data);
+				mAsyncRunner.request("me", new RequestListener(){
 
 					@Override
 					public void onComplete(String response, Object state) {
@@ -249,61 +259,9 @@ public class SignInUIActivity extends BaseActivity {
 							lastName = result.getString("last_name");
 							email = result.getString("email");
 							signedInViaFacebook = true;
-							signInRunner();
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-					}
-
-					@Override
-					public void onIOException(IOException e, Object state) {
-						// TODO Auto-generated method stub
-					}
-
-					@Override
-					public void onFileNotFoundException(
-							FileNotFoundException e, Object state) {
-						// TODO Auto-generated method stub
-					}
-
-					@Override
-					public void onMalformedURLException(
-							MalformedURLException e, Object state) {
-						// TODO Auto-generated method stub
-					}
-
-					@Override
-					public void onFacebookError(FacebookError e, Object state) {
-						// TODO Auto-generated method stub
-					}
-
-				});
-
-				facebook.authorizeCallback(requestCode, resultCode, data);
-				mAsyncRunner.request("me/friends", new RequestListener() {
-
-					@Override
-					public void onComplete(String response, Object state) {
-
-						try {
-							JSONObject json = new JSONObject(response);
-							JSONArray d = json.getJSONArray("data");
-							int l = (d != null ? d.length() : 0);
-							Log.d("Facebook-Example-Friends Request",
-									"d.length(): " + l);
-							for (int i = 0; i < l; i++) {
-								JSONObject o = d.getJSONObject(i);
-								String n = o.getString("name");
-								String id = o.getString("id");
-								Friend f = new Friend();
-								f.setId(id);
-								f.setName(n);
-								f.setType("Facebook");
-								friendsList.add(f);
-								Log.d(f.getName() + ": " + f.getId(), "Facebook Friends"); // SWEEETTNNEEESESSS
-
+							
+							if (!facebookFriendsAdded) {
+								requestFacebookFriends();
 							}
 
 						} catch (JSONException e) {
@@ -314,41 +272,99 @@ public class SignInUIActivity extends BaseActivity {
 
 					@Override
 					public void onIOException(IOException e, Object state) {
-						// TODO Auto-generated method stub
-
+						// TODO Auto-generated method stub	
 					}
-
 					@Override
 					public void onFileNotFoundException(
 							FileNotFoundException e, Object state) {
-						// TODO Auto-generated method stub
-
+						// TODO Auto-generated method stub						
 					}
-
 					@Override
 					public void onMalformedURLException(
 							MalformedURLException e, Object state) {
 						// TODO Auto-generated method stub
-
 					}
-
 					@Override
 					public void onFacebookError(FacebookError e, Object state) {
-						// TODO Auto-generated method stub
-
+						// TODO Auto-generated method stub	
 					}
 
 				});
 			}
-		} else {
+		}
+		else {
 			if (requestCode == ACCOUNT_SETUP && requestCode == FACEBOOK_SETUP) {
 				progressDialog.dismiss();
 				signInHandler.sendEmptyMessage(USERSIGNIN_FAILED);
 			}
 		}
 	}
+	
+	private void requestFacebookFriends() {
+		mAsyncRunner.request("me/friends", new RequestListener(){
+
+			@Override
+			public void onComplete(String response, Object state) {
+
+				try {
+					JSONObject json = new JSONObject(response);
+					JSONArray d = json.getJSONArray("data");
+					int l = (d != null ? d.length() : 0);
+					Log.d("Requesting Friends, Signing In", "d.length(): " + l);
+					for (int i=0; i<l; i++) {
+						JSONObject o = d.getJSONObject(i);
+						String n = o.getString("name");
+						String id = o.getString("id");
+						Friend f = new Friend();
+						f.setId(id);
+						f.setName(n);
+						f.setType("Facebook");
+						friendsList.add(f);
+						Log.d(f.getName() + ": " + f.getId(), "Facebook Friends");			//SWEEETTNNEEESESSS
+
+					}
+
+					facebookFriendsAdded = true;
+					progressDialog.dismiss();
+					signInHandler.sendEmptyMessage(FACEBOOK_SIGNIN);
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();      
+				}
+			}
+
+			@Override
+			public void onIOException(IOException e, Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onFileNotFoundException(FileNotFoundException e,
+					Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onMalformedURLException(MalformedURLException e,
+					Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onFacebookError(FacebookError e, Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+	}
 
 	private void signInUser() {
+
 
 		if (!signedInViaFacebook) {
 			UserSignInRequest userSignInRequest = new UserSignInRequest();
@@ -361,6 +377,7 @@ public class SignInUIActivity extends BaseActivity {
 			userFBSignInRequest.FirstName = firstName;
 			userFBSignInRequest.LastName = lastName;
 			userFBSignInRequest.Email = email;
+			userFBSignInRequest.DeviceToken = prefs.getString("deviceToken", "");
 			userSignInResponse = UserService.signInUser(userFBSignInRequest);
 		}
 	}

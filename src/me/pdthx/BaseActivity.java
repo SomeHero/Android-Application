@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import me.pdthx.Login.TabUIActivity;
 import me.pdthx.Models.Friend;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
@@ -209,7 +210,7 @@ public class BaseActivity extends Activity {
 
 
 			if (!facebook.isSessionValid()) {
-				startActivityForResult(new Intent(this, SignInActivity.class), 1);
+				startActivityForResult(new Intent(this, TabUIActivity.class), 1);
 			}
 			else {
 				facebookLogout();
@@ -232,7 +233,7 @@ public class BaseActivity extends Activity {
 		mAsyncRunner.logout(this, new RequestListener() {
 			@Override
 			public void onComplete(String response, Object state) {
-				startActivityForResult(new Intent(BaseActivity.this, SignInActivity.class), 1);
+				startActivityForResult(new Intent(BaseActivity.this, TabUIActivity.class), 1);
 			}
 
 			@Override
