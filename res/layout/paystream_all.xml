@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="#f6f6f6"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/tab_paystreamtitle"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/paystreamTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Paystream"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#34363d"
+            android:textStyle="bold"
+            android:typeface="normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#c8cbd1"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="5dp"
+        android:background="#a4a5a5"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f6f6f6"
+        android:gravity="center" >
+
+        <RadioGroup
+            android:id="@+id/paystreamSubCategories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <me.pdthx.SegmentButtons.SegmentedControlButton
+                android:id="@+id/paystreamAll"
+                android:checked="true"
+                android:text="All" />
+
+            <me.pdthx.SegmentButtons.SegmentedControlButton
+                android:id="@+id/paystreamSent"
+                android:checked="false"
+                android:text="Sent" />
+
+            <me.pdthx.SegmentButtons.SegmentedControlButton
+                android:id="@+id/paystreamReceived"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Received" />
+
+            <me.pdthx.SegmentButtons.SegmentedControlButton
+                android:id="@+id/paystreamOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Other" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/lvPaystream"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:divider="@drawable/paystream_divider"
+            android:dividerHeight="1dp" >
+        </ListView>
+
+        <TextView
+            android:id="@+id/txtEmptyPaystream"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/panel_background"
+            android:padding="14dp"
+            android:text="Your paystream is empty."
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

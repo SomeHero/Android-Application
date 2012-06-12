@@ -59,10 +59,9 @@
             android:name=".CustomTabActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity
-            android:name=".FriendsListActivity"
-            android:label="@string/app_name" 
-            android:noHistory="true">
+	<activity
+            android:name=".FriendListActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name =".FilterPayStreamActivity"
