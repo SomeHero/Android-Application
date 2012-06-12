@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1c8839"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="305dp"
+        android:layout_height="535dp"
+        android:layout_marginBottom="19dp"
+        android:background="@drawable/welcome_sc"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/pdthxlogo"
+            android:layout_width="250dp"
+            android:layout_height="80dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="34dp"
+            android:src="@drawable/pdthxlogo" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pdthxlogo"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/welcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pdthxlogo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:text="Welcome to PaidThx!"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#58585a"
+                android:textStyle="bold"
+                android:typeface="normal" />
+
+            <TextView
+                android:id="@+id/intro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxWidth="200dp"
+                android:paddingBottom="10dp"
+                android:text="The fastest, easiest, safest way to exchange money with friends, family, and your favorite organizations."
+                android:textColor="#58585a"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/signup_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:gravity="center"
+                android:text="Sign Up or Sign In Below:"
+                android:textColor="#58585a"
+                android:textSize="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/signup_button"
+                android:layout_width="275dp"
+                android:layout_height="83dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/signup_selector"
+                android:paddingBottom="15dp"
+                android:text=" " />
+
+            <Button
+                android:id="@+id/signin_button"
+                android:layout_width="275dp"
+                android:layout_height="83dp"
+                android:background="@drawable/signin_selector"
+                android:text=" " />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

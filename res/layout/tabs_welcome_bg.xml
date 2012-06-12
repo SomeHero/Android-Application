@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/tabsWLayout" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:background="@drawable/tab_welcome_bg_selector"
+	android:padding="10dip" android:gravity="center" android:orientation="vertical">
+
+	<ImageView
+	    android:id="@+id/tabsWIcon"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:src="@drawable/actionbar_back_indicator" />
+
+	<TextView android:id="@+id/tabsWText" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:text="Title"
+		android:textSize="12dip" android:textColor="@drawable/tab_welcome_text_selector"
+		android:gravity="center" />
+</LinearLayout>
