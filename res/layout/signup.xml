@@ -169,7 +169,6 @@
                 android:layout_width="280dp"
                 android:layout_height="55dp"
                 android:layout_marginLeft="6dp"
-                android:background="@drawable/button_selector"
                 android:text="Create my account"
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"
