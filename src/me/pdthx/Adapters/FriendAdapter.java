@@ -2,7 +2,6 @@ package me.pdthx.Adapters;
 
 
 import java.util.ArrayList;
-
 import me.pdthx.R;
 import me.pdthx.Models.Friend;
 import android.content.Context;
@@ -19,7 +18,6 @@ public final class FriendAdapter extends ArrayAdapter<Friend> {
 	public FriendAdapter(Context context, int textViewResourceId,
 			ArrayList<Friend> items) {
 		super(context, textViewResourceId, items);
-
 	}
 
 	@Override
@@ -50,6 +48,10 @@ public final class FriendAdapter extends ArrayAdapter<Friend> {
 				}
 			}
 
+//			 if(imgFriend != null) {
+//				 imgFriend.setImageResource(resId)							//PULL FRIEND IMAGE FROM FB!!!!
+//			 }
+			 
 			if (txtRecipientUri != null) {
 				txtRecipientUri.setText(o.getName());
 				txtPhoneNumber.setText(o.getPhoneNumber());
@@ -67,7 +69,7 @@ public final class FriendAdapter extends ArrayAdapter<Friend> {
 		else
 			v.setBackgroundDrawable(drawableRowAlt);
 
-		return v;
+			return v;
+		}
 	}
-}
 

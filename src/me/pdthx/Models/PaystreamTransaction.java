@@ -21,6 +21,7 @@ public class PaystreamTransaction {
 	private Date _createDate = null;
 	private Date _lastUpdateDate = null;
 	private String _direction = "";
+	private String _comments = "";
 	
 	public String getHeader() {
 		return _header;
@@ -126,6 +127,12 @@ public class PaystreamTransaction {
 		return _direction;
 	}
 	
+	public String getComments() {
+		return _comments;
+	}
+	public void setComments(String comments) {
+		_comments = comments;
+	}
 	public boolean equals(Object other) {
 		return other instanceof PaystreamTransaction 
 				&& _transactionId.equals(((PaystreamTransaction) other).getTransactionId());
