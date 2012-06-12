@@ -1,5 +1,6 @@
 package me.pdthx;
 
+import me.pdthx.Login.TabUIActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
@@ -52,7 +53,7 @@ public class SplashActivity extends Activity {
 				} finally{
 					finish();
 					overridePendingTransition(R.anim.mainfadein, R.anim.splashfadeout);
-					startActivity(new Intent(getApplicationContext(), CustomTabActivity.class));
+					startActivity(new Intent(getApplicationContext(), TabUIActivity.class));
 				}
 			}
 		};

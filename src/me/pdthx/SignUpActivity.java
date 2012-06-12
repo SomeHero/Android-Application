@@ -31,9 +31,7 @@ public class SignUpActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);    
 
 		if (!signedInViaFacebook) {
-		setContentView(View.inflate(this, R.layout.setup_account, null));
-
-		showSignUpActivity(); 
+			showSignUpActivity();
 		}
 		else {
 			setResult(RESULT_OK);

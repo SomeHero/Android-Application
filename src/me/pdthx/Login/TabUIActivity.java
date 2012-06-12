@@ -3,12 +3,7 @@ package me.pdthx.Login;
 import com.zubhium.ZubhiumSDK;
 import com.zubhium.ZubhiumSDK.CrashReportingMode;
 
-import me.pdthx.CustomTabActivity;
-import me.pdthx.HomeActivity;
-import me.pdthx.PaystreamActivity;
 import me.pdthx.R;
-import me.pdthx.RequestMoneyActivity;
-import me.pdthx.SubmitPaymentActivity;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +11,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.SyncStateContract.Constants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +19,7 @@ import android.widget.TextView;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 
+@SuppressWarnings("deprecation")
 public class TabUIActivity extends TabActivity {
 	public static TabUIActivity self;
 
