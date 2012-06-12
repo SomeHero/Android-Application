@@ -19,10 +19,10 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:padding="10dip" >
-
+
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="458dp" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -35,6 +35,14 @@
                 android:layout_width="fill_parent"
                 android:layout_height="30dp" >
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="Send Money"
+                    android:textColor="#41924b" />
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -43,13 +51,6 @@
                     android:contentDescription="PaidThx Logo"
                     android:src="@drawable/logo" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:text="Send Money"
-                    android:textColor="#41924b" />
             </RelativeLayout>
 
             <LinearLayout
@@ -73,58 +74,83 @@
                         android:id="@+id/textView1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Send To:"
+                        android:text="Send Money:"
                         android:textColor="#000000"
                         android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/addRecipient"
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <ImageView
+                            android:id="@+id/imageView1"
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/to_icon" />
+
+                        <Button
+                            android:id="@+id/addRecipient"
+                            android:hint="Add Recipient"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@drawable/to_amount" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Add Recipient" />
+                        android:orientation="vertical" >
 
-                    <TextView
-                        android:id="@+id/textView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Amount to Send:"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <ImageView
+                                android:id="@+id/imageView2"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:src="@drawable/amt_icon" />
+
+                            <EditText
+                                android:id="@+id/txtAmount"
+                                android:layout_width="match_parent"
+                                android:layout_height="60dp"
+                                android:background="@drawable/to_amount"
+                                android:digits="0123456789."
+                                android:ems="10"
+                                android:inputType="number"
+                                android:lines="1"
+                                android:maxLength="14"
+                                android:maxLines="1"
+                                android:hint="  How much?" >
 
-                    <EditText
-                        android:id="@+id/txtAmount"
-                        android:layout_width="136dp"
-                        android:layout_height="wrap_content"
-                        android:digits="0123456789."
-                        android:inputType="number"
-                        android:lines="1"
-                        android:maxLength="14"
-                        android:maxLines="1"
-                        android:text="$0.00" />
+                                <requestFocus />
+                            </EditText>
 
-                    <TextView
-                        android:id="@+id/textView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Comments:"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
+                        </LinearLayout>
 
+                    </LinearLayout>
+
                     <EditText
                         android:id="@+id/txtComments"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="120dp"
                         android:gravity="top"
-                        android:hint="Comment"
+                        android:hint="Comments"
                         android:inputType="textMultiLine"
                         android:lines="3" >
-                    </EditText>
 
+                    </EditText>
+
                     <Button
                         android:id="@+id/btnSubmitPaymentRequest"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/btn_sendmoney_now" />
+                        android:layout_height="60dp"
+                        android:background="@drawable/send_big_green"
+                        android:textSize="20dip"
+                        android:text="Send Money" />
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
