@@ -2,22 +2,21 @@ package me.pdthx.Services;
 
 import java.io.IOException;
 import java.io.InputStream;
-import me.pdthx.RestClient;
 import me.pdthx.Models.MeCodeModel;
 import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Requests.UserChangeSecurityPinRequest;
 import me.pdthx.Requests.UserFBSignInRequest;
 import me.pdthx.Requests.UserMeCodeRequest;
+import me.pdthx.Requests.UserPushNotificationRequest;
 import me.pdthx.Requests.UserRegistrationRequest;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Requests.SecurityPinSetupRequest;
 import me.pdthx.Requests.UserSignInRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
-import me.pdthx.Responses.UserChangeSecurityPinResponse;
+import me.pdthx.Responses.Response;
 import me.pdthx.Responses.UserMeCodeResponse;
 import me.pdthx.Responses.UserRegistrationResponse;
 import me.pdthx.Responses.UserResponse;
-import me.pdthx.Responses.SecurityPinSetupResponse;
 import me.pdthx.Responses.UserSignInResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -43,11 +42,12 @@ public class UserService {
 	private static final String CHANGESECURITYPIN_URL = "/Users/%s/change_securitypin";
 	private static final String SETUPACHACCOUNT_URL = "/Users/%s/PaymentAccounts?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String MECODE_URL = "/Users/%s/mecodes";
+	private static final String PUSHNOTIFICATION_URL = "/Users/%s/RegisterPushNotifications";
 	private static final String USER_URL = "/Users/";
 	public UserService() {
 
 	}
-	public UserResponse GetUser(
+	public static UserResponse getUser(
 			UserRequest userRequest) {
 
 		UserResponse userResponse = new UserResponse();
@@ -109,12 +109,14 @@ public class UserService {
 
 			try {
 				userResponse.UserId = jsonResult.getString("userId");
+				userResponse.DeviceToken = jsonResult.getString("deviceToken");
 				userResponse.MobileNumber = jsonResult.getString("mobileNumber");
 				userResponse.EmailAddress = jsonResult.getString("emailAddress");
 				userResponse.UserName = jsonResult.getString("userName");
 				userResponse.UserStatus = jsonResult.getString("userStatus");
 				userResponse.FirstName = jsonResult.getString("firstName");
 				userResponse.LastName = jsonResult.getString("lastName");
+				userResponse.UpperLimit = jsonResult.getInt("upperLimit");
 				userResponse.TotalMoneySent = jsonResult.getDouble("totalMoneySent");
 				userResponse.TotalMoneyReceived = jsonResult.getDouble("totalMoneyReceived");
 			} catch (JSONException e) {
@@ -125,7 +127,7 @@ public class UserService {
 
 		return userResponse;
 	}
-	public UserSignInResponse SignInUser(UserSignInRequest userSignInRequest) {
+	public static UserSignInResponse signInUser(UserSignInRequest userSignInRequest) {
 		UserSignInResponse userSignInResponse = new UserSignInResponse();
 		HttpResponse response = null;
 		try {
@@ -191,7 +193,7 @@ public class UserService {
 			if (response.getStatusLine().getStatusCode() == 200) {
 
 				try {
-					userSignInResponse.IsValid = true;
+					userSignInResponse.Success = true;
 					userSignInResponse.UserId = jsonResult.getString("userId");
 					userSignInResponse.MobileNumber = jsonResult
 							.getString("mobileNumber");
@@ -206,7 +208,7 @@ public class UserService {
 				}
 			}
 			else {
-				userSignInResponse.IsValid = false;
+				userSignInResponse.Success = false;
 				userSignInResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
 			}
 		}
@@ -214,7 +216,7 @@ public class UserService {
 		return userSignInResponse;
 	}
 
-	public UserSignInResponse SignInUser(UserFBSignInRequest userFBSignInRequest) {
+	public static UserSignInResponse signInUser(UserFBSignInRequest userFBSignInRequest) {
 		UserSignInResponse userSignInResponse = new UserSignInResponse();
 		HttpResponse response = null;
 		try {
@@ -227,7 +229,7 @@ public class UserService {
 			json.put("firstName", userFBSignInRequest.FirstName);
 			json.put("lastName", userFBSignInRequest.LastName);
 			json.put("emailAddress", userFBSignInRequest.Email);
-			json.put("deviceToken", "");
+			json.put("deviceToken", userFBSignInRequest.DeviceToken);
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);
@@ -284,7 +286,7 @@ public class UserService {
 			if (response.getStatusLine().getStatusCode() == 200) {
 
 				try {
-					userSignInResponse.IsValid = true;
+					userSignInResponse.Success = true;
 					userSignInResponse.UserId = jsonResult.getString("userId");
 					userSignInResponse.MobileNumber = jsonResult
 							.getString("mobileNumber");
@@ -299,7 +301,7 @@ public class UserService {
 
 			}
 			else {
-				userSignInResponse.IsValid = false;
+				userSignInResponse.Success = false;
 				userSignInResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
 			}
 		}
@@ -307,7 +309,7 @@ public class UserService {
 		return userSignInResponse;
 	}
 
-	public UserRegistrationResponse RegisterUser(UserRegistrationRequest userRegistrationRequest)
+	public static UserRegistrationResponse registerUser(UserRegistrationRequest userRegistrationRequest)
 	{
 		UserRegistrationResponse userRegistrationResponse = new UserRegistrationResponse();
 		HttpResponse response = null;
@@ -391,7 +393,7 @@ public class UserService {
 		return userRegistrationResponse;
 
 	}
-	public ACHAccountSetupResponse setupACHAccount(ACHAccountSetupRequest achAccountSetupRequest) {
+	public static ACHAccountSetupResponse setupACHAccount(ACHAccountSetupRequest achAccountSetupRequest) {
 		ACHAccountSetupResponse achAccountSetupResponse = new ACHAccountSetupResponse();
 		HttpResponse response = null;
 		try {
@@ -473,16 +475,15 @@ public class UserService {
 
 		return achAccountSetupResponse;
 	}
-	public SecurityPinSetupResponse setupSecurityPin(
-			SecurityPinSetupRequest userSecurityPinRequest) {
-		SecurityPinSetupResponse userSecurityPinResponse = new SecurityPinSetupResponse();
+	public static Response setupSecurityPin(SecurityPinSetupRequest userSecurityPinRequest) {
+		Response setupPinResponse = new Response();
 		HttpResponse response = null;
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost request = new HttpPost(ROOTURL + String.format(SETUPSECURITYPIN_URL, userSecurityPinRequest.getUserId()));
+			HttpPost request = new HttpPost(ROOTURL + String.format(SETUPSECURITYPIN_URL, userSecurityPinRequest.UserId));
 
 			JSONObject json = new JSONObject();
-			json.put("securityPin", userSecurityPinRequest.getSecurityPin());
+			json.put("securityPin", userSecurityPinRequest.SecurityPin);
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);
@@ -503,18 +504,18 @@ public class UserService {
 
 		if (response.getStatusLine().getStatusCode() == 200) {
 
-			userSecurityPinResponse.Success = true;
+			setupPinResponse.Success = true;
 		}
 		else {
-			userSecurityPinResponse.Success = false;
-			userSecurityPinResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+			setupPinResponse.Success = false;
+			setupPinResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
 		}
 
-		return userSecurityPinResponse;
+		return setupPinResponse;
 	}
 	
-	public UserChangeSecurityPinResponse changeSecurityPin(UserChangeSecurityPinRequest userSecurityPinRequest) {
-		UserChangeSecurityPinResponse userChangeSecurityPinResponse = new UserChangeSecurityPinResponse();
+	public static Response changeSecurityPin(UserChangeSecurityPinRequest userSecurityPinRequest) {
+		Response changePinResponse = new Response();
 		HttpResponse response = null;
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
@@ -543,21 +544,22 @@ public class UserService {
 
 		if (response.getStatusLine().getStatusCode() == 200) {
 
-			userChangeSecurityPinResponse.Success = true;
+			changePinResponse.Success = true;
 		}
 		else {
-			userChangeSecurityPinResponse.Success = false;
-			userChangeSecurityPinResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+			changePinResponse.Success = false;
+			changePinResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
 		}
 
-		return userChangeSecurityPinResponse;
+		return changePinResponse;
 	}
 
-	public void createMeCode(UserMeCodeRequest userMeCodeRequest) {
+	public static Response createMeCode(UserMeCodeRequest userMeCodeRequest) {
 		HttpResponse response = null;
+		Response meCodeResponse = new Response();
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost request = new HttpPost(ROOTURL + String.format(MECODE_URL, userMeCodeRequest.getUserId()));
+			HttpPost request = new HttpPost(ROOTURL + String.format(MECODE_URL, userMeCodeRequest.UserId));
 
 			JSONObject json = new JSONObject();
 			json.put("MeCode", userMeCodeRequest.getMeCodes().get(0));
@@ -578,12 +580,18 @@ public class UserService {
 			e.printStackTrace();
 		}
 
-		if (response.getStatusLine().getStatusCode() != 201) {
-			System.out.println(response.getStatusLine().getReasonPhrase());
+		if (response.getStatusLine().getStatusCode() == 201) {
+			meCodeResponse.Success = true;
 		}
+		else {
+			meCodeResponse.Success = false;
+			meCodeResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+		}
+		
+		return meCodeResponse;
 	}
 
-	public UserMeCodeResponse getMeCodes(UserRequest userRequest) {
+	public static UserMeCodeResponse getMeCodes(UserRequest userRequest) {
 		UserMeCodeResponse userMeCodeResponse = new UserMeCodeResponse();
 		HttpResponse response = null;
 		try {
@@ -659,337 +667,54 @@ public class UserService {
 				}
 				
 				userMeCodeResponse.populateMeCodes(meCodeArray);
-				userMeCodeResponse.setSuccess(true);
+				userMeCodeResponse.Success = true;
 			}
 			else {
-				userMeCodeResponse.setSuccess(false);
-				userMeCodeResponse.setReasonPhrase(response.getStatusLine().getReasonPhrase());
+				userMeCodeResponse.Success = false;
+				userMeCodeResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
 				return userMeCodeResponse;
 			}
 		}
 		
 		return userMeCodeResponse;
 	}
+	
+	public static Response registerForPush(UserPushNotificationRequest userRequest) {
+		HttpResponse response = null;
+		Response serverResponse = new Response();
+		try {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost request = new HttpPost(ROOTURL + 
+					String.format(PUSHNOTIFICATION_URL, userRequest.UserId));
 
-	//	//Don't use.
-	//	public UserAcknowledgementResponse AcknowledgeUser(
-	//			UserAcknowledgementRequest userAcknowledgementRequest) {
-	//
-	//		UserAcknowledgementResponse userAcknowledgementResponse = new UserAcknowledgementResponse();
-	//
-	//		HttpResponse response = null;
-	//		try {
-	//			HttpClient httpClient = new DefaultHttpClient();
-	//			HttpPost request = new HttpPost(ROOTURL + ACKNOWLEDGEUSER_URL);
-	//
-	//			JSONObject json = new JSONObject();
-	//			json.put("mobileNumber", userAcknowledgementRequest.MobileNumber);
-	//			json.put("deviceId", userAcknowledgementRequest.DeviceId);
-	//
-	//			StringEntity entity = new StringEntity(json.toString());
-	//			request.setEntity(entity);
-	//			request.setHeader("content-type", "application/json");
-	//
-	//			response = httpClient.execute(request);
-	//		} catch (ClientProtocolException e1) {
-	//			// TODO Auto-generated catch block
-	//			e1.printStackTrace();
-	//		} catch (IOException e1) {
-	//			// TODO Auto-generated catch block
-	//			e1.printStackTrace();
-	//		} catch (JSONException e) {
-	//			// TODO Auto-generated catch block
-	//			e.printStackTrace();
-	//		}
-	//
-	//		HttpEntity entity = response.getEntity();
-	//
-	//		if (entity != null) {
-	//
-	//			InputStream instream = null;
-	//			String result = "";
-	//			try {
-	//				instream = entity.getContent();
-	//				result = RestClient.convertStreamToString(instream);
-	//				// Log.i(TAG, "Result of converstion: [" + result +
-	//				// "]");
-	//			} catch (IllegalStateException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			} catch (IOException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			try {
-	//				instream.close();
-	//			} catch (IOException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			Log.i("User Acknowledgement", result);
-	//
-	//			JSONObject jsonResult = null;
-	//			try {
-	//				jsonResult = new JSONObject(result);
-	//			} catch (JSONException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			try {
-	//				userAcknowledgementResponse.UserId = jsonResult.getString("userId");
-	//				userAcknowledgementResponse.PaymentAccountId = jsonResult.getString("paymentAccountId");
-	//				userAcknowledgementResponse.DoesDeviceIdMatch = jsonResult
-	//						.getBoolean("doesDeviceIdMatch");
-	//				userAcknowledgementResponse.IsMobileNumberRegistered = jsonResult
-	//						.getBoolean("isMobileNumberRegistered");
-	//				userAcknowledgementResponse.SetupSecurityPin = jsonResult.getBoolean("setupSecurityPin");
-	//				userAcknowledgementResponse.SetupPassword = jsonResult.getBoolean("setupPassword");
-	//			} catch (JSONException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//
-	//		return userAcknowledgementResponse;
-	//	}
-	//Don't use.
-	//	public UserVerifyMobileDeviceResponse VerifyMobileDevice(UserVerifyMobileDeviceRequest userVerifyMobileDeviceRequest) {
-	//		UserVerifyMobileDeviceResponse userVerifyMobileDeviceResponse = new UserVerifyMobileDeviceResponse();
-	//		
-	//		HttpResponse response = null;
-	//		try {
-	//			HttpClient httpClient = new DefaultHttpClient();
-	//			HttpPost request = new HttpPost(ROOTURL + USERVERIFYMOBILEDEVICESERVICE_URL);
-	//
-	//			JSONObject json = new JSONObject();
-	//			json.put("userId",  userVerifyMobileDeviceRequest.UserId);
-	//			json.put("mobileNumber", userVerifyMobileDeviceRequest.MobileNumber);
-	//			json.put("deviceId", userVerifyMobileDeviceRequest.DeviceId);
-	//			json.put("verificationCode1", userVerifyMobileDeviceRequest.VerificationCode1);
-	//			json.put("verificationCode2", userVerifyMobileDeviceRequest.VerificationCode2);
-	//
-	//			StringEntity entity = new StringEntity(json.toString());
-	//			request.setEntity(entity);
-	//			request.setHeader("content-type", "application/json");
-	//
-	//			response = httpClient.execute(request);
-	//		} catch (ClientProtocolException e1) {
-	//			// TODO Auto-generated catch block
-	//			e1.printStackTrace();
-	//		} catch (IOException e1) {
-	//			// TODO Auto-generated catch block
-	//			e1.printStackTrace();
-	//		} catch (JSONException e) {
-	//			// TODO Auto-generated catch block
-	//			e.printStackTrace();
-	//		}
-	//
-	//		HttpEntity entity = response.getEntity();
-	//
-	//		if (entity != null) {
-	//
-	//			InputStream instream = null;
-	//			String result = "";
-	//			try {
-	//				instream = entity.getContent();
-	//				result = RestClient.convertStreamToString(instream);
-	//				// Log.i(TAG, "Result of conversation: [" + result +
-	//				// "]");
-	//			} catch (IllegalStateException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			} catch (IOException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			try {
-	//				instream.close();
-	//			} catch (IOException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			Log.i("Mobile Device Verification", result);
-	//
-	//			JSONObject jsonResult = null;
-	//			try {
-	//				jsonResult = new JSONObject(result);
-	//			} catch (JSONException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			boolean success = false;
-	//			String message = "";
-	//			try {
-	//				userVerifyMobileDeviceResponse.Success = jsonResult.getBoolean("success");
-	//				userVerifyMobileDeviceResponse.Message = jsonResult.getString("message");
-	//			} catch (JSONException e) {
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//		
-	//		return userVerifyMobileDeviceResponse;
-	//	}
-	//	//Don't use.
-	//	public UserSetupPasswordResponse SetupPassword(UserSetupPasswordRequest userSetupPasswordRequest) {
-	//		UserSetupPasswordResponse userSetupPasswordResponse = new UserSetupPasswordResponse();
-	//		
-	//		HttpResponse response = null;
-	//		try {
-	//			HttpClient httpClient = new DefaultHttpClient();
-	//			HttpPost request = new HttpPost(ROOTURL + USERSETUPPASSWORDSERVICE_URL);
-	//
-	//			JSONObject json = new JSONObject();
-	//			json.put("userId",  userSetupPasswordRequest.UserId);
-	//			json.put("deviceId", userSetupPasswordRequest.DeviceId);
-	//			json.put("userName", userSetupPasswordRequest.UserName);
-	//			json.put("password", userSetupPasswordRequest.Password);
-	//
-	//			StringEntity entity = new StringEntity(json.toString());
-	//			request.setEntity(entity);
-	//			request.setHeader("content-type", "application/json");
-	//
-	//			response = httpClient.execute(request);
-	//		} catch (ClientProtocolException e1) {
-	//			// TODO Auto-generated catch block
-	//			e1.printStackTrace();
-	//		} catch (IOException e1) {
-	//			// TODO Auto-generated catch block
-	//			e1.printStackTrace();
-	//		} catch (JSONException e) {
-	//			// TODO Auto-generated catch block
-	//			e.printStackTrace();
-	//		}
-	//
-	//		HttpEntity entity = response.getEntity();
-	//
-	//		if (entity != null) {
-	//
-	//			InputStream instream = null;
-	//			String result = "";
-	//			try {
-	//				instream = entity.getContent();
-	//				result = RestClient.convertStreamToString(instream);
-	//				// Log.i(TAG, "Result of converstion: [" + result +
-	//				// "]");
-	//			} catch (IllegalStateException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			} catch (IOException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			try {
-	//				instream.close();
-	//			} catch (IOException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			Log.i("Mobile Device Verification", result);
-	//
-	//			JSONObject jsonResult = null;
-	//			try {
-	//				jsonResult = new JSONObject(result);
-	//			} catch (JSONException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			boolean success = false;
-	//			String message = "";
-	//			try {
-	//				userSetupPasswordResponse.Success = jsonResult.getBoolean("success");
-	//				userSetupPasswordResponse.Message = jsonResult.getString("message");
-	//			} catch (JSONException e) {
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//		
-	//		return userSetupPasswordResponse;
-	//	}
-	//	//Don't use.
-	//	public UserSetupSecurityPinResponse SetupSecurityPin(UserSetupSecurityPinRequest userSetupSecurityPinRequest) {
-	//		UserSetupSecurityPinResponse userSetupSecurityPinResponse = new UserSetupSecurityPinResponse();
-	//		
-	//		HttpResponse response = null;
-	//		try {
-	//			HttpClient httpClient = new DefaultHttpClient();
-	//			HttpPost request = new HttpPost(ROOTURL + USERSETUPSECURITYPIN_URL);
-	//
-	//			JSONObject json = new JSONObject();
-	//			json.put("userId",  userSetupSecurityPinRequest.UserId);
-	//			json.put("deviceId", userSetupSecurityPinRequest.DeviceId);
-	//			json.put("securityPin", userSetupSecurityPinRequest.SecurityPin);
-	//
-	//			StringEntity entity = new StringEntity(json.toString());
-	//			request.setEntity(entity);
-	//			request.setHeader("content-type", "application/json");
-	//
-	//			response = httpClient.execute(request);
-	//		} catch (ClientProtocolException e1) {
-	//			// TODO Auto-generated catch block
-	//			e1.printStackTrace();
-	//		} catch (IOException e1) {
-	//			// TODO Auto-generated catch block
-	//			e1.printStackTrace();
-	//		} catch (JSONException e) {
-	//			// TODO Auto-generated catch block
-	//			e.printStackTrace();
-	//		}
-	//
-	//		HttpEntity entity = response.getEntity();
-	//
-	//		if (entity != null) {
-	//
-	//			InputStream instream = null;
-	//			String result = "";
-	//			try {
-	//				instream = entity.getContent();
-	//				result = RestClient.convertStreamToString(instream);
-	//				// Log.i(TAG, "Result of converstion: [" + result +
-	//				// "]");
-	//			} catch (IllegalStateException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			} catch (IOException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			try {
-	//				instream.close();
-	//			} catch (IOException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			Log.i("User Setup Security Pin", result);
-	//
-	//			JSONObject jsonResult = null;
-	//			try {
-	//				jsonResult = new JSONObject(result);
-	//			} catch (JSONException e) {
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//
-	//			boolean success = false;
-	//			String message = "";
-	//			try {
-	//				userSetupSecurityPinResponse.Success = jsonResult.getBoolean("success");
-	//				userSetupSecurityPinResponse.Message = jsonResult.getString("message");
-	//			} catch (JSONException e) {
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//		
-	//		return userSetupSecurityPinResponse;
-	//	}
+			JSONObject json = new JSONObject();
+			json.put("registrationId", userRequest.RegistrationId);
+			json.put("deviceToken", userRequest.DeviceToken);
+
+			StringEntity entity = new StringEntity(json.toString());
+			request.setEntity(entity);
+			request.setHeader("content-type", "application/json");
+
+			response = httpClient.execute(request);
+		} catch (ClientProtocolException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (response.getStatusLine().getStatusCode() == 201) {
+			serverResponse.Success = true;
+		}
+		else {
+			serverResponse.Success = false;
+			serverResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+		}
+		
+		return serverResponse;
+	}
 }

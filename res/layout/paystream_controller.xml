@@ -3,35 +3,49 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="0dip">
-	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dip">
-	        
-	<RelativeLayout
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="30dp">
+    android:padding="0dip" >
 
-	<ImageView 
-	    android:src="@drawable/logo"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:contentDescription="PaidThx Logo"
-	    android:layout_alignParentLeft="true"
-	            android:layout_alignParentBottom="true"
-	 />
-	<TextView android:text="Paystream" 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentRight="true" 
-	            android:layout_alignParentBottom="true"
-	            android:textColor="#41924b" />
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dip" >
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:contentDescription="PaidThx Logo"
+                android:src="@drawable/logo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:text="Paystream"
+                android:textColor="#41924b" />
 
 	</RelativeLayout> 
 	</LinearLayout>
+<!-- 
+	    <SearchView
+	        android:id="@+id/searchBar"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:ems="10" >
+	
+
+	        <requestFocus />
+	    </SearchView>
+ -->
 	<LinearLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
@@ -45,13 +59,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical">
+
 	<ListView
-  android:id="@+id/lvPaystream"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content" 
-  android:divider="@drawable/paystream_divider"
-	android:dividerHeight="1dp"
-  >
+	    android:id="@+id/lvPaystream"
+	    android:layout_width="fill_parent"
+	    android:layout_height="397dp"
+	    android:divider="@drawable/paystream_divider"
+	    android:dividerHeight="1dp" >
+
 </ListView>
 
 <TextView android:text="Your paystream is empty."
@@ -64,4 +79,6 @@
         android:visibility="gone"/>
 		</LinearLayout>
 </LinearLayout>
+
 </LinearLayout>
+

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1c8839"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="450dp"
+        android:layout_marginBottom="55dp"
+        android:background="@drawable/bg_welcome"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/signin_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="25dp"
+                android:paddingBottom="10dp"
+                android:text="Sign in with Facebook:"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/linearLayout1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="5dp"
+            android:background="#dcdcdc" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/linearLayout1"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="12dp"
+            android:paddingTop="15dp" >
+
+            <Button
+                android:id="@+id/signin_facebook"
+                android:layout_marginTop="10dp"
+                android:layout_width="278dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_facebook" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/linearLayout1"
+            android:layout_below="@+id/linearLayout2"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/signine_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:text="Or use your email address:"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="313dp"
+                android:layout_height="1px"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="4dp"
+                android:background="#dcdcdc" />
+
+            <EditText
+                android:id="@+id/enterEmail"
+                android:layout_width="280dp"
+                android:layout_height="45dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:hint="Enter Your Email Address"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textSize="12dp"
+                android:textStyle="italic" />
+
+            <EditText
+                android:id="@+id/enterPassword"
+                android:layout_width="280dp"
+                android:layout_height="45dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="Enter Your Password"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textSize="12dp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/linearLayout2"
+            android:layout_below="@+id/linearLayout3"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/signin_email"
+                android:layout_width="278dp"
+                android:layout_height="70dp"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:background="@drawable/button_selector"
+                android:text="Sign in with E-mail" />
+
+            <TextView
+                android:id="@+id/forgotInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:text="Forgot email or password? Click here."
+                android:textSize="12dp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

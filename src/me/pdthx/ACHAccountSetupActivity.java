@@ -25,8 +25,10 @@ public class ACHAccountSetupActivity extends BaseActivity {
 	private ACHAccountSetupResponse response;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
+		
+		progressDialog.dismiss();
 		setContentView(R.layout.setup_achaccount_controller);
 
 		btnEnablePayments = (Button)findViewById(R.id.btnSubmitACHAccount);
@@ -126,8 +128,7 @@ public class ACHAccountSetupActivity extends BaseActivity {
 						public void run() {
 							// TODO Auto-generated method stub
 							try {
-								UserService userService = new UserService();
-								response = userService.setupACHAccount(request);
+								response = UserService.setupACHAccount(request);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

@@ -3,6 +3,7 @@ package me.pdthx;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +12,7 @@ import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.*;
 import com.facebook.android.Facebook.DialogListener;
 
-import me.pdthx.Models.Friends;
+import me.pdthx.Models.Friend;
 import me.pdthx.Requests.UserFBSignInRequest;
 import me.pdthx.Requests.UserSignInRequest;
 import me.pdthx.Responses.UserSignInResponse;
@@ -38,7 +39,7 @@ public class SignInActivity extends BaseActivity {
 	private String firstName = "";
 	private String lastName = "";
 	private String email = "";
-	
+
 	private UserSignInResponse userSignInResponse = null;
 
 	private final int ACCOUNT_SETUP = 1;
@@ -47,21 +48,18 @@ public class SignInActivity extends BaseActivity {
 
 	final private int USERSIGNIN_INVALID = 0;
 	final private int USERSIGNIN_FAILED = 4;
-
-	// private Handler _handler = null;
-	// private Activity parent = this;
-
-	// private SharedPreferences _prefs;
+	final private int FACEBOOK_SIGNIN = 5;
+	final private int AUTHENTICATE = 6;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(View.inflate(this, R.layout.signin_controller, null));
+		setContentView(View.inflate(this, R.layout.signin_controller, null));		
 
 		showSignInActivity();
 	}
 
-	Handler signInHandler = new Handler() {
+	private Handler signInHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -95,6 +93,16 @@ public class SignInActivity extends BaseActivity {
 
 			alertDialog.show();
 			break;
+			
+			case(FACEBOOK_SIGNIN):
+				signInRunner();
+				break;
+				
+			case(AUTHENTICATE):
+				progressDialog.setMessage("Logging into PaidThx...");
+				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				progressDialog.show();
+				break;
 			}
 
 		}
@@ -155,7 +163,9 @@ public class SignInActivity extends BaseActivity {
 
 				login = txtUserName.getText().toString();
 				password = txtPassword.getText().toString();
-
+				
+				signInHandler.sendEmptyMessage(AUTHENTICATE);
+				
 				signInRunner();
 			}
 		});
@@ -173,10 +183,10 @@ public class SignInActivity extends BaseActivity {
 
 	private void signInRunner() {
 		Thread thread = null;
-		//		progressDialog.setMessage("Authenticating...");
-		//		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		//		progressDialog.show();
-
+		
+		signInHandler.sendEmptyMessage(AUTHENTICATE);
+		
+		
 		thread = new Thread(new Runnable() {
 
 			@Override
@@ -188,25 +198,24 @@ public class SignInActivity extends BaseActivity {
 					e.printStackTrace();
 				}
 
-				if (userSignInResponse.IsValid) {
+				if (userSignInResponse.Success) {
 
 					Editor editor = prefs.edit();
 					editor.putString("userId", userSignInResponse.UserId);
 					editor.putString("mobileNumber", userSignInResponse.MobileNumber);
 					editor.putString("paymentAccountId", userSignInResponse.PaymentAccountId);
 					editor.putBoolean("setupSecurityPin", userSignInResponse.SetupSecurityPin);
-					editor.putInt("upperLimit", userSignInResponse.UpperLimit);
-					
+
 					if (signedInViaFacebook) {
 						editor.putString("login", "fb_" + login);
 					}
 					else {
 						editor.putString("login", login);
 					}
-					
-					editor.commit();
-					progressDialog.dismiss();
 
+					editor.commit();
+
+					progressDialog.dismiss();
 
 					if (userSignInResponse.PaymentAccountId.equals("")) {
 						startActivityForResult(new Intent(SignInActivity.this, 
@@ -233,9 +242,10 @@ public class SignInActivity extends BaseActivity {
 		if (resultCode == Activity.RESULT_OK) {
 			
 			if (requestCode == ACCOUNT_SETUP) {
+								
 				login = data.getStringExtra("email");
 				password = data.getStringExtra("password");
-				
+
 				signInRunner();
 			}
 			else if (requestCode == ACHACCOUNT_SETUP) {
@@ -244,11 +254,11 @@ public class SignInActivity extends BaseActivity {
 			}
 			else if (requestCode == FACEBOOK_SETUP)
 			{
-				facebook.authorizeCallback(requestCode, resultCode, data);
-				progressDialog.setMessage("Authenticating...");
+				progressDialog.setMessage("Requesting information from Facebook...");
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				progressDialog.show();
-
+				
+				facebook.authorizeCallback(requestCode, resultCode, data);
 				mAsyncRunner.request("me", new RequestListener(){
 
 					@Override
@@ -263,13 +273,17 @@ public class SignInActivity extends BaseActivity {
 							lastName = result.getString("last_name");
 							email = result.getString("email");
 							signedInViaFacebook = true;
-							signInRunner();
+							
+							if (!facebookFriendsAdded) {
+								requestFacebookFriends();
+							}
+
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-
 					}
+
 					@Override
 					public void onIOException(IOException e, Object state) {
 						// TODO Auto-generated method stub	
@@ -290,64 +304,6 @@ public class SignInActivity extends BaseActivity {
 					}
 
 				});
-
-				facebook.authorizeCallback(requestCode, resultCode, data);
-				mAsyncRunner.request("me/friends", new RequestListener(){
-
-					@Override
-					public void onComplete(String response, Object state) {
-
-						try {
-							JSONObject json = new JSONObject(response);
-							JSONArray d = json.getJSONArray("data");
-							int l = (d != null ? d.length() : 0);
-							Log.d("Facebook-Example-Friends Request", "d.length(): " + l);
-							for (int i=0; i<l; i++) {
-								JSONObject o = d.getJSONObject(i);
-								String n = o.getString("name");
-								String id = o.getString("id");
-								Friends f = new Friends();
-								f.id = id;
-								f.name = n;
-								f.type = "Facebook";
-								friendList.add(f);
-								Log.d(f.name + ": " + f.id, "Facebook Friends");			//SWEEETTNNEEESESSS
-
-							}
-							
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();      
-						}
-					}
-
-					@Override
-					public void onIOException(IOException e, Object state) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void onFileNotFoundException(FileNotFoundException e,
-							Object state) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void onMalformedURLException(MalformedURLException e,
-							Object state) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void onFacebookError(FacebookError e, Object state) {
-						// TODO Auto-generated method stub
-
-					}
-
-				});
 			}
 		}
 		else {
@@ -357,23 +313,86 @@ public class SignInActivity extends BaseActivity {
 			}
 		}
 	}
+	
+	private void requestFacebookFriends() {
+		mAsyncRunner.request("me/friends", new RequestListener(){
+
+			@Override
+			public void onComplete(String response, Object state) {
+
+				try {
+					JSONObject json = new JSONObject(response);
+					JSONArray d = json.getJSONArray("data");
+					int l = (d != null ? d.length() : 0);
+					Log.d("Requesting Friends, Signing In", "d.length(): " + l);
+					for (int i=0; i<l; i++) {
+						JSONObject o = d.getJSONObject(i);
+						String n = o.getString("name");
+						String id = o.getString("id");
+						Friend f = new Friend();
+						f.setId(id);
+						f.setName(n);
+						f.setType("Facebook");
+						friendsList.add(f);
+						Log.d(f.getName() + ": " + f.getId(), "Facebook Friends");			//SWEEETTNNEEESESSS
+
+					}
+
+					facebookFriendsAdded = true;
+					progressDialog.dismiss();
+					signInHandler.sendEmptyMessage(FACEBOOK_SIGNIN);
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();      
+				}
+			}
+
+			@Override
+			public void onIOException(IOException e, Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onFileNotFoundException(FileNotFoundException e,
+					Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onMalformedURLException(MalformedURLException e,
+					Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onFacebookError(FacebookError e, Object state) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+	}
 
 	private void signInUser() {
-		UserService userService = new UserService();
-		
-		
+
+
 		if (!signedInViaFacebook) {
 			UserSignInRequest userSignInRequest = new UserSignInRequest();
 			userSignInRequest.Login = login;
 			userSignInRequest.Password = password;
-			userSignInResponse = userService.SignInUser(userSignInRequest);
+			userSignInResponse = UserService.signInUser(userSignInRequest);
 		} else {
 			UserFBSignInRequest userFBSignInRequest = new UserFBSignInRequest();
 			userFBSignInRequest.IDNumber = login;
 			userFBSignInRequest.FirstName = firstName;
 			userFBSignInRequest.LastName = lastName;
 			userFBSignInRequest.Email = email;
-			userSignInResponse = userService.SignInUser(userFBSignInRequest);
+			userFBSignInRequest.DeviceToken = prefs.getString("deviceToken", "");
+			userSignInResponse = UserService.signInUser(userFBSignInRequest);
 		}
 	}
 }

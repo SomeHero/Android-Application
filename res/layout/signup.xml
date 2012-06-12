@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1c8839"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="450dp"
+        android:layout_marginBottom="55dp"
+        android:background="@drawable/bg_welcome"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="5dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="25dp"
+                android:text="Sign in with Facebook:"
+                android:textColor="#000000"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="1px"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/linearLayout1"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="#dcdcdc" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/imageView1"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/imageView1"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/signinFB"
+                android:layout_width="282dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/button_facebook"
+                android:text=" " />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/linearLayout2"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/linearLayout2"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="Or use your email address:"
+                android:textColor="#000000"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="1px"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/linearLayout3"
+            android:layout_margin="3dp"
+            android:background="#dcdcdc" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/linearLayout3"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/imageView2"
+            android:layout_centerVertical="true"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/enter_email"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginTop="15dp"
+                android:hint="Enter your email address"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textSize="12dp"
+                android:textStyle="italic" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/enter_pw"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="18dp"
+                android:hint="Enter your password"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textSize="12dp"
+                android:textStyle="italic" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/confirmPW"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="18dp"
+                android:hint="Confirm your password"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textSize="12dp"
+                android:textStyle="italic" >
+            </EditText>
+
+            <Button
+                android:id="@+id/createAcct"
+                android:layout_width="280dp"
+                android:layout_height="55dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/button_selector"
+                android:text="Create my account"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>
