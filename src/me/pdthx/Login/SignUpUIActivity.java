@@ -1,60 +1,32 @@
 package me.pdthx.Login;
 
-import com.facebook.android.DialogError;
-import com.facebook.android.FacebookError;
-import com.facebook.android.Facebook.DialogListener;
-
 import me.pdthx.BaseActivity;
-import me.pdthx.CustomLockView;
 import me.pdthx.R;
-import me.pdthx.Models.ACHAccountModel;
-import me.pdthx.Models.UserRegistrationModel;
-import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Requests.UserRegistrationRequest;
-import me.pdthx.Responses.ACHAccountSetupResponse;
 import me.pdthx.Responses.UserRegistrationResponse;
 import me.pdthx.Services.UserService;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 
 public class SignUpUIActivity extends BaseActivity {
-	private UserRegistrationModel registrationModel;
-	private ACHAccountModel achAccountModel;
-
-	final private int USERSECURITYPIN_COMPLETE = 1;
-	final private int USERSECURITYPIN_FAILED = 2;
-	final private int SETUPACHACCOUNT_FAILED = 3;
 	final private int USERREGISTRATION_FAILED = 4;
-	final private int USERSECURITYPIN_INVALIDLENGTH = 5;
-	final private int USERSECURITYPIN_CONFIRMMISMATCH = 6;
 	final private int USERREGISTRATION_PASSWORDMISMATCH = 7;
-	final private int USERREGISTRATION_ACHNUMBERMISMATCH = 8;
-	final private int USERREGISTRATION_EMPTYFIELDS = 9;
-
+	private UserRegistrationRequest request;
+	private UserRegistrationResponse response;
+	
 	private EditText enterEmail;
 	private EditText enterPW;
-	private Button facebookButton;
-
-	protected UserService userService = new UserService();
-	protected UserRegistrationResponse userRegistrationResponse;
-	protected ACHAccountSetupResponse achAccountSetupResponse;
-
-	private Activity parent = null;
-
+	private String emailAddress;
+	private String password;
 	private View signUpView = null;
 	ProgressDialog progressDialog = null;
 	AlertDialog alertDialog = null;
@@ -64,8 +36,7 @@ public class SignUpUIActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		parent = this;
-		registrationModel = new UserRegistrationModel();
+		
 		
 		//implement facebook button
 
@@ -81,254 +52,71 @@ public class SignUpUIActivity extends BaseActivity {
 
 			showSignUpActivity();
 		} else {
-			showSetupSecurityPinController();
+			setResult(RESULT_OK);
+			finish();
 		}
 
 	}
 
-	Handler signUpHandler = new Handler() {
+	private Handler signUpHandler = new Handler() {
 
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case (USERSECURITYPIN_COMPLETE):
-				showSetupACHController();
-				break;
-			case (USERSECURITYPIN_FAILED):
-				alertDialog = new AlertDialog.Builder(parent).create();
-				alertDialog.setTitle("Setup Failed");
-				alertDialog
-						.setMessage("There was an error setting up your security pin: "
-								+ userRegistrationResponse.ReasonPhrase
-								+ " Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
+        @Override
+        public void handleMessage(Message msg) {
+        	switch(msg.what) {
+	        	case(USERREGISTRATION_FAILED):
+	        		alertDialog = new AlertDialog.Builder(SignUpUIActivity.this)
+					.create();
+					alertDialog.setTitle("User Registration Failed.");
+					alertDialog
+							.setMessage("There was an error completing your registration: " + response.ReasonPhrase + " Please try again.");
+					alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
 
-				alertDialog.show();
-				break;
-			case (SETUPACHACCOUNT_FAILED):
-				alertDialog = new AlertDialog.Builder(parent).create();
-				alertDialog.setTitle("Setup Failed");
-				alertDialog
-						.setMessage("There was an error setting up your ACH account: "
-								+ achAccountSetupResponse.ReasonPhrase
-								+ " Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
+					alertDialog.show();
+	        		break;
 
-				alertDialog.show();
-				break;
-			case (USERREGISTRATION_FAILED):
-				alertDialog = new AlertDialog.Builder(parent).create();
-				alertDialog.setTitle("User Registration Failed.");
-				alertDialog
-						.setMessage("There was an error completing your registration. Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
-
-				alertDialog.show();
-				break;
-			case (USERSECURITYPIN_CONFIRMMISMATCH):
-				alertDialog = new AlertDialog.Builder(parent).create();
-				alertDialog.setTitle("Security Pins Mismatch.");
-				alertDialog
-						.setMessage("The two security pins you just swiped don't match. Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
-
-				alertDialog.show();
-				break;
-
-			case (USERREGISTRATION_PASSWORDMISMATCH):
-				alertDialog = new AlertDialog.Builder(parent).create();
+	        	case(USERREGISTRATION_PASSWORDMISMATCH):
+	        		alertDialog = new AlertDialog.Builder(SignUpUIActivity.this)
+				.create();
 				alertDialog.setTitle("Passwords don't Match.");
 				alertDialog
 						.setMessage("The password you entered do not match. Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
+				alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
 
 				alertDialog.show();
-				break;
+        		break;
+        	}	
 
-			case (USERREGISTRATION_ACHNUMBERMISMATCH):
-				alertDialog = new AlertDialog.Builder(parent).create();
-				alertDialog.setTitle("ACH Account Number Mismatch.");
-				alertDialog
-						.setMessage("The ACH account numbers you entered do not match. Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
-
-				alertDialog.show();
-				break;
-
-			case (USERREGISTRATION_EMPTYFIELDS):
-				alertDialog = new AlertDialog.Builder(parent).create();
-				alertDialog.setTitle("Empty Fields.");
-				alertDialog
-						.setMessage("All fields are required. Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
-
-				alertDialog.show();
-				break;
-
-			// case(USERREGISTRATION_PHONENUMBERFORMATERROR):
-			// alertDialog = new AlertDialog.Builder(parent)
-			// .create();
-			// alertDialog.setTitle("Phone Number Format error.");
-			// alertDialog
-			// .setMessage("Phone number does not have 10 digits. Please try again.");
-			// alertDialog.setButton("OK", new DialogInterface.OnClickListener()
-			// {
-			// public void onClick(DialogInterface dialog, int which) {
-			// dialog.dismiss();
-			// }
-			// });
-			//
-			// alertDialog.show();
-			// break;
-			}
-
-		}
-
+        }
+        
 	};
 
 	public void showSignUpActivity() {
 
-		Button btnCreateAccount = (Button) findViewById(R.id.createAcct);
+		Button btnCreateAccount = (Button)findViewById(R.id.createAcct);
 
 		btnCreateAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View argO) {
 
-				EditText txtConfirmPassword = (EditText) findViewById(R.id.confirmPW);
+				emailAddress = enterEmail.getText().toString().trim();
+				password = enterPW.getText().toString().trim();
+				String confirmPassword = ((EditText) findViewById(R.id.confirmPW)).getText().toString().trim();
 
-				// if(txtMobileNumber.getText().toString().matches("[0-9]{3}-[0-9]{3}-[0-9]{4}"))
-				// {
-				if (enterPW.getText().toString().trim()
-						.equals(txtConfirmPassword.getText().toString().trim())) {
-					registrationModel.setEmailAddress(enterEmail.getText()
-							.toString().trim());
-					// registrationModel.setMobileNumber(txtMobileNumber.getText().toString().trim());
-					registrationModel.setPassword(enterPW.getText()
-							.toString());
-					showSetupSecurityPinController();
-				} else {
-					signUpHandler
-							.sendEmptyMessage(USERREGISTRATION_PASSWORDMISMATCH);
-				}
-				// }
-				// else {
-				// signUpHandler.sendEmptyMessage(USERREGISTRATION_PHONENUMBERFORMATERROR);
-				// }
-			}
-		});
-	}
+				if(password.equals(confirmPassword)) {
+					request = new UserRegistrationRequest();
+					request.UserName = emailAddress;
+					request.Password = password;
+					request.DeviceToken = prefs.getString("deviceToken", "");
 
-	private void showSetupSecurityPinController() {
-		setContentView(R.layout.setup_security_controller);
-
-		Button btnSetupPin = (Button) findViewById(R.id.btnSetupSecurityPin);
-
-		btnSetupPin.setOnClickListener(new OnClickListener() {
-			public void onClick(View argO) {
-				showSecurityPinDialog();
-			}
-		});
-	}
-
-	private void showSecurityPinDialog() {
-		final Dialog d = new Dialog(this, R.style.CustomDialogTheme);
-		d.setContentView(R.layout.setup_security_dialog);
-
-		d.getWindow().setLayout(400, 600);
-		d.show();
-
-		final CustomLockView ctrlSecurityPin = (CustomLockView) d
-				.findViewById(R.id.ctrlSecurityPin);
-		ctrlSecurityPin.invalidate();
-		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-
-				String passcode = ctrlSecurityPin.getPasscode();
-
-				if (passcode.length() > 3) {
-					registrationModel.setSecurityPin(passcode);
-					d.dismiss();
-
-					showConfirmSecurityPinDialog();
-				} else
-					signUpHandler
-							.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
-
-				return false;
-
-			}
-		});
-	}
-
-	private void showConfirmSecurityPinDialog() {
-		final Dialog d = new Dialog(this, R.style.CustomDialogTheme);
-		d.setContentView(R.layout.confirm_security_dialog);
-
-		d.getWindow().setLayout(400, 600);
-		d.show();
-
-		final CustomLockView ctrlSecurityPin = (CustomLockView) d
-				.findViewById(R.id.ctrlSecurityPin);
-		ctrlSecurityPin.invalidate();
-		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-
-				String passcode = ctrlSecurityPin.getPasscode();
-
-				if (passcode.length() > 3
-						&& passcode.equals(registrationModel.getSecurityPin())) {
-					d.dismiss();
-
-					progressDialog = new ProgressDialog(v.getContext());
-					// ProgressDialog.Builder progressDialog = new
-					// ProgressDialog.Builder(parent);
-					progressDialog
-							.setMessage("Setting up your PaidThx Account...");
-					progressDialog
-							.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+					progressDialog.setMessage("Setting up account...");
+					progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 					progressDialog.show();
 
 					Thread thread = new Thread(new Runnable() {
@@ -337,155 +125,36 @@ public class SignUpUIActivity extends BaseActivity {
 						public void run() {
 							// TODO Auto-generated method stub
 							try {
-								registerUser();
+								response = UserService.registerUser(request);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
 							progressDialog.dismiss();
 
-							if (userRegistrationResponse.Success) {
-								Editor editor = prefs.edit();
+							if(response.Success) {
 
-								editor.putString("userId",
-										userRegistrationResponse.UserId);
-								editor.putString("mobileNumber",
-										registrationModel.getMobileNumber());
-								editor.putString("paymentAccountId", "");
-								editor.putBoolean("setupPassword", true);
-								editor.putBoolean("setupSecurityPin", true);
-
-								editor.commit();
-
-								signUpHandler
-										.sendEmptyMessage(USERSECURITYPIN_COMPLETE);
-							} else {
-								signUpHandler
-										.sendEmptyMessage(USERSECURITYPIN_FAILED);
-
-							}
-						}
-
-					});
-					thread.start();
-
-				} else
-					signUpHandler
-							.sendEmptyMessage(USERSECURITYPIN_CONFIRMMISMATCH);
-
-				return false;
-			}
-		});
-	}
-
-	private void showSetupACHController() {
-		setContentView(R.layout.setup_achaccount_controller);
-
-		Button btnEnablePayments = (Button) findViewById(R.id.btnSubmitACHAccount);
-		btnEnablePayments.setOnClickListener(new OnClickListener() {
-			public void onClick(View argO) {
-
-				EditText txtNameOnAccount = (EditText) findViewById(R.id.txtNameOnAccount);
-				EditText txtRoutingNumber = (EditText) findViewById(R.id.txtRoutingNumber);
-				EditText txtAccountNumber = (EditText) findViewById(R.id.txtAccountNumber);
-
-				if (txtAccountNumber
-						.getText()
-						.toString()
-						.trim()
-						.equals(((EditText) findViewById(R.id.txtConfirmAccountNumber))
-								.getText().toString().trim())) {
-
-					achAccountModel = new ACHAccountModel();
-					achAccountModel.NameOnAccount = txtNameOnAccount.getText()
-							.toString().trim();
-					achAccountModel.RoutingNumber = txtRoutingNumber.getText()
-							.toString().trim();
-					achAccountModel.AccountNumber = txtAccountNumber.getText()
-							.toString().trim();
-					achAccountModel.AccountType = "Savings";
-
-					progressDialog = new ProgressDialog(argO.getContext());
-					// ProgressDialog.Builder progressDialog = new
-					// ProgressDialog.Builder(parent);
-					progressDialog.setMessage("Setting up ACH Account...");
-					progressDialog
-							.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-					progressDialog.show();
-
-					Thread thread = new Thread(new Runnable() {
-
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							try {
-								setupACHAccount();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							progressDialog.dismiss();
-
-							if (achAccountSetupResponse.Success) {
-								Editor editor = prefs.edit();
-
-								editor.putString(
-										"paymentAccountId",
-										achAccountSetupResponse.PaymentAccountId);
-								editor.commit();
-
-								signUpHandler
-										.sendEmptyMessage(R.id.USERREGISTRATION_COMPLETE);
 								Intent data = new Intent();
-								data.putExtra("email", enterEmail.getText()
-										.toString().trim());
-								data.putExtra("password", enterPW.getText()
-										.toString().trim());
+								data.putExtra("email", emailAddress);
+								data.putExtra("password", password);
 
-								setResult(Activity.RESULT_OK, data);
+								setResult(RESULT_OK, data);
 								finish();
-							} else {
-								signUpHandler
-										.sendEmptyMessage(SETUPACHACCOUNT_FAILED);
 
+								//signUpHandler.sendEmptyMessage(R.id.USERREGISTRATION_COMPLETE);
+							}
+							else {
+								signUpHandler.sendEmptyMessage(USERREGISTRATION_FAILED);
 							}
 						}
 
 					});
 					thread.start();
-				} else {
-					signUpHandler
-							.sendEmptyMessage(USERREGISTRATION_ACHNUMBERMISMATCH);
+				} 
+				else {
+					signUpHandler.sendEmptyMessage(USERREGISTRATION_PASSWORDMISMATCH);
 				}
 			}
 		});
 	}
 
-	// Fix this.
-	private void registerUser() {
-
-		if (signedInViaFacebook) {
-			userRegistrationResponse = new UserRegistrationResponse();
-			userRegistrationResponse.UserId = prefs.getString("userId", "");
-			userRegistrationResponse.Success = true;
-		} else {
-
-			UserRegistrationRequest request = new UserRegistrationRequest();
-			request.DeviceToken = "";
-			request.UserName = registrationModel.getEmailAddress();
-			request.Password = registrationModel.getPassword();
-
-			userRegistrationResponse = userService.RegisterUser(request);
-		}
-	}
-
-	private void setupACHAccount() {
-		ACHAccountSetupRequest request = new ACHAccountSetupRequest();
-
-		request.UserId = prefs.getString("userId", "");
-		request.AccountNumber = achAccountModel.AccountNumber;
-		request.AccountType = achAccountModel.AccountType;
-		request.NameOnAccount = achAccountModel.NameOnAccount;
-		request.RoutingNumber = achAccountModel.RoutingNumber;
-
-		achAccountSetupResponse = userService.setupACHAccount(request);
-	}
 }

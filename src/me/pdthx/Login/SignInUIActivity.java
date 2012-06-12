@@ -17,8 +17,7 @@ import me.pdthx.ACHAccountSetupActivity;
 import me.pdthx.BaseActivity;
 import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
-import me.pdthx.SignInActivity;
-import me.pdthx.Models.Friends;
+import me.pdthx.Models.Friend;
 import me.pdthx.Requests.UserFBSignInRequest;
 import me.pdthx.Requests.UserSignInRequest;
 import me.pdthx.Responses.UserSignInResponse;
@@ -54,8 +53,6 @@ public class SignInUIActivity extends BaseActivity {
 	final private int USERSIGNIN_INVALID = 0;
 	final private int USERSIGNIN_FAILED = 4;
 
-	private EditText enterID;
-	private EditText enterPW;
 	private Button facebookButton;
 	private Button emailacctButton;
 
@@ -181,7 +178,7 @@ public class SignInUIActivity extends BaseActivity {
 					e.printStackTrace();
 				}
 
-				if (userSignInResponse.IsValid) {
+				if (userSignInResponse.Success) {
 
 					Editor editor = prefs.edit();
 					editor.putString("userId", userSignInResponse.UserId);
@@ -300,12 +297,12 @@ public class SignInUIActivity extends BaseActivity {
 								JSONObject o = d.getJSONObject(i);
 								String n = o.getString("name");
 								String id = o.getString("id");
-								Friends f = new Friends();
-								f.id = id;
-								f.name = n;
-								f.type = "Facebook";
-								friendList.add(f);
-								Log.d(f.name + ": " + f.id, "Facebook Friends"); // SWEEETTNNEEESESSS
+								Friend f = new Friend();
+								f.setId(id);
+								f.setName(n);
+								f.setType("Facebook");
+								friendsList.add(f);
+								Log.d(f.getName() + ": " + f.getId(), "Facebook Friends"); // SWEEETTNNEEESESSS
 
 							}
 
@@ -352,20 +349,19 @@ public class SignInUIActivity extends BaseActivity {
 	}
 
 	private void signInUser() {
-		UserService userService = new UserService();
 
 		if (!signedInViaFacebook) {
 			UserSignInRequest userSignInRequest = new UserSignInRequest();
 			userSignInRequest.Login = login;
 			userSignInRequest.Password = password;
-			userSignInResponse = userService.SignInUser(userSignInRequest);
+			userSignInResponse = UserService.signInUser(userSignInRequest);
 		} else {
 			UserFBSignInRequest userFBSignInRequest = new UserFBSignInRequest();
 			userFBSignInRequest.IDNumber = login;
 			userFBSignInRequest.FirstName = firstName;
 			userFBSignInRequest.LastName = lastName;
 			userFBSignInRequest.Email = email;
-			userSignInResponse = userService.SignInUser(userFBSignInRequest);
+			userSignInResponse = UserService.signInUser(userFBSignInRequest);
 		}
 	}
 }
