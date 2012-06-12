@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import me.pdthx.Adapters.PaystreamAdapter;
+import me.pdthx.Dialogs.FilterPayStreamDialog;
 import me.pdthx.Dialogs.IncomingPaymentDialog;
 import me.pdthx.Dialogs.IncomingRequestDialog;
 import me.pdthx.Dialogs.OutgoingPaymentDialog;
@@ -20,9 +21,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 public final class PaystreamActivity extends BaseActivity {
@@ -31,6 +34,8 @@ public final class PaystreamActivity extends BaseActivity {
 	private ArrayList<PaystreamTransaction> m_transactions = null;
 	private PaystreamAdapter m_adapter;
 	private Runnable viewOrders;
+//	private SearchView searchView = null;
+	private int FILTER_PAYSTREAM = 1;
 
 	public static final String TAG = "PaystreamActivity";
 	private ListView mListView = null;
@@ -72,11 +77,15 @@ public final class PaystreamActivity extends BaseActivity {
 				showPaystreamController();
 			}
 		}
+//		if(resultCode == FILTER_PAYSTREAM)
+//		{
+//			//Show new view?
+//		}
 		else {
 			finish();
 		}
+		
 	}
-
 	private void showPaystreamController() {
 		setContentView(R.layout.paystream_controller);
 		m_transactions = new ArrayList<PaystreamTransaction>();
@@ -86,6 +95,19 @@ public final class PaystreamActivity extends BaseActivity {
 		mListView.setAdapter(m_adapter);
 		mEmptyTextView = (TextView) findViewById(R.id.txtEmptyPaystream);
 
+//		searchView = (SearchView)findViewById(R.id.searchBar);
+		
+//		searchView.setOnSearchClickListener(new OnClickListener()
+//		{
+//			@Override
+//			public void onClick(View v) {
+//				startActivityForResult(new Intent(PaystreamActivity.this, FilterPayStreamActivity.class), FILTER_PAYSTREAM);				
+//				
+//			}
+//			
+//		});
+		
+		
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -173,7 +195,6 @@ public final class PaystreamActivity extends BaseActivity {
 		}
 		runOnUiThread(returnRes);
 	}
-	
 	private void getTransactionDetails(int index) {
 		PaystreamTransaction ref = m_transactions.get(index);	
 		
@@ -248,3 +269,4 @@ public final class PaystreamActivity extends BaseActivity {
 		}
 	}
 }
+

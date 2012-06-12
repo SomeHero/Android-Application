@@ -29,6 +29,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -155,8 +157,8 @@ public final class SendPaymentActivity extends BaseActivity {
 
 		locationManager.requestLocationUpdates(
 				LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-		locationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+//		locationManager.requestLocationUpdates(
+//				LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
 
 	}
@@ -307,7 +309,10 @@ public final class SendPaymentActivity extends BaseActivity {
 		txtAmount = (EditText) findViewById(R.id.txtAmount);
 		txtComments = (EditText) findViewById(R.id.txtComments);
 		btnSendMoney = (Button) findViewById(R.id.btnSubmitPaymentRequest);
-
+		Typeface type = Typeface.createFromAsset(getAssets(),"HelveticaWorld-Bold.ttf");
+		btnSendMoney.setTypeface(type);
+		btnSendMoney.setTextColor(Color.WHITE);
+			
 		txtAmount.addTextChangedListener(new TextWatcher() {
 			String current = "";
 
