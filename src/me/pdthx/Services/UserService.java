@@ -109,7 +109,7 @@ public class UserService {
 
 			try {
 				userResponse.UserId = jsonResult.getString("userId");
-				userResponse.DeviceToken = jsonResult.getString("deviceToken");
+				//userResponse.DeviceToken = jsonResult.getString("deviceToken");
 				userResponse.MobileNumber = jsonResult.getString("mobileNumber");
 				userResponse.EmailAddress = jsonResult.getString("emailAddress");
 				userResponse.UserName = jsonResult.getString("userName");

@@ -3,14 +3,17 @@ package me.pdthx.Login;
 import com.zubhium.ZubhiumSDK;
 import com.zubhium.ZubhiumSDK.CrashReportingMode;
 
+import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,12 +28,21 @@ public class TabUIActivity extends TabActivity {
 
 	private Resources res; // Resource object to get Drawables
 	private TabHost tabHost; // The activity TabHost
+	private SharedPreferences prefs;
 	ZubhiumSDK sdk;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		
+		if (!prefs.getString("userId", "").equals("")) {
+			startActivity(new Intent(this, CustomTabActivity.class));
+		}
+		
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.tabslayout);
 		self = this;
 
