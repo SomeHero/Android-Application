@@ -18,21 +18,23 @@ public class PaystreamTransaction {
 	private String _standardEntryClass = "";
 	private String _paymentChannel = "";
 	private String _transactionBatchId = "";
+	private String _transactionImageUri = "";
 	private Date _transactionSentDate = null;
 	private Date _createDate = null;
 	private Date _lastUpdateDate = null;
 	private String _direction = "";
 	private String _comments = "";
-	private ArrayList<PaystreamTransaction> _transactions = new ArrayList<PaystreamTransaction>();
 	
-	public void addTransactions(PaystreamTransaction transactions)
+	public String getImageUri()
 	{
-		_transactions.add(transactions);
+		return _transactionImageUri;
 	}
-	public ArrayList<PaystreamTransaction> getTransactions()
+	
+	public void setImageUri(String imageuri)
 	{
-		return _transactions;
+		_transactionImageUri = imageuri;
 	}
+	
 	public String getHeader() {
 		return _header;
 	}

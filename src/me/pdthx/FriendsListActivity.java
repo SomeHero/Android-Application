@@ -71,6 +71,7 @@ public final class FriendsListActivity extends BaseActivity  {
 			mEmptyTextView.setVisibility(View.GONE);
 			m_adapter = new FriendAdapter(this, R.layout.friend_item, friendsList);
 			mListView.setAdapter(m_adapter);
+			mListView.setFastScrollEnabled(true);
 			m_adapter.notifyDataSetChanged();
 
 		}
@@ -80,6 +81,8 @@ public final class FriendsListActivity extends BaseActivity  {
 		}
 
 		m_ProgressDialog.dismiss();
+		
+		loadViewableImages(mListView.getFirstVisiblePosition(), mListView.getChildCount());
 
 
 		mListView.setOnItemClickListener(new OnItemClickListener() {
@@ -186,24 +189,9 @@ public final class FriendsListActivity extends BaseActivity  {
 
 			case SCROLL_STATE_IDLE :
 
-				int first = view.getFirstVisiblePosition();
-				int count = view.getChildCount();
+				loadViewableImages(view.getFirstVisiblePosition(), view.getChildCount());
 
-				for (int i = 0; i < count; i++) {
-
-					Friend friend = (Friend) mListView.getAdapter().getItem(i + first);
-					ImageView imageView = (ImageView) mListView.getChildAt(i).findViewById(R.id.imgFriend);
-					if (friend.getPicture() == null && friend.getType().equals("Facebook")) {
-						if (!pictureMap.containsKey(friend.getId())) {
-							Log.d("Retrieving Image for:", friend.getName());
-							fetchDrawableOnThread(friend, imageView);
-						}
-						else {
-							imageView.setImageBitmap(pictureMap.get(friend.getId()));
-						}
-					}
-
-				}
+				
 
 
 				break;
@@ -219,8 +207,26 @@ public final class FriendsListActivity extends BaseActivity  {
 
 		}
 	};
+	
+	private void loadViewableImages(int first, int count) {
+		for (int i = 0; i < count; i++) {
 
-	public void fetchDrawableOnThread(final Friend friend, final ImageView imageView) {
+			Friend friend = (Friend) mListView.getAdapter().getItem(i + first);
+			ImageView imageView = (ImageView) mListView.getChildAt(i).findViewById(R.id.imgFriend);
+			if (friend.getPicture() == null && friend.getType().equals("Facebook")) {
+				if (!pictureMap.containsKey(friend.getId())) {
+					Log.d("Retrieving Image for:", friend.getName());
+					fetchDrawableOnThread(friend, imageView);
+				}
+				else {
+					imageView.setImageBitmap(pictureMap.get(friend.getId()));
+				}
+			}
+
+		}
+	}
+
+	private void fetchDrawableOnThread(final Friend friend, final ImageView imageView) {
 		final Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message message) {

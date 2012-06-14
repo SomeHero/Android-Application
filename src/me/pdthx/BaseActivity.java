@@ -92,7 +92,7 @@ public class BaseActivity extends Activity {
 	public void registerPushNotifications() {
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 1, new Intent(), 0));
-		registrationIntent.putExtra("sender", "james@paidthx.com");
+		registrationIntent.putExtra("sender", "android.paidthx@gmail.com");
 		startService(registrationIntent);
 	}
 	
@@ -221,7 +221,6 @@ public class BaseActivity extends Activity {
 		case R.id.profileMenuItem:
 
 			startActivity(new Intent(this, ProfileSetupActivity.class));
-
 			break;
 		}
 

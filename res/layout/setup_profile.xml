@@ -1,13 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/background"
     android:orientation="vertical"
-    android:padding="10dip"
-	android:background="@drawable/background">
-<ScrollView
+    android:padding="10dip" >
+
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
-
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -52,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:orientation="vertical" >
-
+
                     <TextView
                         android:id="@+id/textMeCode"
                         android:layout_width="wrap_content"
@@ -62,7 +63,7 @@
                         android:text="Create Your MeCode"
                         android:textColor="#000000"
                         android:textStyle="bold" />
-
+
                     <TextView
                         android:id="@+id/txtNoteMeCode"
                         android:layout_width="fill_parent"
@@ -108,7 +109,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:orientation="vertical" >
-                    <TextView
+
+                    <TextView
                         android:id="@+id/txtViewPin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -117,7 +119,7 @@
                         android:text="Change your Security Pin"
                         android:textColor="#000000"
                         android:textStyle="bold" />
-
+
                     <TextView
                         android:id="@+id/txtNotePin"
                         android:layout_width="fill_parent"
@@ -126,18 +128,61 @@
                         android:text="Click the button to change your security pin."
                         android:textColor="#000000"
                         android:textSize="10dip" />
-
+
                     <Button
                         android:id="@+id/btnChangeSecurityPin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:text="Change Pin" />
-
                 </LinearLayout>
+            </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/relativeLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dip"
+                android:background="@drawable/panel_background"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <LinearLayout
+                    android:id="@+id/relativeLayout3"
+                    android:layout_width="280dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/txtAccountSettings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="4dp"
+                        android:text="Go to Account Settings"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtNotePin"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="Click the button to go to account settings."
+                        android:textColor="#000000"
+                        android:textSize="10dip" />
+
+                    <Button
+                        android:id="@+id/btnManageAccounts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="Manage Accounts" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+    </ScrollView>
 
-</ScrollView>
 </LinearLayout>
