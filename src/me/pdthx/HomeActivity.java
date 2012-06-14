@@ -133,9 +133,9 @@ public final class HomeActivity extends BaseActivity {
 			startActivity(new Intent(this, TabUIActivity.class));
 		} 
 		else {
-			if (userResponse.DeviceToken != null && 
-					userResponse.DeviceToken.equals("null") && 
-					!prefs.getString("deviceId", "").equals(userResponse.DeviceToken)) {
+			if (userResponse.DeviceToken == null || 
+					userResponse.DeviceToken.equals("null") || 
+					!prefs.getString("deviceToken", "").equals(userResponse.DeviceToken)) {
 				registerPushNotifications();
 			}
 			
