@@ -63,7 +63,7 @@ public final class SendPaymentActivity extends BaseActivity {
 	private Friend friend;
 
 	private Button btnAddContacts;
-	private EditText txtAmount;
+	private Button txtAmount;
 	private EditText txtComments;
 	private Button btnSendMoney;
 	private String passcode = "";
@@ -75,6 +75,7 @@ public final class SendPaymentActivity extends BaseActivity {
 	final private int PAYMENTEXCEEDSLIMIT_DIALOG = 5;
 	final private int SUBMITPAYMENTFAILED_DIALOG = 3;
 	final private int SUBMITPAYMENTSUCCESS_DIALOG = 4;
+	final private int ADD_MONEY = 8;
 	final private int INVALIDPASSCODELENGTH_DIALOG = 12;
 
 	final private int SUBMITPAYMENT_ACTION = 0;
@@ -306,60 +307,69 @@ public final class SendPaymentActivity extends BaseActivity {
 		
 		btnAddContacts = (Button) findViewById(R.id.addRecipient);
 		
-		txtAmount = (EditText) findViewById(R.id.txtAmount);
+		txtAmount = (Button) findViewById(R.id.btnAmount);
 		txtComments = (EditText) findViewById(R.id.txtComments);
 		btnSendMoney = (Button) findViewById(R.id.btnSubmitPaymentRequest);
 		Typeface type = Typeface.createFromAsset(getAssets(),"HelveticaWorld-Bold.ttf");
 		btnSendMoney.setTypeface(type);
 		btnSendMoney.setTextColor(Color.WHITE);
-			
-		txtAmount.addTextChangedListener(new TextWatcher() {
-			String current = "";
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				if (!s.toString().equals(current)) {
-					txtAmount.removeTextChangedListener(this);
-
-					String cleanString = s.toString().replaceAll("[$,.]", "");
-
-					double parsed = Double.parseDouble(cleanString);
-					String formatted = NumberFormat.getCurrencyInstance()
-							.format((parsed / 100));
-
-					current = formatted;
-					txtAmount.setText(formatted);
-					txtAmount.setSelection(formatted.length());
-					
-					txtAmount.addTextChangedListener(this);
-				}
-			}
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
-				if (arg0.length() == 14) {
-					arg0.replace(13, 14, "");
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-				// TODO Auto-generated method stub
-
-			}
-		});
 		
-		btnAddContacts.setOnClickListener(new OnClickListener(){
+		txtAmount.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				startActivityForResult(new Intent(SendPaymentActivity.this, FriendsListActivity.class), ADDING_FRIEND);			
-			}
-			
+				startActivityForResult(new Intent(SendPaymentActivity.this, AddMoneyActivity.class), ADD_MONEY);			
+			}		
 		});
+		
+		btnAddContacts.setOnClickListener(new OnClickListener(){	
+						@Override
+						public void onClick(View v) {
+							startActivityForResult(new Intent(SendPaymentActivity.this, FriendsListActivity.class), ADDING_FRIEND);			
+						}
+						
+					});
+	
+//		txtAmount.addTextChangedListener(new TextWatcher() {
+//			String current = "";
+//
+//			@Override
+//			public void onTextChanged(CharSequence s, int start, int before,
+//					int count) {
+//				if (!s.toString().equals(current)) {
+//					txtAmount.removeTextChangedListener(this);
+//
+//					String cleanString = s.toString().replaceAll("[$,.]", "");
+//
+//					double parsed = Double.parseDouble(cleanString);
+//					String formatted = NumberFormat.getCurrencyInstance()
+//							.format((parsed / 100));
+//
+//					current = formatted;
+//					txtAmount.setText(formatted);
+//					txtAmount.setSelection(formatted.length());
+//					
+//					txtAmount.addTextChangedListener(this);
+//				}
+//			}
+//
+//			@Override
+//			public void afterTextChanged(Editable arg0) {
+//				// TODO Auto-generated method stub
+//				if (arg0.length() == 14) {
+//					arg0.replace(13, 14, "");
+//				}
+//			}
+//
+//			@Override
+//			public void beforeTextChanged(CharSequence arg0, int arg1,
+//					int arg2, int arg3) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//		});
+		
+		
 
 		btnSendMoney.setOnClickListener(new OnClickListener() {
 
@@ -424,12 +434,17 @@ public final class SendPaymentActivity extends BaseActivity {
 				
 				
 			}
+			else if(requestCode == ADD_MONEY){
+				Bundle bundle = data.getExtras();
+				String amount = bundle.getString("index");
+				txtAmount.setText("$"+ amount);
+			}
 			else {
 				launchSendMoneyView();
 			}
 		}
 		else {
-			if (requestCode != ADDING_FRIEND) {
+			if (requestCode != ADDING_FRIEND && requestCode != ADD_MONEY) {
 				finish();
 			}
 		}

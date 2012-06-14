@@ -5,11 +5,11 @@
     android:layout_gravity="center"
     android:background="#f6f6f6"
     android:orientation="vertical" >
-
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/txtbox"
+        android:background="@drawable/tab_paystreamtitle"
         android:gravity="center"
         android:orientation="vertical" >
 
@@ -25,6 +25,17 @@
             android:shadowColor="#000000"
             android:textStyle="bold"
             android:typeface="normal" />
+
+        <EditText
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:ems="10"
+            android:hint="Search For something" >
+
+            <requestFocus />
+        </EditText>
+
     </LinearLayout>
 
     <LinearLayout
