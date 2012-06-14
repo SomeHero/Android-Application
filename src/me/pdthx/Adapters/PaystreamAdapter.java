@@ -21,6 +21,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,13 +34,11 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 
 	private ArrayList<PaystreamTransaction> items;
 	private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-	private SharedPreferences prefs;
 
 	public PaystreamAdapter(Context context, int textViewResourceId,
 			ArrayList<PaystreamTransaction> items) {
 		super(context, textViewResourceId, items);
 		this.items = items;
-		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
 	@Override
@@ -64,7 +63,7 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 			// .findViewById(R.id.txtPaymentDate);
 			// ImageView imgStatus = (ImageView) v.findViewById(R.id.imgStatus);
 			// TextView txtAmount = (TextView) v.findViewById(R.id.txtAmount);
-			DateFormat timeFormat = DateFormat.getTimeInstance();
+			//DateFormat timeFormat = DateFormat.getTimeInstance();
 			TextView txtHeader = (TextView) v
 					.findViewById(R.id.paystreamHeaderTitle);
 			TextView recipientUri = (TextView) v

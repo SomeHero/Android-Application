@@ -2,22 +2,58 @@ package me.pdthx.Adapters;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+
 import me.pdthx.R;
 import me.pdthx.Models.Friend;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-public final class FriendAdapter extends ArrayAdapter<Friend> {
+public final class FriendAdapter extends ArrayAdapter<Friend> implements SectionIndexer {
 
+    private HashMap<String, Integer> alphaIndexer;
+    private String[] sections;
+	
+	
 	public FriendAdapter(Context context, int textViewResourceId,
 			ArrayList<Friend> items) {
 		super(context, textViewResourceId, items);
+		
+		alphaIndexer = new HashMap<String, Integer>();
+		int size = items.size();
+		for (int i = size - 1; i >= 0; i--) {
+            String element = items.get(i).getName();
+            alphaIndexer.put(element.substring(0, 1), i);
+		}
+		
+		Set<String> keys = alphaIndexer.keySet(); // set of letters ...sets
+        // cannot be sorted...
+
+        Iterator<String> it = keys.iterator();
+        ArrayList<String> keyList = new ArrayList<String>(); // list can be
+        // sorted
+
+        while (it.hasNext()) {
+                String key = it.next();
+                keyList.add(key);
+        }
+
+        Collections.sort(keyList);
+
+        sections = new String[keyList.size()]; // simple conversion to an
+        // array of object
+        keyList.toArray(sections);
 	}
 
 	@Override
@@ -48,10 +84,6 @@ public final class FriendAdapter extends ArrayAdapter<Friend> {
 				}
 			}
 
-//			 if(imgFriend != null) {
-//				 imgFriend.setImageResource(resId)							//PULL FRIEND IMAGE FROM FB!!!!
-//			 }
-			 
 			if (txtRecipientUri != null) {
 				txtRecipientUri.setText(o.getName());
 				txtPhoneNumber.setText(o.getPhoneNumber());
@@ -69,7 +101,24 @@ public final class FriendAdapter extends ArrayAdapter<Friend> {
 		else
 			v.setBackgroundDrawable(drawableRowAlt);
 
-			return v;
-		}
+		return v;
 	}
+
+	@Override
+	public int getPositionForSection(int section) {
+		String letter = sections[section];
+        return alphaIndexer.get(letter);
+	}
+
+	@Override
+	public int getSectionForPosition(int position) {
+		Log.v("getSectionForPosition", "called");
+		return 0;
+	}
+
+	@Override
+	public Object[] getSections() {
+		return sections;
+	}
+}
 
