@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class C2DMReceiver extends BroadcastReceiver {
 	
@@ -56,6 +57,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 	private void handleRegistration(Context context, Intent intent) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		registrationId = intent.getExtras().getString("registration_id");		
+		Log.d("Registration Got back from Google", registrationId);
 		deviceToken = prefs.getString("deviceToken", "");
 		userId = prefs.getString("userId", "");
 		
