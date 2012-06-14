@@ -14,7 +14,9 @@ import me.pdthx.Dialogs.OutgoingRequestDialog;
 import me.pdthx.Models.PaystreamTransaction;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Responses.PaystreamResponse;
+import me.pdthx.Responses.UserResponse;
 import me.pdthx.Services.PaystreamService;
+import me.pdthx.Services.UserService;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +24,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -182,6 +185,7 @@ public final class PaystreamActivity extends BaseActivity implements
 				o1.setTransactionStatus(currentTransaction.MessageStatus);
 				o1.setDirection(currentTransaction.Direction);
 				o1.setComments(currentTransaction.Comments);
+				o1.setImageUri(currentTransaction.ImageUri);
 
 				currentHeader = createHeader(currentTransaction);
 
@@ -485,6 +489,30 @@ public final class PaystreamActivity extends BaseActivity implements
 		String transactionType = ref.getTransactionType();
 		String transactionStat = ref.getTransactionStatus();
 		String transactionId = ref.getTransactionId();
+		String transactionComment = ref.getComments();
+		
+		UserRequest messageRequest = new UserRequest();
+
+		String userId = prefs.getString("userId", "");
+
+		messageRequest.UserId = userId;
+		ArrayList<PaystreamResponse> messages = PaystreamService
+				.getMessages(messageRequest);
+		UserResponse userInfo = UserService.getUser(messageRequest);
+		
+		String username = userInfo.FirstName + " " + userInfo.LastName;
+		if(username.length() <= 0)
+		{
+			username = userInfo.EmailAddress;
+			if(username.length() <= 0)
+			{
+				username = userInfo.MobileNumber;
+				if(username.length() <= 0)
+				{
+					username = userInfo.UserName;
+				}
+			}
+		}
 
 		// first create intent based on what the transaction type is
 		// 1) determine outgoing or incoming
@@ -502,10 +530,14 @@ public final class PaystreamActivity extends BaseActivity implements
 				temp1.putExtra("transactionType", transactionType);
 				temp1.putExtra("transactionStat", transactionStat);
 				temp1.putExtra("transactionId", transactionId);
+				temp1.putExtra("username", username);
+				temp1.putExtra("comments", transactionComment);
+				// picture?
 				startActivity(temp1);
 			} else {
 				Intent temp2 = new Intent(getApplicationContext(),
 						OutgoingRequestDialog.class);
+				
 				temp2.putExtra("date", date);
 				temp2.putExtra("time", theTime);
 				temp2.putExtra("recipient", recipient);
@@ -514,6 +546,8 @@ public final class PaystreamActivity extends BaseActivity implements
 				temp2.putExtra("transactionType", transactionType);
 				temp2.putExtra("transactionStat", transactionStat);
 				temp2.putExtra("transactionId", transactionId);
+				temp2.putExtra("username", username);
+				temp2.putExtra("comments", transactionComment);
 				startActivity(temp2);
 			}
 		} else {
@@ -528,6 +562,8 @@ public final class PaystreamActivity extends BaseActivity implements
 				temp3.putExtra("transactionType", transactionType);
 				temp3.putExtra("transactionStat", transactionStat);
 				temp3.putExtra("transactionId", transactionId);
+				temp3.putExtra("username", username);
+				temp3.putExtra("comments", transactionComment);
 				startActivity(temp3);
 			} else {
 				Intent temp4 = new Intent(getApplicationContext(),
@@ -540,6 +576,8 @@ public final class PaystreamActivity extends BaseActivity implements
 				temp4.putExtra("transactionType", transactionType);
 				temp4.putExtra("transactionStat", transactionStat);
 				temp4.putExtra("transactionId", transactionId);
+				temp4.putExtra("username", username);
+				temp4.putExtra("comments", transactionComment);
 				startActivity(temp4);
 			}
 		}

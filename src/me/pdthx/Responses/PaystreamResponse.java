@@ -12,4 +12,5 @@ public class PaystreamResponse {
 	public String MessageStatus = "";
 	public String MessageType = "";
 	public String Direction = "";
+	public String ImageUri = "";
 }

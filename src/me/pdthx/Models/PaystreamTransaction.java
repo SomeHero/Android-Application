@@ -17,11 +17,22 @@ public class PaystreamTransaction {
 	private String _standardEntryClass = "";
 	private String _paymentChannel = "";
 	private String _transactionBatchId = "";
+	private String _transactionImageUri = "";
 	private Date _transactionSentDate = null;
 	private Date _createDate = null;
 	private Date _lastUpdateDate = null;
 	private String _direction = "";
 	private String _comments = "";
+	
+	public String getImageUri()
+	{
+		return _transactionImageUri;
+	}
+	
+	public void setImageUri(String imageuri)
+	{
+		_transactionImageUri = imageuri;
+	}
 	
 	public String getHeader() {
 		return _header;
