@@ -14,6 +14,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/tab_bg_selected"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"

@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,23 +31,24 @@ public class IncomingPaymentDialog extends Activity implements OnTouchListener {
 	private String transactionId = "";
 	private String createDate = null;
 	private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+	private String user = "";
+	private String comments = "";
 
-	private ImageView pic;
-	private TextView username;
-	private ImageView payStatusPic;
-	private TextView payStatusText;
-	private TextView theAmount;
-	private TextView payDate;
-	private TextView payTime;
-	private TextView comments;
-	// private EditText sendMessage;
-
+	private Button closeButton;
+	private TextView titleText;
+	private TextView usernameText;
+	private TextView username2Text;
+	private TextView amountText;
+	private TextView commentText;
+	private TextView dateText;
+	private TextView statusText;
+	private TextView typeText;
+	private Button rejectButton;
+	private Button acceptButton;
+	private Button reminderButton;
 	/**
 	 * None of the buttons are viewed in incoming payments.
 	 */
-	private Button button1;
-	private Button button2;
-	private Button button3;
 
 	private static final int SWIPE_MIN_DISTANCE = 120;
 	private static final int SWIPE_MAX_OFF_PATH = 250;
@@ -57,15 +59,7 @@ public class IncomingPaymentDialog extends Activity implements OnTouchListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Display display = getWindowManager().getDefaultDisplay();
-		int width = display.getWidth();
-		int height = display.getHeight();
-		if (width < height) {
-			setContentView(R.layout.dialog);
-		} else {
-			setContentView(R.layout.dialog_land);
-		}
-
+		setContentView(R.layout.dialog);
 		// retrieve data
 		Bundle extras = getIntent().getExtras();
 		senderUri = extras.getString("sender");
@@ -76,6 +70,8 @@ public class IncomingPaymentDialog extends Activity implements OnTouchListener {
 		transactionType = extras.getString("transactionType");
 		transactionStatus = extras.getString("transactionStat");
 		transactionId = extras.getString("transactionId");
+		user = extras.getString("username");
+		comments = extras.getString("comments");
 
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		getWindow().setGravity(Gravity.BOTTOM | Gravity.RIGHT);
@@ -98,79 +94,88 @@ public class IncomingPaymentDialog extends Activity implements OnTouchListener {
 	}
 
 	private void setupButtons() {
-		pic = (ImageView) findViewById(R.id.paypic);
-		pic.setImageResource(R.drawable.paystream_received_icon);
 
-		username = (TextView) findViewById(R.id.pay_username);
-		// since incoming, set text to sender's name
-		if (username != null) {
-			username.setText(senderUri);
-		}
+		closeButton = (Button) findViewById(R.id.pDialog_CloseButton);
+		closeButton.setOnClickListener(new OnClickListener() {
 
-		payStatusPic = (ImageView) findViewById(R.id.pay_status);
-		if (payStatusPic != null) {
-			if (transactionStatus.toUpperCase() == "SUBMITTED") {
-				payStatusPic
-						.setImageResource(R.drawable.transaction_pending_icon);
-			} else if (transactionStatus.toUpperCase() == "PENDING") {
-				payStatusPic
-						.setImageResource(R.drawable.transaction_pending_icon);
-			} else if (transactionStatus.toUpperCase() == "COMPLETE") {
-				payStatusPic
-						.setImageResource(R.drawable.transaction_complete_icon);
-			} else {
-				payStatusPic
-						.setImageResource(R.drawable.transaction_pending_icon);
+			@Override
+			public void onClick(View arg0) {
+				finish();
 			}
-			// else if(o.getTransactionStatus().toUpperCase() == "FAILED") {
-			// imgStatus.setImageResource(R.drawable.transaction_failed_icon);
-			// }else if(o.getTransactionStatus().toUpperCase() == "RETURNED") {
-			// imgStatus.setImageResource(R.drawable.transaction_returned_icon);
-			// } else if(o.getTransactionStatus().toUpperCase() == "CANCELLED")
-			// {
-			// imgStatus.setImageResource(R.drawable.transaction_cancelled_icon);
-			// }
+
+		});
+
+		titleText = (TextView) findViewById(R.id.pDialog_Title);
+		if (titleText != null) {
+			titleText.setText("$ Received");
 		}
 
-		payStatusText = (TextView) findViewById(R.id.pay_status_txt);
-		if (payStatusText != null) {
-			if (transactionStatus.toUpperCase() == "SUBMITTED") {
-				payStatusText.setText("Submitted");
-			} else if (transactionStatus.toUpperCase() == "PENDING") {
-				payStatusText.setText("Pending");
-			} else if (transactionStatus.toUpperCase() == "COMPLETE") {
-				payStatusText.setText("Complete");
-			} else {
-				payStatusText.setText("Pending");
+		usernameText = (TextView) findViewById(R.id.pDialog_Username);
+		if (usernameText != null) {
+			usernameText.setText(recipientUri);
+		}
+
+		username2Text = (TextView) findViewById(R.id.pDialog_Username2);
+		// since outgoing, put recipient's name
+		if (username2Text != null) {
+			username2Text.setText(user);
+		}
+
+		// PICTURES FROM USERS
+		// ????????????????
+
+		amountText = (TextView) findViewById(R.id.pDialog_Amount);
+		if (amountText != null) {
+			amountText.setText("$" + amount + " ");
+		}
+
+		commentText = (TextView) findViewById(R.id.pDialog_Comments);
+		if (commentText != null) {
+			commentText.setText(comments);
+		}
+
+		dateText = (TextView) findViewById(R.id.pDialog_Date);
+		if (dateText != null) {
+			dateText.setText("on " + header + " at " + createDate);
+		}
+
+		statusText = (TextView) findViewById(R.id.pDialog_Status);
+		if (statusText != null) {
+			statusText.setText(transactionStatus);
+		}
+
+		typeText = (TextView) findViewById(R.id.pDialog_type);
+		if (typeText != null) {
+			typeText.setText("sent ");
+		}
+
+		rejectButton = (Button) findViewById(R.id.pDialog_Reject);
+		rejectButton.setVisibility(View.GONE);
+		acceptButton = (Button) findViewById(R.id.pDialog_Accept);
+		acceptButton.setVisibility(View.GONE);
+		reminderButton = (Button) findViewById(R.id.pDialog_Reminder);
+		reminderButton.setVisibility(View.GONE);
+
+		acceptButton.setVisibility(View.GONE);
+
+		Button borderLeft = (Button) findViewById(R.id.payDialogLeft);
+		Button borderTop = (Button) findViewById(R.id.payDialogTop);
+		borderLeft.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				finish();
 			}
-		}
 
-		theAmount = (TextView) findViewById(R.id.pay_amountgiven);
-		if (theAmount != null) {
-			theAmount.setText(currencyFormatter.format(amount));
-		}
+		});
+		borderTop.setOnClickListener(new OnClickListener() {
 
-		payDate = (TextView) findViewById(R.id.pay_date);
-		if (payDate != null) {
-			payDate.setText(header);
-		}
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
 
-		payTime = (TextView) findViewById(R.id.pay_time);
-		if (payTime != null) {
-			payTime.setText(createDate);
-		}
-
-		comments = (TextView) findViewById(R.id.pay_comments);
-		comments.setMovementMethod(new ScrollingMovementMethod());
-
-		// sendMessage = (EditText) findViewById(R.id.pay_send_msg);
-
-		button1 = (Button) findViewById(R.id.pay_button1);
-		button1.setVisibility(View.GONE);
-		button2 = (Button) findViewById(R.id.pay_button2);
-		button2.setVisibility(View.GONE);
-		button3 = (Button) findViewById(R.id.pay_button3);
-		button3.setVisibility(View.GONE);
+		});
 	}
 
 	@Override

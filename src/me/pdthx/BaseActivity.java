@@ -221,7 +221,6 @@ public class BaseActivity extends Activity {
 		case R.id.profileMenuItem:
 
 			startActivity(new Intent(this, ProfileSetupActivity.class));
-
 			break;
 		}
 

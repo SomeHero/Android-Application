@@ -130,15 +130,16 @@
             android:layout_alignLeft="@+id/linearLayout2"
             android:layout_below="@+id/linearLayout3"
             android:orientation="vertical" >
-
+
             <Button
                 android:id="@+id/signin_email"
-                android:layout_width="278dp"
-                android:layout_height="70dp"
+                android:layout_width="275dp"
+                android:layout_height="60dp"
+                android:background="@drawable/button_selector"
+                android:text="Sign in with E-mail"
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"
-                android:textStyle="bold"
-                android:text="Sign in with E-mail" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/forgotInfo"

@@ -1,13 +1,26 @@
 package me.pdthx.Adapters;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import me.pdthx.R;
+import me.pdthx.Models.Friend;
 import me.pdthx.Models.PaystreamTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
+import android.preference.PreferenceManager;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 
@@ -67,6 +81,28 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 
 			ImageView recipientUserImg = (ImageView) v
 					.findViewById(R.id.paystreamUserImg);
+
+			if (recipientUserImg != null) {
+				URL url;
+				try {
+					if (o.getImageUri().length() != 0
+							&& !o.getImageUri().equals("")) {
+						url = new URL(o.getImageUri());
+						Bitmap mIcon = BitmapFactory.decodeStream(url
+								.openConnection().getInputStream());
+						recipientUserImg.setImageBitmap(mIcon);
+					} else {
+						recipientUserImg
+								.setImageResource(R.drawable.avatar_unknown);
+					}
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 
 			if (o.getHeader().length() > 0) {
 				txtHeader.setVisibility(View.VISIBLE);
@@ -149,31 +185,39 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 			// FIX createDate = time
 			// header contains date
 			if (transactionTime != null) {
+				int minutesAgo;
+				int hoursAgo;
+				int secondsAgo;
+				String currentDay = "";
 				// today
 				Calendar c = Calendar.getInstance();
 				if (o.getCreateDate().getDate() == c.get(Calendar.DATE)) {
-					String currentDay = "";
-					int hoursAgo = o.getCreateDate().getHours()
-							- c.get(Calendar.HOUR_OF_DAY);
-					if (hoursAgo != 0) {
-						currentDay = currentDay + hoursAgo + " hours";
-					}
-					int minutesAgo = o.getCreateDate().getMinutes()
-							- c.get(Calendar.MINUTE);
-					if (minutesAgo != 0) {
-						if (currentDay.length() != 0) {
-							currentDay = currentDay + ", ";
+
+					hoursAgo = c.get(Calendar.HOUR_OF_DAY)
+							- o.getCreateDate().getHours();
+					if (hoursAgo > 0) {
+						if (hoursAgo == 1) {
+							currentDay = currentDay + hoursAgo + " hr. ";
+						} else {
+							currentDay = currentDay + hoursAgo + " hrs. ";
 						}
-						currentDay = currentDay + minutesAgo + " minutes";
+					} else {
+						minutesAgo = c.get(Calendar.MINUTE)
+								- o.getCreateDate().getMinutes();
+						if (minutesAgo > 0) {
+							currentDay = currentDay + minutesAgo + " min. ";
+						} else {
+							// only use seconds if minutes and hours do not
+							// apply
+							secondsAgo = c.get(Calendar.SECOND)
+									- o.getCreateDate().getSeconds();
+							currentDay = currentDay + secondsAgo + "seconds";
+
+						}
 					}
-					// only use seconds if minutes and hours do not apply
-					int secondsAgo = o.getCreateDate().getSeconds()
-							- c.get(Calendar.SECOND);
-					if (secondsAgo != 0 && (minutesAgo == 0 && hoursAgo == 0)) {
-						currentDay = currentDay + secondsAgo + "seconds";
-					}
-					currentDay = currentDay + " ago";
+					currentDay = currentDay + "ago";
 					transactionTime.setText(currentDay);
+
 				} else // else should just be date and time
 				{
 					SimpleDateFormat format = new SimpleDateFormat(
@@ -196,15 +240,8 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 			// }
 
 			if (transactionStatus != null) {
-				if (o.getTransactionStatus().toUpperCase() == "SUBMITTED") {
-					transactionStatus.setText("Submitted");
-				} else if (o.getTransactionStatus().toUpperCase() == "PENDING") {
-					transactionStatus.setText("Pending");
-				} else if (o.getTransactionStatus().toUpperCase() == "COMPLETE") {
-					transactionStatus.setText("Complete");
-				} else {
-					transactionStatus.setText("Pending");
-				}
+				transactionStatus.setText(o.getTransactionStatus());
+
 			}
 
 			// if(imgStatus != null) {
@@ -260,7 +297,17 @@ public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 				if (o.getComments().equals("No comments")) {
 					transactionComment.setText(" ");
 				} else {
-					String comment = "\"" + o.getComments() + "\" ";
+					String comment;
+					if(o.getComments().length() > 18)
+					{
+						String shortened = o.getComments().substring(0, 18);
+						shortened = shortened + "...";
+						comment = "\"" + shortened + "\" ";
+					}
+					else
+					{
+						comment = "\"" + o.getComments() + "\" ";
+					}
 					transactionComment.setText(comment);
 				}
 			}

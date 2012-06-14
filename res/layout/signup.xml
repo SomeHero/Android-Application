@@ -32,7 +32,7 @@
                 android:layout_marginTop="25dp"
                 android:text="Sign in with Facebook:"
                 android:textColor="#000000"
-                android:textSize="12dp"
+                android:textSize="15dp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -87,7 +87,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="Or use your email address:"
                 android:textColor="#000000"
-                android:textSize="12dp"
+                android:textSize="15dp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -163,16 +163,18 @@
                 android:textSize="12dp"
                 android:textStyle="italic" >
             </EditText>
-
+
             <Button
                 android:id="@+id/createAcct"
-                android:layout_width="280dp"
-                android:layout_height="55dp"
+                android:layout_width="275dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="6dp"
+                android:background="@drawable/button_selector"
                 android:text="Create my account"
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"
                 android:textStyle="bold" />
+
         </LinearLayout>
     </RelativeLayout>
 
