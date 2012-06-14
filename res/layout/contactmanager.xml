@@ -25,133 +25,96 @@
         android:layout_height="458dp" >
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:id="@+id/relativeLayout2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <RelativeLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/RelativeLayout01"
-                android:layout_width="fill_parent"
-                android:layout_height="30dp" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:text="Send Money"
-                    android:textColor="#41924b" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:contentDescription="PaidThx Logo"
-                    android:src="@drawable/logo" />
-
-            </RelativeLayout>
+            android:layout_marginTop="20dip"
+            android:background="@drawable/panel_background"
+            android:orientation="vertical"
+            android:padding="10dp" >
 
             <LinearLayout
                 android:id="@+id/relativeLayout2"
-                android:layout_width="match_parent"
+                android:layout_width="280dip"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dip"
-                android:background="@drawable/panel_background"
-                android:orientation="vertical"
-                android:padding="10dp" >
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Send Money:"
+                    android:textColor="#000000"
+                    android:textStyle="bold" />
 
                 <LinearLayout
-                    android:id="@+id/relativeLayout2"
-                    android:layout_width="280dip"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="vertical" >
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
 
-                    <TextView
-                        android:id="@+id/textView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Send Money:"
-                        android:textColor="#000000"
-                        android:textStyle="bold" />
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/to_icon" />
+
+                    <Button
+                        android:id="@+id/addRecipient"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="@drawable/to_amount"
+                        android:hint="Add Recipient" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
                         <ImageView
-                            android:id="@+id/imageView1"
+                            android:id="@+id/imageView2"
                             android:layout_width="60dp"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/to_icon" />
-
+                            android:layout_height="60dp"
+                            android:src="@drawable/amt_icon" />
+
                         <Button
-                            android:id="@+id/addRecipient"
-                            android:hint="Add Recipient"
+                            android:id="@+id/btnAmount"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:background="@drawable/to_amount" />
-
+                            android:background="@drawable/to_amount"
+                            android:digits="0123456789."
+                            android:ems="10"
+                            android:hint="             How much?"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="14"
+                            android:maxLines="1" />
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" >
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
-
-                            <ImageView
-                                android:id="@+id/imageView2"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
-                                android:src="@drawable/amt_icon" />
-
-                            <EditText
-                                android:id="@+id/txtAmount"
-                                android:layout_width="match_parent"
-                                android:layout_height="60dp"
-                                android:background="@drawable/to_amount"
-                                android:digits="0123456789."
-                                android:ems="10"
-                                android:inputType="number"
-                                android:lines="1"
-                                android:maxLength="14"
-                                android:maxLines="1"
-                                android:hint="  How much?" >
-
-                                <requestFocus />
-                            </EditText>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/txtComments"
-                        android:layout_width="fill_parent"
-                        android:layout_height="120dp"
-                        android:gravity="top"
-                        android:hint="Comments"
-                        android:inputType="textMultiLine"
-                        android:lines="3" >
-
-                    </EditText>
-
-                    <Button
-                        android:id="@+id/btnSubmitPaymentRequest"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:background="@drawable/send_big_green"
-                        android:textSize="20dip"
-                        android:text="Send Money" />
-
                 </LinearLayout>
+
+                <EditText
+                    android:id="@+id/txtComments"
+                    android:layout_width="fill_parent"
+                    android:layout_height="120dp"
+                    android:gravity="top"
+                    android:hint="Comments"
+                    android:inputType="textMultiLine"
+                    android:lines="3" >
+
+                    <requestFocus />
+                </EditText>
+
+                <Button
+                    android:id="@+id/btnSubmitPaymentRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/send_big_green"
+                    android:text="Send Money"
+                    android:textSize="20dip" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

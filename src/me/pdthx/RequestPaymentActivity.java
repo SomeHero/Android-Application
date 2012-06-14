@@ -47,7 +47,7 @@ public class RequestPaymentActivity extends BaseActivity {
 	private Friend friend;
 
 	private Button btnAddContacts;
-	private EditText txtAmount;
+	private Button txtAmount;
 	private EditText txtComments;
 	private Button btnRequestMoney;
 	private String passcode = "";
@@ -60,7 +60,7 @@ public class RequestPaymentActivity extends BaseActivity {
 	final private int SUBMITREQUESTSUCCESS_DIALOG = 4;
 	final private int INVALIDPASSCODELENGTH_DIALOG = 5;
 	final private int PAYMENTEXCEEDSLIMIT_DIALOG = 6;
-
+	final private int ADD_MONEY = 8;
 	final private int SUBMITREQUEST_ACTION = 1;
 
 	private View requestMoneyView = null;
@@ -279,51 +279,59 @@ public class RequestPaymentActivity extends BaseActivity {
 		requestMoneyView = View.inflate(this, R.layout.requestmoney_controller, null);
 		setContentView(requestMoneyView);
 
-		txtAmount = (EditText) findViewById(R.id.txtRequestMoneyAmount);
+		
 		txtComments = (EditText) findViewById(R.id.txtRequestMoneyComments);
 		btnRequestMoney = (Button) findViewById(R.id.btnSubmit);
 		Typeface type = Typeface.createFromAsset(getAssets(),"HelveticaWorld-Bold.ttf");
 		btnRequestMoney.setTypeface(type);
 		btnRequestMoney.setTextColor(Color.WHITE);
-		
-		txtAmount.addTextChangedListener(new TextWatcher() {
-			String current = "";
+
+		txtAmount = (Button) findViewById(R.id.txtRequestMoneyAmount);
+		txtAmount.setOnClickListener(new OnClickListener(){
 
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				if (!s.toString().equals(current)) {
-					EditText txtAmount = (EditText) findViewById(R.id.txtRequestMoneyAmount);
-					txtAmount.removeTextChangedListener(this);
-
-					String cleanString = s.toString().replaceAll("[$,.]", "");
-
-					double parsed = Double.parseDouble(cleanString);
-					String formatted = NumberFormat.getCurrencyInstance()
-							.format((parsed / 100));
-
-					current = formatted;
-					txtAmount.setText(formatted);
-					txtAmount.setSelection(formatted.length());
-
-					txtAmount.addTextChangedListener(this);
-				}
-			}
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				if (arg0.length() == 14) {
-					arg0.replace(13, 14, "");
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-				
-			}
+			public void onClick(View v) {
+				startActivityForResult(new Intent(RequestPaymentActivity.this, AddMoneyActivity.class), ADD_MONEY);			
+			}		
 		});
-		
+//		txtAmount.addTextChangedListener(new TextWatcher() {
+//			String current = "";
+//
+//			@Override
+//			public void onTextChanged(CharSequence s, int start, int before,
+//					int count) {
+//				if (!s.toString().equals(current)) {
+//					EditText txtAmount = (EditText) findViewById(R.id.txtRequestMoneyAmount);
+//					txtAmount.removeTextChangedListener(this);
+//
+//					String cleanString = s.toString().replaceAll("[$,.]", "");
+//
+//					double parsed = Double.parseDouble(cleanString);
+//					String formatted = NumberFormat.getCurrencyInstance()
+//							.format((parsed / 100));
+//
+//					current = formatted;
+//					txtAmount.setText(formatted);
+//					txtAmount.setSelection(formatted.length());
+//
+//					txtAmount.addTextChangedListener(this);
+//				}
+//			}
+//
+//			@Override
+//			public void afterTextChanged(Editable arg0) {
+//				if (arg0.length() == 14) {
+//					arg0.replace(13, 14, "");
+//				}
+//			}
+//
+//			@Override
+//			public void beforeTextChanged(CharSequence arg0, int arg1,
+//					int arg2, int arg3) {
+//				
+//			}
+//		});
+//		
 		btnAddContacts = (Button) findViewById(R.id.addRecipient);
 		btnAddContacts.setOnClickListener(new OnClickListener(){
 
@@ -395,12 +403,17 @@ public class RequestPaymentActivity extends BaseActivity {
 				
 				
 			}
+			else if(requestCode == ADD_MONEY){
+				Bundle bundle = data.getExtras();
+				String amount = bundle.getString("index");
+				txtAmount.setText("$"+ amount);
+			}
 			else {
 				launchRequestMoneyView();
 			}
 		}
 		else {
-			if (requestCode != ADDING_FRIEND) {
+			if (requestCode != ADDING_FRIEND && requestCode != ADD_MONEY) {
 				finish();
 			}
 		}

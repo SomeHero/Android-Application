@@ -2,11 +2,14 @@ package me.pdthx;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
 import me.pdthx.Adapters.FriendAdapter;
+import me.pdthx.Adapters.PaystreamAdapter;
 import me.pdthx.Models.Friend;
+import me.pdthx.Models.PaystreamTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,11 +17,14 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,7 +39,9 @@ public final class FriendsListActivity extends BaseActivity  {
 	private TextView mEmptyTextView = null;
 	private final static int SETFRIENDIMAGE = 1;
 	private static HashMap<String, Bitmap> pictureMap;
-
+	private EditText searchBar = null;
+	private ArrayList<Friend> contacts = new ArrayList<Friend>();
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,6 +63,10 @@ public final class FriendsListActivity extends BaseActivity  {
 		mEmptyTextView = (TextView)findViewById(R.id.txtEmptyFriendList);
 
 		if(friendsList != null && friendsList.size() > 0) {
+			for(int x = 0; x < friendsList.size(); x++)
+			{
+				contacts.add(friendsList.get(x));
+			}
 			Collections.sort(friendsList);
 			mEmptyTextView.setVisibility(View.GONE);
 			m_adapter = new FriendAdapter(this, R.layout.friend_item, friendsList);
@@ -86,7 +98,80 @@ public final class FriendsListActivity extends BaseActivity  {
 			}
 		});
 
+		searchBar = (EditText) findViewById(R.id.searchBar);
+		searchBar.addTextChangedListener(new TextWatcher() {
+			
+			String current = "";
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+				ArrayList<String> searched = new ArrayList<String>();
+				current = s.toString();
+				int currentLength = current.length();
+				
+				for (int x = 0; x < friendsList.size(); x++) {
+					String name = friendsList.get(x).getName().toLowerCase();
+					int counter = 0;
+					for (int y = 0; y < currentLength; y++) {
+						char currentChar = current.charAt(y);
+						char recipientChar = name.charAt(y);
+						if (currentChar == recipientChar) {
+							counter++;
+						}
+						if (counter == currentLength) {
+							searched.add(name);
+						}
+					}
+				}
+				
+				ArrayList<Friend> tempList = new ArrayList<Friend>();
+				for (int t = 0; t < friendsList.size(); t++)
+				{
+					tempList.add(friendsList.get(t));
+				}
+				contacts.clear();
+				for(int i = 0; i < searched.size(); i++)
+				{
+					for (int j = 0; j < friendsList.size(); j++)
+					{
+						if(tempList.get(j).getName().toLowerCase().equals(searched.get(i)))
+						{															
+							contacts.add(tempList.get(j));					
+							break;
+						}
+					}
+				}				
+				if(searchBar.getText().toString().length() == 0)
+				{
+					m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item,
+							friendsList);
+					contacts.clear();
+				}
+				else
+				{
+					m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item,
+							contacts);
+				}
+				mListView.setAdapter(m_adapter);
 
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) 
+			{
+				
+			
+			}
+
+		});
 	}
 
 	private OnScrollListener mOnScrollListener = new OnScrollListener() {

@@ -35,7 +35,7 @@
 
 	</RelativeLayout> 
 	</LinearLayout>
-<!-- 
+ 
 	    <SearchView
 	        android:id="@+id/searchBar"
 	        android:layout_width="match_parent"
@@ -45,7 +45,7 @@
 
 	        <requestFocus />
 	    </SearchView>
- -->
+
 	<LinearLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
