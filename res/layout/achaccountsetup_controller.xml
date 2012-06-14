@@ -1,74 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-        <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dip"
-        android:layout_marginTop="40dip" >
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="200dip"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="#0000FF"
-            android:padding="5dip"
-            android:text="Great, your security pin was setup.  Now setup the account that you want us the money withdrawn from."
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#FFFFFF" />
-    </RelativeLayout>
+    android:fadingEdge="none"
+    android:scrollbars="none" >
 
     <LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="280dip"
-        android:layout_height="wrap_content" 
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal">
-    <EditText
-        android:id="@+id/txtNameOnAccount"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Name on Account" >
+        android:layout_height="match_parent"
+        android:background="#FAFAFA"
+        android:orientation="vertical" >
 
-        <requestFocus />
-    </EditText>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/pay_bg"
+            android:gravity="center|left"
+            android:orientation="horizontal" >
 
-    <EditText
-        android:id="@+id/txtRoutingNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Routing Number" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
 
-    <EditText
-        android:id="@+id/txtAccountNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Account Number" />
+                <Button
+                    android:id="@+id/btnACHBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/button_back" />
 
-    <EditText
-        android:id="@+id/txtConfirmAccountNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Confirm Account Number" />
+                <TextView
+                    android:id="@+id/txtACHTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="Create Account"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#575455"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/btnSubmitACHAccount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Submit" />
-
-    <Button
-        android:id="@+id/btnACHRemindMeLater"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Remind me later" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#9C9C9C"
+            android:orientation="vertical" >
+        </LinearLayout>
 
-   </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:orientation="vertical" >
 
-</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Enter info below or" />
+
+                <Button
+                    android:id="@+id/button2"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@null"
+                    android:text="Snap a photo of a check"
+                    android:textColor="#4CB7CF" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/txtNameOnAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Name on Account" >
+
+                <requestFocus />
+            </EditText>
+
+            <EditText
+                android:id="@+id/txtRoutingNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Routing Number" />
+
+            <EditText
+                android:id="@+id/txtAccountNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Account Number" />
+
+            <EditText
+                android:id="@+id/txtConfirmAccountNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Confirm Account Number" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:gravity="center" >
+
+                <RadioGroup
+                    android:id="@+id/paystreamSubCategories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <me.pdthx.SegmentButtons.SegmentedControlButton
+                        android:id="@+id/achCheckings"
+                        android:checked="false"
+                        android:text="Checkings" />
+
+                    <me.pdthx.SegmentButtons.SegmentedControlButton
+                        android:id="@+id/achSavings"
+                        android:checked="false"
+                        android:text="Savings" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSubmitACHAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/paystream_gselector"
+                android:text="Submit"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnremoveACHAcct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/paystream_rselector"
+                android:text="Remove Account"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnRemindMeLater"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/paystream_bselector"
+                android:text="Remind me later"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

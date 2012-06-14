@@ -3,96 +3,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#B3B3B3"
+    android:gravity="center_vertical|top"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/tab_bg_selected" >
+        android:background="@drawable/txtbox"
+        android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:gravity="center" >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:src="@drawable/tab_profile" />
+            <Button
+                android:id="@+id/acct_BackButton"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/button_back" />
 
             <TextView
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile"
-                android:textColor="#FFFFFF"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="Manage Accounts"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#383838"
                 android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:gravity="center" >
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/tab_acct" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Accounts"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/nonglossy"
-            android:gravity="center" >
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/tab_pref" />
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Preferences"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold" />
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:fadingEdge="none"
+        android:scrollbars="none" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/txtbox"
+            android:background="#FAFAFA"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp" >
+                android:layout_height="wrap_content" >
 
                 <TextView
                     android:id="@+id/textView4"
@@ -102,21 +65,20 @@
                     android:layout_marginTop="20dp"
                     android:text="Your Linked Accounts"
                     android:textColor="#3D3D3D"
-                    android:textSize="18dp"
+                    android:textSize="14dp"
                     android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:gravity="right" >
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|right" >
 
                     <ImageView
-                        android:id="@+id/imageView4"
+                        android:id="@+id/imageView5"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:src="@drawable/tab_help" />
                 </LinearLayout>
             </LinearLayout>
@@ -127,34 +89,32 @@
                 android:layout_height="1px"
                 android:layout_marginLeft="15px"
                 android:layout_marginRight="15px"
+                android:layout_marginTop="15px"
                 android:background="#8A8788"
                 android:orientation="vertical" >
             </LinearLayout>
 
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/bankIDs"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Button" />
+                android:layout_marginBottom="15dp"
+                android:gravity="center"
+                android:orientation="vertical" >
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical" >
-
+
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/bankAddAcct"
                     android:layout_width="265dp"
                     android:layout_height="65dp"
-                    android:layout_marginBottom="25dp"
-                    android:background="@drawable/blue_active"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/blue_button_selector"
                     android:text="Add an account"
                     android:textColor="#FFFFFF"
                     android:textSize="20dp"
@@ -183,7 +143,7 @@
                     android:layout_marginTop="20dp"
                     android:text="Your Default Send Account"
                     android:textColor="#3D3D3D"
-                    android:textSize="18dp"
+                    android:textSize="14dp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -218,7 +178,7 @@
                     android:layout_marginTop="20dp"
                     android:text="Your Default Receive Account"
                     android:textColor="#3D3D3D"
-                    android:textSize="18dp"
+                    android:textSize="14dp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -239,24 +199,27 @@
             <Spinner
                 android:id="@+id/spinner2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center" >
-
+
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/bankUpdateAcct"
                     android:layout_width="265dp"
                     android:layout_height="65dp"
-                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="40dp"
+                    android:layout_marginTop="15dp"
                     android:background="@drawable/button_selector"
                     android:text="Update Accounts"
+                    android:textColor="#FFFFFF"
                     android:textSize="20dp"
                     android:textStyle="bold" />
-
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+</LinearLayout>

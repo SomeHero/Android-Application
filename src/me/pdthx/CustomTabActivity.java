@@ -1,5 +1,7 @@
 package me.pdthx;
 
+import me.pdthx.Accounts.AccountManagerActivity;
+
 import com.zubhium.ZubhiumSDK;
 import com.zubhium.ZubhiumSDK.CrashReportingMode;
 
@@ -38,7 +40,7 @@ public class CustomTabActivity extends TabActivity {
 		Resources res = getResources();
 
 		mTabHost = getTabHost(); // The activity TabHost
-		//mTabHost.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
+		mTabHost.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
 
 		Intent intent; // Reusable Intent for each tab
 
@@ -54,6 +56,7 @@ public class CustomTabActivity extends TabActivity {
 		setupTab(res.getDrawable(R.drawable.tab_home_selector), "Home", intent);
 
 		intent = new Intent(mTabHost.getContext(), SendPaymentActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.tab_send_selector), "Send $", intent);
 
 		// if(prefs.getString("paymentAccountId", "").length() == 0) {
@@ -62,9 +65,11 @@ public class CustomTabActivity extends TabActivity {
 		// }
 
 		intent = new Intent(mTabHost.getContext(), RequestPaymentActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.tab_request_selector), "Req $", intent);
 
 		intent = new Intent(mTabHost.getContext(), PaystreamActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.tab_stream_selector), "Stream", intent);
 
 		mTabHost.setCurrentTab(0);

@@ -1,235 +1,319 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/theDialog"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
     <LinearLayout
+        android:id="@+id/emptySpace"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/emptySpaceTop"
+        android:background="@android:color/transparent"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/payDialogLeft"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/emptySpaceTop"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_height="20dp"
+        android:background="@android:color/transparent"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/payDialogTop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/theDialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/emptySpaceTop"
+        android:layout_toRightOf="@+id/emptySpace"
+        android:background="@drawable/rect_stroke"
         android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/paystream_header_background"
             android:gravity="center"
-            android:paddingBottom="2dp"
-            android:paddingTop="10dp" >
+            android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/paypic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="3dp"
-                android:src="@drawable/person_icon_small" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center" >
 
-            <TextView
-                android:id="@+id/pay_username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Username"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/tab_paystreamtitle" >
+
+                    <Button
+                        android:id="@+id/pDialog_CloseButton"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/button_x" />
+
+                    <TextView
+                        android:id="@+id/pDialog_Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/pDialog_CloseButton"
+                        android:layout_alignBottom="@+id/pDialog_CloseButton"
+                        android:layout_centerHorizontal="true"
+                        android:text="$ payment"
+                        android:textColor="#4F4F4F"
+                        android:textSize="22dp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingBottom="3dp" >
-
-            <ImageView
-                android:id="@+id/pay_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="3dp"
-                android:src="@drawable/transaction_pending_icon" />
-
-            <TextView
-                android:id="@+id/pay_status_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pending" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="10dp" >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" >
-
-            <TextView
-                android:id="@+id/pay_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:text="Amount:"
-                android:textColor="#000000"
-                android:textStyle="bold" />
+            android:layout_height="2dp"
+            android:background="#CCCCCC"
+            android:orientation="vertical" >
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/pay_amountgiven"
+        <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:text="$10.00"
-            android:textColor="#12A34E"
-            android:textSize="15dp"
-            android:textStyle="bold" />
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="85dp" >
+
+                    <ImageView
+                        android:id="@+id/pDialog_picUsername"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:maxHeight="60dp"
+                        android:maxWidth="60dp"
+                        android:src="@drawable/avatar_unknown" />
+
+                    <ImageView
+                        android:id="@+id/pDialog_picUsername2"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"
+                        android:maxHeight="60dp"
+                        android:maxWidth="60dp"
+                        android:src="@drawable/avatar_unknown" />
+
+                    <TextView
+                        android:id="@+id/pDialog_Username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/pDialog_picUsername"
+                        android:layout_marginLeft="2dp"
+                        android:layout_toRightOf="@+id/pDialog_picUsername"
+                        android:paddingLeft="2dp"
+                        android:text="username1"
+                        android:textColor="#3F4040"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/pDialog_Username2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/pDialog_picUsername2"
+                        android:layout_marginRight="2dp"
+                        android:layout_toLeftOf="@+id/pDialog_picUsername2"
+                        android:paddingRight="2dp"
+                        android:text="username2"
+                        android:textColor="#4D9689"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/pDialog_Username2"
+                        android:layout_centerInParent="true" >
+
+                        <TextView
+                            android:id="@+id/pDialog_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="sent "
+                            android:textColor="#3F4040"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/pDialog_Amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$140.50 "
+                            android:textColor="#4D9689"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="to"
+                            android:textColor="#3F4040"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/pDialog_Comments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/message"
+                        android:text="insert your comment here"
+                        android:textColor="#696E6D"
+                        android:textStyle="italic" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:gravity="right"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/pDialog_Date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="on Wed, March 23, 2012 at 2:35PM"
+                            android:textStyle="italic" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginTop="5dp"
+                            android:background="#BEE8E0"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/textView9"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2dp"
+                                android:paddingLeft="3dp"
+                                android:text="CURRENT STATUS"
+                                android:textColor="#428A99"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/pDialog_Status"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/rect_stroke"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="Status"
+                                android:textColor="#CF932B"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:background="#BEE8E0"
+                                android:orientation="vertical" >
+
+                                <TextView
+                                    android:id="@+id/textView9"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="2dp"
+                                    android:paddingLeft="3dp"
+                                    android:text="WHAT NEXT?"
+                                    android:textColor="#428A99"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:gravity="center"
+                        android:orientation="vertical" >
+
+                        <Button
+                            android:id="@+id/pDialog_Reminder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/paystream_bselector"
+                            android:text="Send a Reminder"
+                            android:textColor="#FFFFFF"
+                            android:textSize="16dp"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/pDialog_Accept"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/paystream_gselector"
+                            android:text="Accept &amp; Pay"
+                            android:textColor="#FFFFFF"
+                            android:textSize="16dp"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/pDialog_Reject"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/paystream_rselector"
+                            android:text="Reject Payment"
+                            android:textColor="#FFFFFF"
+                            android:textSize="16dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/recieved"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingRight="15dp"
-            android:text="Received:"
-            android:textColor="#000000"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/pay_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="May 25, 2012"
-            android:textColor="#000000" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="15dp" >
-
-        <TextView
-            android:id="@+id/pay_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="85dp"
-            android:text="9:54:51 AM"
-            android:textColor="#000000" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/paystream_header_background"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp" >
-
-        <TextView
-            android:id="@+id/comments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:text="Comments"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/pay_comments"
-            android:layout_width="210dp"
-            android:layout_height="90dp"
-            android:layout_margin="5dp"
-            android:gravity="center"
-            android:maxLines="5"
-            android:scrollbars="vertical"
-            android:text="No comments" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/paystream_header_background" >
-
-        <TextView
-            android:id="@+id/messagesend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:text="Send a Message"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <EditText
-            android:id="@+id/pay_send_msg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:ems="10" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp" >
-
-        <Button
-            android:id="@+id/pay_button1"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/pop5"
-            android:minWidth="60dp"
-            android:text="Accept" />
-
-        <Button
-            android:id="@+id/pay_button2"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="24dp"
-            android:layout_toRightOf="@+id/pay_button1"
-            android:background="@drawable/pop5"
-            android:minWidth="60dp"
-            android:text="Reject" />
-
-        <Button
-            android:id="@+id/pay_button3"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="26dp"
-            android:layout_toRightOf="@+id/pay_button2"
-            android:background="@drawable/pop5"
-            android:minWidth="60dp"
-            android:text="Ignore" />
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>
