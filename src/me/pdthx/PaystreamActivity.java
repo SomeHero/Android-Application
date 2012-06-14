@@ -42,7 +42,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public final class PaystreamActivity extends BaseActivity implements
-		OnCheckedChangeListener {
+OnCheckedChangeListener {
 
 	private ProgressDialog m_ProgressDialog = null;
 	private ArrayList<PaystreamTransaction> m_transactions = null;
@@ -59,7 +59,7 @@ public final class PaystreamActivity extends BaseActivity implements
 	private ListView mListView = null;
 	private TextView mEmptyTextView = null;
 	private static final int CLEARSEARCH = 11;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,7 +87,7 @@ public final class PaystreamActivity extends BaseActivity implements
 		}
 
 	}
-	
+
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -127,25 +127,27 @@ public final class PaystreamActivity extends BaseActivity implements
 		mEmptyTextView = (TextView) findViewById(R.id.txtEmptyPaystream);
 		searchBar = (EditText) findViewById(R.id.searchBar);
 		transactionsList = new ArrayList<PaystreamTransaction>();
-		
-			if(refreshCount > 1)
-			{
-				searchBar.setText("");
-			}
-			searchBar.addTextChangedListener(new TextWatcher() {
-				
-				String current = "";
-				
-				@Override
-				public void afterTextChanged(Editable s) {
-					
-					ArrayList<String> searched = new ArrayList<String>();
-					current = s.toString();
-					int currentLength = current.length();
-					
-					for (int x = 0; x < transactionsList.size(); x++) {
-						String recipient = transactionsList.get(x).getRecipientUri()						
-								.toString();
+
+		if(refreshCount > 1)
+		{
+			searchBar.setText("");
+		}
+		searchBar.addTextChangedListener(new TextWatcher() {
+
+			String current = "";
+
+			@Override
+			public void afterTextChanged(Editable s) {
+
+				ArrayList<String> searched = new ArrayList<String>();
+				current = s.toString();
+				int currentLength = current.length();
+
+				for (int x = 0; x < transactionsList.size(); x++) {
+					String recipient = transactionsList.get(x).getRecipientUri()						
+							.toString();
+
+					if (recipient.length() > currentLength) {
 						int counter = 0;
 						for (int y = 0; y < currentLength; y++) {
 							char currentChar = current.charAt(y);
@@ -158,55 +160,56 @@ public final class PaystreamActivity extends BaseActivity implements
 							}
 						}
 					}
-					
-					ArrayList<PaystreamTransaction> tempList = new ArrayList<PaystreamTransaction>();
-					for (int t = 0; t < transactionsList.size(); t++)
-					{
-						tempList.add(transactionsList.get(t));
-					}
-					m_transactions.clear();
-					for(int i = 0; i < searched.size(); i++)
-					{
-						for (int j = 0; j < transactionsList.size(); j++)
-						{
-							if(tempList.get(j).getRecipientUri().equals(searched.get(i)))
-							{															
-								m_transactions.add(tempList.get(j));					
-								break;
-							}
-						}
-					}				
-					if(searchBar.getText().toString().length() == 0)
-					{
-						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item,
-								transactionsList);
-						m_transactions.clear();
-					}
-					else
-					{
-						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item,
-							m_transactions);
-					}
-					mListView.setAdapter(m_adapter);
-	
 				}
-	
-				@Override
-				public void beforeTextChanged(CharSequence s, int start, int count,
-						int after) {
-	
-				}
-	
-				@Override
-				public void onTextChanged(CharSequence s, int start, int before,
-						int count) 
+
+				ArrayList<PaystreamTransaction> tempList = new ArrayList<PaystreamTransaction>();
+				for (int t = 0; t < transactionsList.size(); t++)
 				{
-					
-				
+					tempList.add(transactionsList.get(t));
 				}
-	
-			});
-		
+				m_transactions.clear();
+				for(int i = 0; i < searched.size(); i++)
+				{
+					for (int j = 0; j < transactionsList.size(); j++)
+					{
+						if(tempList.get(j).getRecipientUri().equals(searched.get(i)))
+						{															
+							m_transactions.add(tempList.get(j));					
+							break;
+						}
+					}
+				}				
+				if(searchBar.getText().toString().length() == 0)
+				{
+					m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item,
+							transactionsList);
+					m_transactions.clear();
+				}
+				else
+				{
+					m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item,
+							m_transactions);
+				}
+				mListView.setAdapter(m_adapter);
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) 
+			{
+
+
+			}
+
+		});
+
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -242,7 +245,7 @@ public final class PaystreamActivity extends BaseActivity implements
 			}
 			m_ProgressDialog.dismiss();
 			m_adapter.notifyDataSetChanged();
-			
+
 		}
 	};
 
@@ -287,7 +290,7 @@ public final class PaystreamActivity extends BaseActivity implements
 				} else {
 					o1.setHeader("");
 				}
-				
+
 				m_transactions.add(o1);
 			}
 			refreshCount++;
@@ -363,7 +366,7 @@ public final class PaystreamActivity extends BaseActivity implements
 				transactionsList.add(m_transactions.get(t));
 			}
 
-			
+
 
 			// Log.i("ARRAY", ""+ m_transactions.size());
 		} catch (Exception e) {
@@ -394,7 +397,7 @@ public final class PaystreamActivity extends BaseActivity implements
 
 				if (currentTransaction.MessageType.equalsIgnoreCase("Payment")
 						&& !currentTransaction.Direction
-								.equalsIgnoreCase("Out")) {
+						.equalsIgnoreCase("Out")) {
 					PaystreamTransaction o1 = new PaystreamTransaction();
 					o1.setTransactionId(currentTransaction.MessageId);
 					o1.setSenderUri(currentTransaction.SenderUri);
@@ -634,7 +637,7 @@ public final class PaystreamActivity extends BaseActivity implements
 		String transactionStat = ref.getTransactionStatus();
 		String transactionId = ref.getTransactionId();
 		String transactionComment = ref.getComments();
-		
+
 		UserRequest messageRequest = new UserRequest();
 
 		String userId = prefs.getString("userId", "");
@@ -643,7 +646,7 @@ public final class PaystreamActivity extends BaseActivity implements
 		ArrayList<PaystreamResponse> messages = PaystreamService
 				.getMessages(messageRequest);
 		UserResponse userInfo = UserService.getUser(messageRequest);
-		
+
 		String username = userInfo.FirstName + " " + userInfo.LastName;
 		if(username.length() <= 0)
 		{
@@ -681,7 +684,7 @@ public final class PaystreamActivity extends BaseActivity implements
 			} else {
 				Intent temp2 = new Intent(getApplicationContext(),
 						OutgoingRequestDialog.class);
-				
+
 				temp2.putExtra("date", date);
 				temp2.putExtra("time", theTime);
 				temp2.putExtra("recipient", recipient);

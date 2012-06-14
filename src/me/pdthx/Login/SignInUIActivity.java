@@ -142,12 +142,16 @@ public class SignInUIActivity extends BaseActivity {
 								}
 
 								public void onFacebookError(FacebookError error) {
+									Log.d(error.toString(), error.toString());
+									
 								}
 
 								public void onError(DialogError e) {
+									Log.d(e.toString(), e.toString());
 								}
 
 								public void onCancel() {
+									Log.d("Canceled", "Canceled");
 								}
 							});
 				}

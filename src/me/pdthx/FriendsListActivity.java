@@ -41,13 +41,13 @@ public final class FriendsListActivity extends BaseActivity  {
 	private static HashMap<String, Bitmap> pictureMap;
 	private EditText searchBar = null;
 	private ArrayList<Friend> contacts = new ArrayList<Friend>();
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		pictureMap = new HashMap<String, Bitmap>();
-		
+
 		showFriendsController();
 
 	}
@@ -81,7 +81,7 @@ public final class FriendsListActivity extends BaseActivity  {
 		}
 
 		m_ProgressDialog.dismiss();
-		
+
 		loadViewableImages(mListView.getFirstVisiblePosition(), mListView.getChildCount());
 
 
@@ -100,36 +100,41 @@ public final class FriendsListActivity extends BaseActivity  {
 
 		searchBar = (EditText) findViewById(R.id.searchBar);
 		searchBar.addTextChangedListener(new TextWatcher() {
-			
+
 			String current = "";
-			
+
 			@Override
 			public void afterTextChanged(Editable s) {
-				
-				ArrayList<String> searched = new ArrayList<String>();
+
+				ArrayList<String>searched = new ArrayList<String>();
 				current = s.toString();
 				int currentLength = current.length();
-				
+
 				for (int x = 0; x < friendsList.size(); x++) {
 					String name = friendsList.get(x).getName().toLowerCase();
-					int counter = 0;
-					for (int y = 0; y < currentLength; y++) {
-						char currentChar = current.charAt(y);
-						char recipientChar = name.charAt(y);
-						if (currentChar == recipientChar) {
-							counter++;
-						}
-						if (counter == currentLength) {
-							searched.add(name);
+//					if (s.charAt(currentLength - 1) == name.charAt(currentLength - 1)) {
+//						searched.add(name);
+//					}
+
+					if (name.length() > currentLength) {
+						int counter = 0;
+						for (int y = 0; y < currentLength; y++) {
+							char currentChar = current.charAt(y);
+							char recipientChar = name.charAt(y);
+
+							if (currentChar == recipientChar) {
+								counter++;
+							}
+							if (counter == currentLength) {
+								searched.add(name);
+							}
+
 						}
 					}
 				}
-				
+
 				ArrayList<Friend> tempList = new ArrayList<Friend>();
-				for (int t = 0; t < friendsList.size(); t++)
-				{
-					tempList.add(friendsList.get(t));
-				}
+				tempList.addAll(friendsList);
 				contacts.clear();
 				for(int i = 0; i < searched.size(); i++)
 				{
@@ -167,8 +172,8 @@ public final class FriendsListActivity extends BaseActivity  {
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) 
 			{
-				
-			
+
+
 			}
 
 		});
@@ -191,7 +196,7 @@ public final class FriendsListActivity extends BaseActivity  {
 
 				loadViewableImages(view.getFirstVisiblePosition(), view.getChildCount());
 
-				
+
 
 
 				break;
@@ -207,7 +212,7 @@ public final class FriendsListActivity extends BaseActivity  {
 
 		}
 	};
-	
+
 	private void loadViewableImages(int first, int count) {
 		for (int i = 0; i < count; i++) {
 
