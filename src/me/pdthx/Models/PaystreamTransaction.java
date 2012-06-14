@@ -1,5 +1,6 @@
 package me.pdthx.Models;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class PaystreamTransaction {
@@ -22,7 +23,16 @@ public class PaystreamTransaction {
 	private Date _lastUpdateDate = null;
 	private String _direction = "";
 	private String _comments = "";
+	private ArrayList<PaystreamTransaction> _transactions = new ArrayList<PaystreamTransaction>();
 	
+	public void addTransactions(PaystreamTransaction transactions)
+	{
+		_transactions.add(transactions);
+	}
+	public ArrayList<PaystreamTransaction> getTransactions()
+	{
+		return _transactions;
+	}
 	public String getHeader() {
 		return _header;
 	}

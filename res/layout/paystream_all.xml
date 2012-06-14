@@ -22,6 +22,17 @@
             android:textColor="#34363d"
             android:textStyle="bold"
             android:typeface="normal" />
+
+        <EditText
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:ems="10"
+            android:hint="Search For something" >
+
+            <requestFocus />
+        </EditText>
+
     </LinearLayout>
 
     <LinearLayout
@@ -81,14 +92,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-
+
         <ListView
             android:id="@+id/lvPaystream"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="310dp"
             android:layout_marginTop="5dp"
             android:divider="@drawable/paystream_divider"
             android:dividerHeight="1dp" >
+
         </ListView>
 
         <TextView
