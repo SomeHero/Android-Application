@@ -58,7 +58,8 @@
                 android:id="@+id/signin_facebook"
                 android:layout_marginTop="10dp"
                 android:layout_width="278dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_facebook" />
         </LinearLayout>
 
         <LinearLayout
