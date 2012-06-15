@@ -34,7 +34,7 @@ public final class FriendAdapter extends ArrayAdapter<Friend> implements Section
 		int size = items.size();
 		for (int i = size - 1; i >= 0; i--) {
             String element = items.get(i).getName();
-            alphaIndexer.put(element.substring(0, 1), i);
+            alphaIndexer.put(element.substring(0, 1).toUpperCase(), i);
 		}
 		
 		Set<String> keys = alphaIndexer.keySet(); // set of letters ...sets
@@ -75,6 +75,11 @@ public final class FriendAdapter extends ArrayAdapter<Friend> implements Section
 			TextView txtEmail = (TextView) v.findViewById(R.id.txtEmail);
 			txtHeader.setVisibility(View.GONE);
 
+			if (position == alphaIndexer.get(o.getName().substring(0, 1).toUpperCase())) {
+				txtHeader.setText(o.getName().substring(0, 1));
+				txtHeader.setVisibility(View.VISIBLE);
+			}
+			
 			if(imgFriend != null) { 
 				if (o.getPicture() != null) {
 					imgFriend.setImageBitmap(o.getPicture());

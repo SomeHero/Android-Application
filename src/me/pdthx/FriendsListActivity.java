@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import me.pdthx.Adapters.FriendAdapter;
@@ -65,7 +66,7 @@ public final class FriendsListActivity extends BaseActivity  {
 			{
 				contacts.add(friendsList.get(x));
 			}
-			Collections.sort(friendsList);
+			Collections.sort(friendsList, myComparator);
 			mEmptyTextView.setVisibility(View.GONE);
 			m_adapter = new FriendAdapter(this, R.layout.friend_item, friendsList);
 			mListView.setAdapter(m_adapter);
@@ -193,10 +194,7 @@ public final class FriendsListActivity extends BaseActivity  {
 			case SCROLL_STATE_IDLE :
 
 				loadViewableImages(view.getFirstVisiblePosition(), view.getChildCount());
-
-
-
-
+				
 				break;
 
 			case SCROLL_STATE_TOUCH_SCROLL:
@@ -258,5 +256,14 @@ public final class FriendsListActivity extends BaseActivity  {
 		};
 		thread.start();
 	}
+	
+	private Comparator<Friend> myComparator = new Comparator<Friend>() {
+
+		@Override
+		public int compare(Friend arg0, Friend arg1) {
+			return arg0.getName().compareToIgnoreCase(arg1.getName());
+		}
+		
+	};
 
 }
