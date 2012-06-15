@@ -1,13 +1,14 @@
 package me.pdthx.Login;
 
+import me.pdthx.BaseActivity;
 import me.pdthx.R;
-import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.about);
+		setContentView(View.inflate(this, R.layout.about, null));
 	}
 }

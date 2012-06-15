@@ -1,23 +1,22 @@
 package me.pdthx.Login;
+import me.pdthx.BaseActivity;
+import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.TabHost;
 
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends BaseActivity {
 
-	 Button signIn;
-	 Button signUp;
+	 private Button signIn;
+	 private Button signUp;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.welcome);
+		setContentView(View.inflate(this, R.layout.welcome, null));
 
 		signIn = (Button) findViewById(R.id.signin_button);
 		signUp = (Button) findViewById(R.id.signup_button);
@@ -29,8 +28,7 @@ public class WelcomeActivity extends Activity {
 				//Intent intent = new Intent(getApplicationContext(),
 				//		signInActivity.class);
 				//startActivity(intent);
-				TabHost tabHost = TabUIActivity.self.getTabHost();
-				tabHost.setCurrentTab(2);
+				switchTabInActivity(2);
 			}
 
 		});
@@ -42,10 +40,15 @@ public class WelcomeActivity extends Activity {
 				//Intent intent = new Intent(getApplicationContext(),
 				//		signUpActivity.class);
 				//startActivity(intent);
-				TabHost tabHost = TabUIActivity.self.getTabHost();
-				tabHost.setCurrentTab(1);
+				switchTabInActivity(1);
 			}
 
 		});
+	}
+	
+	public void switchTabInActivity(int indexTabToSwitchTo){
+		TabUIActivity ParentActivity;
+		ParentActivity = (TabUIActivity) this.getParent();
+		ParentActivity.switchTab(indexTabToSwitchTo);
 	}
 }

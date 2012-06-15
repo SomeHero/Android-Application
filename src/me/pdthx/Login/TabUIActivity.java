@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,16 +25,15 @@ import android.widget.TabHost.TabSpec;
 
 @SuppressWarnings("deprecation")
 public class TabUIActivity extends TabActivity {
-	public static TabUIActivity self;
 
-	private Resources res; // Resource object to get Drawables
 	private TabHost tabHost; // The activity TabHost
 	private SharedPreferences prefs;
-	ZubhiumSDK sdk;
+	private ZubhiumSDK sdk;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		
@@ -41,12 +41,9 @@ public class TabUIActivity extends TabActivity {
 			startActivity(new Intent(this, CustomTabActivity.class));
 		}
 		
-		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.tabslayout);
-		self = this;
 
-		res = getResources(); // Resource object to get Drawables
+		Resources res = getResources(); // Resource object to get Drawables
 		tabHost = getTabHost(); // The activity TabHost
 		tabHost.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
 
@@ -123,5 +120,9 @@ public class TabUIActivity extends TabActivity {
 			tv.setTextColor(Color.parseColor("#191919"));
 		}
 	};
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d("something", "happened");
+	}
 	
 }

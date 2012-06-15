@@ -8,11 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.facebook.android.DialogError;
 import com.facebook.android.FacebookError;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
-import com.facebook.android.Facebook.DialogListener;
-
 import me.pdthx.BaseActivity;
 import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
@@ -62,7 +59,7 @@ public class SignInUIActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.signin);
+		setContentView(View.inflate(this, R.layout.signin, null));
 
 		showSignInActivity();
 	}
@@ -129,27 +126,7 @@ public class SignInUIActivity extends BaseActivity {
 
 				if (!signedInViaFacebook) {
 					String[] permissions = { "email", "read_friendlists" };
-
-					facebook.authorize(SignInUIActivity.this, permissions, 2,
-							new DialogListener() {
-								public void onComplete(Bundle values) {
-									Editor editor = prefs.edit();
-									editor.putString("access_token",
-											facebook.getAccessToken());
-									editor.putLong("access_expires",
-											facebook.getAccessExpires());
-									editor.commit();
-								}
-
-								public void onFacebookError(FacebookError error) {
-								}
-
-								public void onError(DialogError e) {
-								}
-
-								public void onCancel() {
-								}
-							});
+					signInWithFacebook(permissions);
 				}
 
 			}
@@ -236,8 +213,7 @@ public class SignInUIActivity extends BaseActivity {
 				signInRunner();
 			}
 			else if (requestCode == ACHACCOUNT_SETUP) {
-				setResult(RESULT_OK);
-				finish();
+				startActivity(new Intent(getApplicationContext(), CustomTabActivity.class));
 			}
 			else if (requestCode == FACEBOOK_SETUP)
 			{

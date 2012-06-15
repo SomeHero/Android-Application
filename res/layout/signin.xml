@@ -58,7 +58,8 @@
                 android:id="@+id/signin_facebook"
                 android:layout_marginTop="10dp"
                 android:layout_width="278dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_facebook" />
         </LinearLayout>
 
         <LinearLayout
@@ -114,7 +115,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:hint="Enter Your Password"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:lines="1"
                 android:maxLength="20"
                 android:maxLines="1"
