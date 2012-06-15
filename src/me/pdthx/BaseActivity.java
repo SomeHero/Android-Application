@@ -13,6 +13,8 @@ import me.pdthx.Login.TabUIActivity;
 import me.pdthx.Models.Friend;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
+import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 import com.zubhium.ZubhiumSDK;
@@ -106,6 +108,33 @@ public class BaseActivity extends Activity {
 		if (expires != 0) {
 			facebook.setAccessExpires(expires);
 		}
+	}
+	
+	public void signInWithFacebook(String[] permissions) {
+		facebook.authorize(this, permissions, 2,
+				new DialogListener() {
+					public void onComplete(Bundle values) {
+						Editor editor = prefs.edit();
+						editor.putString("access_token",
+								facebook.getAccessToken());
+						editor.putLong("access_expires",
+								facebook.getAccessExpires());
+						editor.commit();
+					}
+
+					public void onFacebookError(FacebookError error) {
+						Log.d(error.toString(), error.toString());
+						
+					}
+
+					public void onError(DialogError e) {
+						Log.d(e.toString(), e.toString());
+					}
+
+					public void onCancel() {
+						Log.d("Canceled", "Canceled");
+					}
+				});
 	}
 
 	private void requestFacebookFriends() {

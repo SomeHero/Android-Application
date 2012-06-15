@@ -7,9 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import me.pdthx.Adapters.FriendAdapter;
-import me.pdthx.Adapters.PaystreamAdapter;
 import me.pdthx.Models.Friend;
-import me.pdthx.Models.PaystreamTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;

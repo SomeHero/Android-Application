@@ -27,9 +27,6 @@ public class SignUpUIActivity extends BaseActivity {
 	private EditText enterPW;
 	private String emailAddress;
 	private String password;
-	private View signUpView = null;
-	ProgressDialog progressDialog = null;
-	AlertDialog alertDialog = null;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -39,22 +36,15 @@ public class SignUpUIActivity extends BaseActivity {
 		
 		
 		//implement facebook button
+		setContentView(View.inflate(this, R.layout.signup, null));
 
-		if (!signedInViaFacebook) {
-			signUpView = View.inflate(this, R.layout.signup, null);
-			setContentView(signUpView);
-			
-			enterEmail = (EditText) findViewById(R.id.enter_email);
-			enterPW = (EditText) findViewById(R.id.enter_pw);
-			// txtMobileNumber = (EditText)findViewById(R.id.txtMobileNumber);
-			// txtMobileNumber.addTextChangedListener(new
-			// PhoneNumberFormattingTextWatcher());
+		enterEmail = (EditText) findViewById(R.id.enter_email);
+		enterPW = (EditText) findViewById(R.id.enter_pw);
+		// txtMobileNumber = (EditText)findViewById(R.id.txtMobileNumber);
+		// txtMobileNumber.addTextChangedListener(new
+		// PhoneNumberFormattingTextWatcher());
 
-			showSignUpActivity();
-		} else {
-			setResult(RESULT_OK);
-			finish();
-		}
+		showSignUpActivity();
 
 	}
 

@@ -3,24 +3,16 @@ package me.pdthx.Adapters;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import me.pdthx.R;
-import me.pdthx.Models.Friend;
 import me.pdthx.Models.PaystreamTransaction;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public final class PaystreamAdapter extends ArrayAdapter<PaystreamTransaction> {
 
