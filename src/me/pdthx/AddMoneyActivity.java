@@ -1,36 +1,11 @@
 package me.pdthx;
 
-import java.text.NumberFormat;
-
-import me.pdthx.CustomViews.CustomLockView;
-import me.pdthx.Models.Friend;
-import me.pdthx.Requests.PaymentRequest;
-import me.pdthx.Responses.Response;
-import me.pdthx.Services.PaymentServices;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class AddMoneyActivity extends BaseActivity {
 

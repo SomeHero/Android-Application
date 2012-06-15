@@ -15,8 +15,6 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import me.pdthx.BaseActivity;
 import me.pdthx.R;
-import me.pdthx.R.id;
-import me.pdthx.R.layout;
 import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
 import me.pdthx.Services.UserService;
@@ -29,8 +27,6 @@ OnCheckedChangeListener{
 	private Button btnEnablePayments;
 	private Button btnACHRemindMeLater;
 	private Button btnRemoveAcct;
-	private Button btnCheckings;
-	private Button btnSavings;
 	private ACHAccountSetupRequest request;
 	private ACHAccountSetupResponse response;
 

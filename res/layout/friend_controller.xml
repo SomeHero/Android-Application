@@ -3,64 +3,61 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="0dip">
-	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dip">
+    android:padding="0dip" >
 
-	<RelativeLayout
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent"
-	    android:layout_height="30dp" >
-
-	    <EditText
-	        android:id="@+id/searchBar"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_alignParentRight="true"
-	        android:ems="10"
-	        android:hint="Search through Contacts" >
-
-	        <requestFocus />
-	    </EditText>
-	</RelativeLayout>
- 
-	</LinearLayout>
-	<LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/LinearLayout1"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dip"
         android:orientation="vertical" >
-	                   <LinearLayout
+
+        <EditText
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:hint="Search through Contacts" >
+
+            <requestFocus />
+        </EditText>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:orientation="vertical">
-	<ListView
-  android:id="@+id/lvFriends"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content" 
-  android:divider="@drawable/paystream_divider"
-	android:dividerHeight="1dp"
-  >
-</ListView>
-
-<TextView
-    android:id="@+id/txtEmptyFriendList"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:background="@drawable/panel_background"
-    android:padding="14dp"
-    android:text="Your friend list is empty."
-    android:visibility="gone" />
+        android:orientation="vertical" >
 
-		</LinearLayout>
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/txtEmptyFriendList"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/panel_background"
+                android:padding="14dp"
+                android:text="Your friend list is empty."
+                android:visibility="gone" />
+
+            <ListView
+                android:id="@+id/lvFriends"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:divider="@drawable/paystream_divider"
+                android:dividerHeight="1dp" >
+
+            </ListView>
+
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>

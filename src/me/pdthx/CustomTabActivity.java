@@ -1,7 +1,5 @@
 package me.pdthx;
 
-import me.pdthx.Accounts.AccountManagerActivity;
-
 import com.zubhium.ZubhiumSDK;
 import com.zubhium.ZubhiumSDK.CrashReportingMode;
 
@@ -24,7 +22,7 @@ import android.widget.TextView;
 public class CustomTabActivity extends TabActivity {
 
 	private TabHost mTabHost;
-	ZubhiumSDK sdk;
+	private ZubhiumSDK sdk;
 
 	// private void setupTabHost() {
 	// mTabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -58,11 +56,6 @@ public class CustomTabActivity extends TabActivity {
 		intent = new Intent(mTabHost.getContext(), SendPaymentActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.tab_send_selector), "Send $", intent);
-
-		// if(prefs.getString("paymentAccountId", "").length() == 0) {
-		// intent = new Intent(mTabHost.getContext(), GetMoneyActivity.class);
-		// setupTab(res.getDrawable(R.drawable.ic_tab_home), "Get $", intent);
-		// }
 
 		intent = new Intent(mTabHost.getContext(), RequestPaymentActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

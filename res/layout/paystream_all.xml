@@ -12,24 +12,11 @@
         android:background="@drawable/tab_paystreamtitle"
         android:gravity="center"
         android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/paystreamTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Paystream"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#636363"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowColor="#000000"
-            android:textStyle="bold"
-            android:typeface="normal" />
-
+
         <EditText
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Search For something" >
 
