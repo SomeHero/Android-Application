@@ -8,11 +8,12 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="423dp">
-
+
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="460dp"
             android:orientation="vertical" >
+
 			"
             <LinearLayout
                 android:id="@+id/relativeLayout2"
@@ -81,7 +82,7 @@
                             android:background="@drawable/to_amount"
                             android:digits="0123456789."
                             android:ems="10"
-                            android:hint="             How much?"
+                            android:hint="  How much?"
                             android:inputType="number"
                             android:lines="1"
                             android:maxLength="14"

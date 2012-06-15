@@ -89,7 +89,7 @@ public final class FriendsListActivity extends BaseActivity  {
 					long arg3) {
 
 				Intent data = new Intent();
-				data.putExtra("index", arg2);
+				data.putExtra("contact_id", contacts.get(arg2).getId());
 
 				setResult(RESULT_OK, data);
 				finish();

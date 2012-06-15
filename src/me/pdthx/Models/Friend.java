@@ -87,6 +87,10 @@ public class Friend implements Comparable<Friend> {
 	public int compareTo(Friend friend) {
 		return this.name.compareTo(friend.name);
 	}
+	
+	public boolean equals(Object other) {
+		return other instanceof Friend && id.equals(((Friend) other).getId());
+	}
 
 
 }

@@ -388,23 +388,26 @@ public class RequestPaymentActivity extends BaseActivity {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == ADDING_FRIEND) {
 				Bundle bundle = data.getExtras();
-				friend = friendsList.get(bundle.getInt("index"));
-				
-				if (friend.getType().equals("Facebook")) {
-					recipientUri = "fb_" + friend.getId();
-					btnAddContacts.setText(friend.getName() + ": " + friend.getId());
+				Friend pickedFriend = new Friend();
+				pickedFriend.setId(bundle.getString("contact_id"));
+				if (!pickedFriend.getId().equals("")) {
+					friend = friendsList.get(friendsList.indexOf(pickedFriend));
+
+					if (friend.getType().equals("Facebook")) {
+						recipientUri = "fb_" + friend.getId();
+						btnAddContacts.setText(friend.getName() + ": " + friend.getId());
+					}
+					else {
+						recipientUri = "" + friend.getPhoneNumber();
+						btnAddContacts.setText(friend.getName() + ": " + friend.getPhoneNumber());
+					}
 				}
-				else {
-					recipientUri = "" + friend.getPhoneNumber();
-					btnAddContacts.setText(friend.getName() + ": " + friend.getPhoneNumber());
-				}
-				
 				
 			}
 			else if(requestCode == ADD_MONEY){
 				Bundle bundle = data.getExtras();
 				String amount = bundle.getString("index");
-				txtAmount.setText("$"+ amount);
+				txtAmount.setText(amount);
 			}
 			else {
 				launchRequestMoneyView();

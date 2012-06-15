@@ -1,6 +1,9 @@
 package me.pdthx;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
+
 import me.pdthx.Models.Friend;
 
 import android.content.Context;
@@ -11,6 +14,8 @@ import android.provider.ContactsContract;
 public class ContactList {
 
 	private ArrayList<Friend> contactsList = new ArrayList<Friend>();
+	private Random random = new Random();
+	
 	public ContactList(Context context) {
 
 
@@ -25,7 +30,7 @@ public class ContactList {
 					Friend friend = new Friend();
 					String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 					String phoneNumber = phones.getString(phones.getColumnIndex( ContactsContract.CommonDataKinds.Phone.NUMBER));
-					friend.setId(contactId);
+					friend.setId(new UUID(random.nextLong(), random.nextLong()).toString());
 					friend.setName(name);
 					friend.setPhoneNumber(phoneNumber);
 					friend.setPicture(BitmapFactory.decodeResource(context.getResources(), R.drawable.person_icon_small));

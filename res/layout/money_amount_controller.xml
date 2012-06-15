@@ -63,15 +63,15 @@
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:src="@drawable/amt_icon" />
-
+
                         <EditText
                             android:id="@+id/amount"
                             android:layout_width="122dp"
                             android:layout_height="60dp"
                             android:layout_weight="0.29"
+                            android:background="@drawable/to_amount"
                             android:ems="10"
-                            android:inputType="number"
-                            android:background="@drawable/to_amount"  >
+                            android:inputType="numberDecimal" >
 
                             <requestFocus />
                         </EditText>

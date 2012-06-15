@@ -88,7 +88,7 @@
                             android:background="@drawable/to_amount"
                             android:digits="0123456789."
                             android:ems="10"
-                            android:hint="             How much?"
+                            android:hint="  How much?"
                             android:inputType="number"
                             android:lines="1"
                             android:maxLength="14"

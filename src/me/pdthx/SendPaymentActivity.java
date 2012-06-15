@@ -57,7 +57,7 @@ public final class SendPaymentActivity extends BaseActivity {
 	private Location location;
 	private LocationManager locationManager;
 	private LocationListener locationListener;
-	
+
 	private Friend friend;
 
 	private Button btnAddContacts;
@@ -156,8 +156,8 @@ public final class SendPaymentActivity extends BaseActivity {
 
 		locationManager.requestLocationUpdates(
 				LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-//		locationManager.requestLocationUpdates(
-//				LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+		//		locationManager.requestLocationUpdates(
+		//				LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
 
 	}
@@ -302,16 +302,16 @@ public final class SendPaymentActivity extends BaseActivity {
 		sendMoneyView = View.inflate(this, R.layout.contactmanager, null);
 		setContentView(sendMoneyView);
 
-		
+
 		btnAddContacts = (Button) findViewById(R.id.addRecipient);
-		
+
 		txtAmount = (Button) findViewById(R.id.btnAmount);
 		txtComments = (EditText) findViewById(R.id.txtComments);
 		btnSendMoney = (Button) findViewById(R.id.btnSubmitPaymentRequest);
 		Typeface type = Typeface.createFromAsset(getAssets(),"HelveticaWorld-Bold.ttf");
 		btnSendMoney.setTypeface(type);
 		btnSendMoney.setTextColor(Color.WHITE);
-		
+
 		txtAmount.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -319,55 +319,55 @@ public final class SendPaymentActivity extends BaseActivity {
 				startActivityForResult(new Intent(SendPaymentActivity.this, AddMoneyActivity.class), ADD_MONEY);			
 			}		
 		});
-		
+
 		btnAddContacts.setOnClickListener(new OnClickListener(){	
-						@Override
-						public void onClick(View v) {
-							startActivityForResult(new Intent(SendPaymentActivity.this, FriendsListActivity.class), ADDING_FRIEND);			
-						}
-						
-					});
-	
-//		txtAmount.addTextChangedListener(new TextWatcher() {
-//			String current = "";
-//
-//			@Override
-//			public void onTextChanged(CharSequence s, int start, int before,
-//					int count) {
-//				if (!s.toString().equals(current)) {
-//					txtAmount.removeTextChangedListener(this);
-//
-//					String cleanString = s.toString().replaceAll("[$,.]", "");
-//
-//					double parsed = Double.parseDouble(cleanString);
-//					String formatted = NumberFormat.getCurrencyInstance()
-//							.format((parsed / 100));
-//
-//					current = formatted;
-//					txtAmount.setText(formatted);
-//					txtAmount.setSelection(formatted.length());
-//					
-//					txtAmount.addTextChangedListener(this);
-//				}
-//			}
-//
-//			@Override
-//			public void afterTextChanged(Editable arg0) {
-//				// TODO Auto-generated method stub
-//				if (arg0.length() == 14) {
-//					arg0.replace(13, 14, "");
-//				}
-//			}
-//
-//			@Override
-//			public void beforeTextChanged(CharSequence arg0, int arg1,
-//					int arg2, int arg3) {
-//				// TODO Auto-generated method stub
-//
-//			}
-//		});
-		
-		
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(new Intent(SendPaymentActivity.this, FriendsListActivity.class), ADDING_FRIEND);			
+			}
+
+		});
+
+		//		txtAmount.addTextChangedListener(new TextWatcher() {
+		//			String current = "";
+		//
+		//			@Override
+		//			public void onTextChanged(CharSequence s, int start, int before,
+		//					int count) {
+		//				if (!s.toString().equals(current)) {
+		//					txtAmount.removeTextChangedListener(this);
+		//
+		//					String cleanString = s.toString().replaceAll("[$,.]", "");
+		//
+		//					double parsed = Double.parseDouble(cleanString);
+		//					String formatted = NumberFormat.getCurrencyInstance()
+		//							.format((parsed / 100));
+		//
+		//					current = formatted;
+		//					txtAmount.setText(formatted);
+		//					txtAmount.setSelection(formatted.length());
+		//					
+		//					txtAmount.addTextChangedListener(this);
+		//				}
+		//			}
+		//
+		//			@Override
+		//			public void afterTextChanged(Editable arg0) {
+		//				// TODO Auto-generated method stub
+		//				if (arg0.length() == 14) {
+		//					arg0.replace(13, 14, "");
+		//				}
+		//			}
+		//
+		//			@Override
+		//			public void beforeTextChanged(CharSequence arg0, int arg1,
+		//					int arg2, int arg3) {
+		//				// TODO Auto-generated method stub
+		//
+		//			}
+		//		});
+
+
 
 		btnSendMoney.setOnClickListener(new OnClickListener() {
 
@@ -413,29 +413,33 @@ public final class SendPaymentActivity extends BaseActivity {
 		btnSendMoney.setVisibility(View.VISIBLE);
 
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == ADDING_FRIEND) {
 				Bundle bundle = data.getExtras();
-				friend = friendsList.get(bundle.getInt("index"));
-				
-				if (friend.getType().equals("Facebook")) {
-					recipientUri = "fb_" + friend.getId();
-					btnAddContacts.setText(friend.getName() + ": " + friend.getId());
+				Friend pickedFriend = new Friend();
+				pickedFriend.setId(bundle.getString("contact_id"));
+				if (!pickedFriend.getId().equals("")) {
+					friend = friendsList.get(friendsList.indexOf(pickedFriend));
+
+					if (friend.getType().equals("Facebook")) {
+						recipientUri = "fb_" + friend.getId();
+						btnAddContacts.setText(friend.getName() + ": " + friend.getId());
+					}
+					else {
+						recipientUri = "" + friend.getPhoneNumber();
+						btnAddContacts.setText(friend.getName() + ": " + friend.getPhoneNumber());
+					}
 				}
-				else {
-					recipientUri = "" + friend.getPhoneNumber();
-					btnAddContacts.setText(friend.getName() + ": " + friend.getPhoneNumber());
-				}
-				
-				
+
+
 			}
 			else if(requestCode == ADD_MONEY){
 				Bundle bundle = data.getExtras();
 				String amount = bundle.getString("index");
-				txtAmount.setText("$"+ amount);
+				txtAmount.setText(amount);
 			}
 			else {
 				launchSendMoneyView();
