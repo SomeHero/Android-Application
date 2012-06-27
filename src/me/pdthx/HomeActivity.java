@@ -1,6 +1,5 @@
 package me.pdthx;
 
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,22 +33,21 @@ public final class HomeActivity extends BaseActivity {
 	private String userId = "";
 
 	private String SENT = "SMS_SENT";
-    private String DELIVERED = "SMS_DELIVERED";
-    private String phoneNumber = "12892100266";
+	private String DELIVERED = "SMS_DELIVERED";
+	private String phoneNumber = "12892100266";
 
-    private PendingIntent sentPI;
-    private PendingIntent deliveredPI;
+	private PendingIntent sentPI;
+	private PendingIntent deliveredPI;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);  
+		super.onCreate(savedInstanceState);
 
 		tracker.trackPageView("Home");
 
-		if(prefs.getString("userId", "").length() == 0) {
+		if (prefs.getString("userId", "").length() == 0) {
 			startActivityForResult(new Intent(this, SignInActivity.class), 1);
-		}
-		else {
+		} else {
 			showHomeController();
 		}
 	}
@@ -58,73 +56,69 @@ public final class HomeActivity extends BaseActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			showHomeController();
-		}
-		else {
+		} else {
 			finish();
 		}
 	}
-	public void switchTabInActivity(int indexTabToSwitchTo){
+
+	public void switchTabInActivity(int indexTabToSwitchTo) {
 		CustomTabActivity ParentActivity;
 		ParentActivity = (CustomTabActivity) this.getParent();
 		ParentActivity.switchTab(indexTabToSwitchTo);
 	}
 
 	public void setupSMS() {
-		sentPI = PendingIntent.getBroadcast(this, 0,
-	            new Intent(SENT), 0);
+		sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
 
-	    deliveredPI = PendingIntent.getBroadcast(this, 0,
-	            new Intent(DELIVERED), 0);
+		deliveredPI = PendingIntent.getBroadcast(this, 0,
+				new Intent(DELIVERED), 0);
 
-	    //---when the SMS has been sent---
-        registerReceiver(new BroadcastReceiver(){
-            @Override
-            public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode())
-                {
-                    case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS sent",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(getBaseContext(), "Generic failure",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Toast.makeText(getBaseContext(), "No service",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NULL_PDU:
-                        Toast.makeText(getBaseContext(), "Null PDU",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(getBaseContext(), "Radio off",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        }, new IntentFilter(SENT));
+		// ---when the SMS has been sent---
+		registerReceiver(new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context arg0, Intent arg1) {
+				switch (getResultCode()) {
+				case Activity.RESULT_OK:
+					Toast.makeText(getBaseContext(), "SMS sent",
+							Toast.LENGTH_SHORT).show();
+					break;
+				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+					Toast.makeText(getBaseContext(), "Generic failure",
+							Toast.LENGTH_SHORT).show();
+					break;
+				case SmsManager.RESULT_ERROR_NO_SERVICE:
+					Toast.makeText(getBaseContext(), "No service",
+							Toast.LENGTH_SHORT).show();
+					break;
+				case SmsManager.RESULT_ERROR_NULL_PDU:
+					Toast.makeText(getBaseContext(), "Null PDU",
+							Toast.LENGTH_SHORT).show();
+					break;
+				case SmsManager.RESULT_ERROR_RADIO_OFF:
+					Toast.makeText(getBaseContext(), "Radio off",
+							Toast.LENGTH_SHORT).show();
+					break;
+				}
+			}
+		}, new IntentFilter(SENT));
 
-        //---when the SMS has been delivered---
-        registerReceiver(new BroadcastReceiver(){
-            @Override
-            public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode())
-                {
-                    case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS delivered",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Toast.makeText(getBaseContext(), "SMS not delivered",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        }, new IntentFilter(DELIVERED));
+		// ---when the SMS has been delivered---
+		registerReceiver(new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context arg0, Intent arg1) {
+				switch (getResultCode()) {
+				case Activity.RESULT_OK:
+					Toast.makeText(getBaseContext(), "SMS delivered",
+							Toast.LENGTH_SHORT).show();
+					break;
+				case Activity.RESULT_CANCELED:
+					Toast.makeText(getBaseContext(), "SMS not delivered",
+							Toast.LENGTH_SHORT).show();
+					break;
+				}
+			}
+		}, new IntentFilter(DELIVERED));
 	}
-
 
 	private void showHomeController() {
 		userId = prefs.getString("userId", "");
@@ -134,47 +128,39 @@ public final class HomeActivity extends BaseActivity {
 
 		UserResponse userResponse = UserService.getUser(userRequest);
 
-		if(userResponse == null)
-		{
-		    logout();
-		}
-		else {
-			if (userResponse.DeviceToken == null ||
-					userResponse.DeviceToken.equals("null") ||
-					userResponse.RegistrationId.equals("null")) {
+		if (userResponse == null) {
+			logout();
+		} else {
+			if (userResponse.DeviceToken == null
+					|| userResponse.DeviceToken.equals("null")
+					|| userResponse.RegistrationId.equals("null")) {
 				registerPushNotifications();
 			}
-			
-			/**if (userResponse.MobileNumber != null && 
-					userResponse.MobileNumber.equals("null")) {
 
-				setupSMS();
-				String message = userResponse.UserId;
+			/**
+			 * if (userResponse.MobileNumber != null &&
+			 * userResponse.MobileNumber.equals("null")) {
+			 * 
+			 * setupSMS(); String message = userResponse.UserId;
+			 * 
+			 * SmsManager sms = SmsManager.getDefault();
+			 * 
+			 * try { sms.sendTextMessage(phoneNumber, null, message, sentPI,
+			 * deliveredPI); } catch(Exception e) { e.printStackTrace(); } }
+			 **/
 
-				SmsManager sms = SmsManager.getDefault();
-
-    	        try {
-    	        	sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
-    	        }
-    	        catch(Exception e)
-    	        {
-    	        	e.printStackTrace();
-    	        }
-			}**/
-			
-			
 			Editor editor = prefs.edit();
 			editor.putInt("upperLimit", userResponse.UpperLimit);
 
-			if (userResponse.UserName != null &&
-					userResponse.UserName.contains("fb_")) {
+			if (userResponse.UserName != null
+					&& userResponse.UserName.contains("fb_")) {
 				editor.putBoolean("signedInViaFacebook", true);
 			}
 			editor.commit();
-			
+
 			setContentView(R.layout.homescreen);
-			
-			ImageView imgUserName =  (ImageView)findViewById(R.id.home_userImg);
+
+			ImageView imgUserName = (ImageView) findViewById(R.id.home_userImg);
 			if (imgUserName != null) {
 				URL url;
 				try {
@@ -184,8 +170,7 @@ public final class HomeActivity extends BaseActivity {
 								.openConnection().getInputStream());
 						imgUserName.setImageBitmap(mIcon);
 					} else {
-						imgUserName
-								.setImageResource(R.drawable.avatar_unknown);
+						imgUserName.setImageResource(R.drawable.avatar_unknown);
 					}
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
@@ -195,44 +180,47 @@ public final class HomeActivity extends BaseActivity {
 					e.printStackTrace();
 				}
 			}
-			
-			TextView txtUserName = (TextView)findViewById(R.id.home_username);
-			if (!userResponse.FirstName.equals("null") && !userResponse.LastName.equals("null") ) {
-				txtUserName.setText(userResponse.FirstName + " " + userResponse.LastName);
-			}
-			else {
+
+			TextView txtUserName = (TextView) findViewById(R.id.home_username);
+			if (!userResponse.FirstName.equals("null")
+					&& !userResponse.LastName.equals("null")) {
+				txtUserName.setText(userResponse.FirstName + " "
+						+ userResponse.LastName);
+			} else {
 				txtUserName.setText("PaidThx User");
 			}
-			
-			TextView txtPhoneNumber = (TextView)findViewById(R.id.home_phonenumber);
-			if(!userResponse.MobileNumber.equals("null"))
-			{
-				txtPhoneNumber.setText(userResponse.MobileNumber);
-			}
-			else
-			{
+
+			TextView txtPhoneNumber = (TextView) findViewById(R.id.home_phonenumber);
+			if (!userResponse.MobileNumber.equals("null")) {
+				String phoneFormat = "";
+				phoneFormat = phoneFormat
+						+ userResponse.MobileNumber.substring(0, 3)
+						+ "-"
+						+ userResponse.MobileNumber.substring(3, 6)
+						+ "-"
+						+ userResponse.MobileNumber.substring(6,
+								userResponse.MobileNumber.length());
+				txtPhoneNumber.setText(phoneFormat);
+			} else {
 				txtPhoneNumber.setText(" ");
 			}
-			
-			TextView txtEmail = (TextView)findViewById(R.id.home_email);
-			if(!userResponse.EmailAddress.equals("null"))
-			{
+
+			TextView txtEmail = (TextView) findViewById(R.id.home_email);
+			if (!userResponse.EmailAddress.equals("null")) {
 				txtEmail.setText(userResponse.EmailAddress);
-			}
-			else
-			{
+			} else {
 				txtEmail.setText(" ");
 			}
-			
-			Button btnSendMoney = (Button)findViewById(R.id.home_sendmoneyBtn);
+
+			Button btnSendMoney = (Button) findViewById(R.id.home_sendmoneyBtn);
 			btnSendMoney.setOnClickListener(new OnClickListener() {
 				public void onClick(View argO) {
 
 					switchTabInActivity(1);
 				}
 			});
-			
-			Button btnRequestMoney = (Button)findViewById(R.id.home_requestmoneyBtn);
+
+			Button btnRequestMoney = (Button) findViewById(R.id.home_requestmoneyBtn);
 
 			btnRequestMoney.setOnClickListener(new OnClickListener() {
 				public void onClick(View argO) {
@@ -240,29 +228,34 @@ public final class HomeActivity extends BaseActivity {
 					switchTabInActivity(2);
 				}
 			});
-			/*NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-
-			TextView txtTotalMoneySent = (TextView)findViewById(R.id.txtTotalMoneySent);
-			txtTotalMoneySent.setText(currencyFormatter.format(userResponse.TotalMoneySent));
-
-			TextView txtTotalMoneyReceived = (TextView)findViewById(R.id.txtTotalMoneyReceived);
-			txtTotalMoneyReceived.setText(currencyFormatter.format(userResponse.TotalMoneyReceived));
-
-			Button btnSendMoney = (Button)findViewById(R.id.btnQuickLinkSent);
-			btnSendMoney.setOnClickListener(new OnClickListener() {
-				public void onClick(View argO) {
-
-					switchTabInActivity(1);
-				}
-			});
-			Button btnRequestMoney = (Button)findViewById(R.id.btnQuickLinkRequest);
-
-			btnRequestMoney.setOnClickListener(new OnClickListener() {
-				public void onClick(View argO) {
-
-					switchTabInActivity(2);
-				}
-			});*/
+			/*
+			 * NumberFormat currencyFormatter =
+			 * NumberFormat.getCurrencyInstance();
+			 * 
+			 * TextView txtTotalMoneySent =
+			 * (TextView)findViewById(R.id.txtTotalMoneySent);
+			 * txtTotalMoneySent.
+			 * setText(currencyFormatter.format(userResponse.TotalMoneySent));
+			 * 
+			 * TextView txtTotalMoneyReceived =
+			 * (TextView)findViewById(R.id.txtTotalMoneyReceived);
+			 * txtTotalMoneyReceived
+			 * .setText(currencyFormatter.format(userResponse
+			 * .TotalMoneyReceived));
+			 * 
+			 * Button btnSendMoney =
+			 * (Button)findViewById(R.id.btnQuickLinkSent);
+			 * btnSendMoney.setOnClickListener(new OnClickListener() { public
+			 * void onClick(View argO) {
+			 * 
+			 * switchTabInActivity(1); } }); Button btnRequestMoney =
+			 * (Button)findViewById(R.id.btnQuickLinkRequest);
+			 * 
+			 * btnRequestMoney.setOnClickListener(new OnClickListener() { public
+			 * void onClick(View argO) {
+			 * 
+			 * switchTabInActivity(2); } });
+			 */
 		}
 	}
 }

@@ -366,7 +366,7 @@ private LocationListener locationListener;
                     }
 
 
-                    if(prefs.getString("userId", "").length() == 0)	{
+                    if(prefs.getString("userId", "").length() == 0) {
                         startActivityForResult(new Intent(SendPaymentActivity.this, SignInActivity.class), 1);
                     } else {
                         showSecurityPinDialog();
