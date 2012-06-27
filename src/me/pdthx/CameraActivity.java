@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -16,13 +15,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 public class CameraActivity extends BaseActivity {
 	
 	private static final int MEDIA_TYPE_IMAGE = 1;
     private Camera mCamera;
     private CameraPreview mPreview;
-
+    private Button capture;
+    private ImageView blah;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,11 +36,14 @@ public class CameraActivity extends BaseActivity {
 
         // Create an instance of Camera
         mCamera = getCameraInstance();
-
+       // blah = (ImageView) findViewById(R.id.blaaah);
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.preview);
-       preview.addView(mPreview);
+        preview.addView(capture);
+//        preview.addView(blah);
+        preview.addView(mPreview);
+     	
 
        // Add a listener to the Capture button
        Button captureButton = (Button) findViewById(R.id.takepicture);
@@ -51,7 +55,6 @@ public class CameraActivity extends BaseActivity {
                    mCamera.takePicture(null, null, mPicture);                 
                }
            });
-
     }
 
     /** A safe way to get an instance of the Camera object. */
@@ -101,7 +104,7 @@ public class CameraActivity extends BaseActivity {
                 fos.close();
                 
                 Intent pic = new Intent();
-                pic.putExtra("index", data);
+                pic.putExtra("index", pictureFile.toString());
 				setResult(RESULT_OK, pic);
                 finish();
                 

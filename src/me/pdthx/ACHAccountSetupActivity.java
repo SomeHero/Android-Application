@@ -42,9 +42,6 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 		progressDialog.dismiss();
 		setContentView(R.layout.setup_achaccount_controller);
 
-		btnEnablePayments = (Button)findViewById(R.id.btnSubmitACHAccount);
-		btnACHRemindMeLater = (Button)findViewById(R.id.btnACHRemindMeLater);
-
 		progressDialog.dismiss();
 		setContentView(R.layout.achaccountsetup_controller);
 
