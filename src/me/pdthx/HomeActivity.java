@@ -1,6 +1,9 @@
 package me.pdthx;
 
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.NumberFormat;
 
 import me.pdthx.Login.TabUIActivity;
@@ -15,11 +18,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -139,7 +145,7 @@ public final class HomeActivity extends BaseActivity {
 				registerPushNotifications();
 			}
 			
-			if (userResponse.MobileNumber != null && 
+			/**if (userResponse.MobileNumber != null && 
 					userResponse.MobileNumber.equals("null")) {
 				
 				setupSMS();
@@ -154,7 +160,7 @@ public final class HomeActivity extends BaseActivity {
     	        {
     	        	e.printStackTrace();
     	        }
-			}
+			}**/
 			
 			
 			Editor editor = prefs.edit();
@@ -166,25 +172,75 @@ public final class HomeActivity extends BaseActivity {
 			}
 			editor.commit();
 			
-			setContentView(R.layout.home_controller);
-
-			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-
-			TextView txtUserName = (TextView)findViewById(R.id.txtUserName);
-
+			setContentView(R.layout.homescreen);
+			
+			ImageView imgUserName =  (ImageView)findViewById(R.id.home_userImg);
+			if (imgUserName != null) {
+				URL url;
+				try {
+					if (!userResponse.ImageUrl.equals("null")) {
+						url = new URL(userResponse.ImageUrl);
+						Bitmap mIcon = BitmapFactory.decodeStream(url
+								.openConnection().getInputStream());
+						imgUserName.setImageBitmap(mIcon);
+					} else {
+						imgUserName
+								.setImageResource(R.drawable.avatar_unknown);
+					}
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			TextView txtUserName = (TextView)findViewById(R.id.home_username);
 			if (!userResponse.FirstName.equals("null") && !userResponse.LastName.equals("null") ) {
 				txtUserName.setText(userResponse.FirstName + " " + userResponse.LastName);
-			}
-			else if (!userResponse.EmailAddress.equals("null")) {
-				txtUserName.setText(userResponse.EmailAddress);
-			}
-			else if (!userResponse.MobileNumber.equals("null")) {
-				txtUserName.setText(userResponse.MobileNumber);
 			}
 			else {
 				txtUserName.setText("PaidThx User");
 			}
+			
+			TextView txtPhoneNumber = (TextView)findViewById(R.id.home_phonenumber);
+			if(!userResponse.MobileNumber.equals("null"))
+			{
+				txtPhoneNumber.setText(userResponse.MobileNumber);
+			}
+			else
+			{
+				txtPhoneNumber.setText(" ");
+			}
+			
+			TextView txtEmail = (TextView)findViewById(R.id.home_email);
+			if(!userResponse.EmailAddress.equals("null"))
+			{
+				txtPhoneNumber.setText(userResponse.EmailAddress);
+			}
+			else
+			{
+				txtPhoneNumber.setText(" ");
+			}
+			
+			Button btnSendMoney = (Button)findViewById(R.id.home_sendmoneyBtn);
+			btnSendMoney.setOnClickListener(new OnClickListener() {
+				public void onClick(View argO) {
 
+					switchTabInActivity(1);
+				}
+			});
+			
+			Button btnRequestMoney = (Button)findViewById(R.id.home_requestmoneyBtn);
+
+			btnRequestMoney.setOnClickListener(new OnClickListener() {
+				public void onClick(View argO) {
+
+					switchTabInActivity(2);
+				}
+			});
+			/*NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 
 			TextView txtTotalMoneySent = (TextView)findViewById(R.id.txtTotalMoneySent);
 			txtTotalMoneySent.setText(currencyFormatter.format(userResponse.TotalMoneySent));
@@ -206,7 +262,7 @@ public final class HomeActivity extends BaseActivity {
 
 					switchTabInActivity(2);
 				}
-			});
+			});*/
 		}
 	}
 }

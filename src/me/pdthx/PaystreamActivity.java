@@ -1,5 +1,6 @@
 package me.pdthx;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,6 +8,8 @@ import java.util.Date;
 import java.util.Iterator;
 
 import me.pdthx.Adapters.PaystreamAdapter;
+import me.pdthx.CustomViews.PullAndRefreshListView;
+import me.pdthx.CustomViews.PullAndRefreshListView.OnRefreshListener;
 import me.pdthx.Dialogs.IncomingPaymentDialog;
 import me.pdthx.Dialogs.IncomingRequestDialog;
 import me.pdthx.Dialogs.OutgoingPaymentDialog;
@@ -19,6 +22,7 @@ import me.pdthx.Services.PaystreamService;
 import me.pdthx.Services.UserService;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,12 +36,12 @@ import android.widget.EditText;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.RadioGroup;
-
+import android.widget.Toast;
 
 import android.widget.TextView;
 
 public final class PaystreamActivity extends BaseActivity implements
-OnCheckedChangeListener {
+		OnCheckedChangeListener {
 
 	private ProgressDialog m_ProgressDialog = null;
 	private ArrayList<PaystreamTransaction> m_transactions = null;
@@ -46,14 +50,15 @@ OnCheckedChangeListener {
 	private Runnable viewOrders;
 	private RadioGroup paystreamCategory;
 	private EditText searchBar = null;
-	private  int numTransactions;
+	private int numTransactions;
 	private ArrayList<PaystreamTransaction> transactionsList;
 	private int FILTER_PAYSTREAM = 1;
 	private int refreshCount = 0;
 	public static final String TAG = "PaystreamActivity";
-	private ListView mListView = null;
+	private PullAndRefreshListView mListView = null;
 	private TextView mEmptyTextView = null;
 	private static final int CLEARSEARCH = 11;
+	private int currentCategory;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +92,7 @@ OnCheckedChangeListener {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case CLEARSEARCH :
+			case CLEARSEARCH:
 				searchBar.setText("");
 			}
 		}
@@ -115,7 +120,7 @@ OnCheckedChangeListener {
 		paystreamCategory.setOnCheckedChangeListener(this);
 
 		m_transactions = new ArrayList<PaystreamTransaction>();
-		mListView = (ListView) findViewById(R.id.lvPaystream);
+		mListView = (PullAndRefreshListView) findViewById(R.id.lvPaystream);
 		m_adapter = new PaystreamAdapter(this, R.layout.transaction_item,
 				m_transactions);
 		mListView.setAdapter(m_adapter);
@@ -123,8 +128,7 @@ OnCheckedChangeListener {
 		searchBar = (EditText) findViewById(R.id.searchBar);
 		transactionsList = new ArrayList<PaystreamTransaction>();
 
-		if(refreshCount > 1)
-		{
+		if (refreshCount > 1) {
 			searchBar.setText("");
 		}
 		searchBar.addTextChangedListener(new TextWatcher() {
@@ -139,8 +143,8 @@ OnCheckedChangeListener {
 				int currentLength = current.length();
 
 				for (int x = 0; x < transactionsList.size(); x++) {
-					String recipient = transactionsList.get(x).getRecipientUri()						
-							.toString();
+					String recipient = transactionsList.get(x)
+							.getRecipientUri().toString();
 
 					if (recipient.length() > currentLength) {
 						int counter = 0;
@@ -158,32 +162,26 @@ OnCheckedChangeListener {
 				}
 
 				ArrayList<PaystreamTransaction> tempList = new ArrayList<PaystreamTransaction>();
-				for (int t = 0; t < transactionsList.size(); t++)
-				{
+				for (int t = 0; t < transactionsList.size(); t++) {
 					tempList.add(transactionsList.get(t));
 				}
 				m_transactions.clear();
-				for(int i = 0; i < searched.size(); i++)
-				{
-					for (int j = 0; j < transactionsList.size(); j++)
-					{
-						if(tempList.get(j).getRecipientUri().equals(searched.get(i)))
-						{															
-							m_transactions.add(tempList.get(j));					
+				for (int i = 0; i < searched.size(); i++) {
+					for (int j = 0; j < transactionsList.size(); j++) {
+						if (tempList.get(j).getRecipientUri()
+								.equals(searched.get(i))) {
+							m_transactions.add(tempList.get(j));
 							break;
 						}
 					}
-				}				
-				if(searchBar.getText().toString().length() == 0)
-				{
-					m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item,
-							transactionsList);
-					m_transactions.clear();
 				}
-				else
-				{
-					m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item,
-							m_transactions);
+				if (searchBar.getText().toString().length() == 0) {
+					m_adapter = new PaystreamAdapter(PaystreamActivity.this,
+							R.layout.transaction_item, transactionsList);
+					m_transactions.clear();
+				} else {
+					m_adapter = new PaystreamAdapter(PaystreamActivity.this,
+							R.layout.transaction_item, m_transactions);
 				}
 				mListView.setAdapter(m_adapter);
 
@@ -197,12 +195,27 @@ OnCheckedChangeListener {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
-					int count) 
-			{
-
+					int count) {
 
 			}
 
+		});
+
+		mListView.setOnRefreshListener(new OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				if (currentCategory == R.id.paystreamAll) {
+					getAllOrders();
+				} else if (currentCategory == R.id.paystreamSent) {
+					getSentOrders();
+				} else if (currentCategory == R.id.paystreamReceived) {
+					getReceivedOrders();
+				} else if (currentCategory == R.id.paystreamOther) {
+					getOtherOrders();
+				}
+				mListView.onRefreshComplete();
+			}
 		});
 
 		mListView.setOnItemClickListener(new OnItemClickListener() {
@@ -234,6 +247,17 @@ OnCheckedChangeListener {
 
 				for (int i = 0; i < m_transactions.size(); i++)
 					m_adapter.add(m_transactions.get(i));
+
+				Toast.makeText(getBaseContext(),
+						"CHILD COUNT: " + mListView.getChildCount(), 3);
+				if (mListView.getChildAt(mListView.getChildCount() - 1)
+						.getVisibility() == View.GONE) {
+					mListView.findViewById(R.id.pull_to_refresh_header)
+							.setVisibility(View.GONE);
+				} else {
+					mListView.findViewById(R.id.pull_to_refresh_header)
+							.setVisibility(View.VISIBLE);
+				}
 			} else {
 				m_adapter.clear();
 				mEmptyTextView.setVisibility(View.VISIBLE);
@@ -289,13 +313,11 @@ OnCheckedChangeListener {
 				m_transactions.add(o1);
 			}
 			refreshCount++;
-			if(refreshCount > 1)
-			{
+			if (refreshCount > 1) {
 				transactionsList.clear();
 			}
 			numTransactions = m_transactions.size();
-			for (int t = 0; t < numTransactions; t++)
-			{
+			for (int t = 0; t < numTransactions; t++) {
 				transactionsList.add(m_transactions.get(t));
 			}
 
@@ -351,17 +373,13 @@ OnCheckedChangeListener {
 				}
 			}
 			refreshCount++;
-			if(refreshCount > 1)
-			{
+			if (refreshCount > 1) {
 				transactionsList.clear();
 			}
 			numTransactions = m_transactions.size();
-			for (int t = 0; t < numTransactions; t++)
-			{
+			for (int t = 0; t < numTransactions; t++) {
 				transactionsList.add(m_transactions.get(t));
 			}
-
-
 
 			// Log.i("ARRAY", ""+ m_transactions.size());
 		} catch (Exception e) {
@@ -392,7 +410,7 @@ OnCheckedChangeListener {
 
 				if (currentTransaction.MessageType.equalsIgnoreCase("Payment")
 						&& !currentTransaction.Direction
-						.equalsIgnoreCase("Out")) {
+								.equalsIgnoreCase("Out")) {
 					PaystreamTransaction o1 = new PaystreamTransaction();
 					o1.setTransactionId(currentTransaction.MessageId);
 					o1.setSenderUri(currentTransaction.SenderUri);
@@ -417,16 +435,13 @@ OnCheckedChangeListener {
 				}
 			}
 			refreshCount++;
-			if(refreshCount > 1)
-			{
+			if (refreshCount > 1) {
 				transactionsList.clear();
 			}
 			numTransactions = m_transactions.size();
-			for (int t = 0; t < numTransactions; t++)
-			{
+			for (int t = 0; t < numTransactions; t++) {
 				transactionsList.add(m_transactions.get(t));
 			}
-
 
 			// Log.i("ARRAY", ""+ m_transactions.size());
 		} catch (Exception e) {
@@ -480,16 +495,13 @@ OnCheckedChangeListener {
 				}
 			}
 			refreshCount++;
-			if(refreshCount > 1)
-			{
+			if (refreshCount > 1) {
 				transactionsList.clear();
 			}
 			numTransactions = m_transactions.size();
-			for (int t = 0; t < numTransactions; t++)
-			{
+			for (int t = 0; t < numTransactions; t++) {
 				transactionsList.add(m_transactions.get(t));
 			}
-
 
 			// Log.i("ARRAY", ""+ m_transactions.size());
 		} catch (Exception e) {
@@ -501,6 +513,7 @@ OnCheckedChangeListener {
 	@Override
 	public void onCheckedChanged(RadioGroup arg0, int arg1) {
 		if (arg1 == R.id.paystreamAll) {
+			currentCategory = arg1;
 			viewOrders = new Runnable() {
 				@Override
 				public void run() {
@@ -513,6 +526,7 @@ OnCheckedChangeListener {
 			m_ProgressDialog = ProgressDialog.show(PaystreamActivity.this,
 					"Please wait...", "Retrieving your paystream...", true);
 		} else if (arg1 == R.id.paystreamSent) {
+			currentCategory = arg1;
 			viewOrders = new Runnable() {
 				@Override
 				public void run() {
@@ -525,6 +539,7 @@ OnCheckedChangeListener {
 			m_ProgressDialog = ProgressDialog.show(PaystreamActivity.this,
 					"Please wait...", "Retrieving your paystream...", true);
 		} else if (arg1 == R.id.paystreamReceived) {
+			currentCategory = arg1;
 			viewOrders = new Runnable() {
 				@Override
 				public void run() {
@@ -537,6 +552,7 @@ OnCheckedChangeListener {
 			m_ProgressDialog = ProgressDialog.show(PaystreamActivity.this,
 					"Please wait...", "Retrieving your paystream...", true);
 		} else if (arg1 == R.id.paystreamOther) {
+			currentCategory = arg1;
 			viewOrders = new Runnable() {
 				@Override
 				public void run() {
@@ -618,7 +634,7 @@ OnCheckedChangeListener {
 	}
 
 	private void getTransactionDetails(int index) {
-		PaystreamTransaction ref = m_transactions.get(index);
+		PaystreamTransaction ref = m_transactions.get(index - 1);
 
 		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
 		String date = dateFormat.format(ref.getCreateDate());
@@ -643,14 +659,11 @@ OnCheckedChangeListener {
 		UserResponse userInfo = UserService.getUser(messageRequest);
 
 		String username = userInfo.FirstName + " " + userInfo.LastName;
-		if(username.length() <= 0)
-		{
+		if (username.length() <= 0) {
 			username = userInfo.EmailAddress;
-			if(username.length() <= 0)
-			{
+			if (username.length() <= 0) {
 				username = userInfo.MobileNumber;
-				if(username.length() <= 0)
-				{
+				if (username.length() <= 0) {
 					username = userInfo.UserName;
 				}
 			}
@@ -668,7 +681,7 @@ OnCheckedChangeListener {
 				temp1.putExtra("time", theTime);
 				temp1.putExtra("recipient", recipient);
 				temp1.putExtra("sender", sender);
-				temp1.putExtra("amount", amount);
+				temp1.putExtra("amount", ref.getAmount());
 				temp1.putExtra("transactionType", transactionType);
 				temp1.putExtra("transactionStat", transactionStat);
 				temp1.putExtra("transactionId", transactionId);

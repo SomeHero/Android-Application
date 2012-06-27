@@ -10,10 +10,11 @@ import org.json.JSONObject;
 
 import com.facebook.android.FacebookError;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
+
+import me.pdthx.ACHAccountSetupActivity;
 import me.pdthx.BaseActivity;
 import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
-import me.pdthx.Accounts.ACHAccountSetupActivity;
 import me.pdthx.Models.Friend;
 import me.pdthx.Requests.UserFBSignInRequest;
 import me.pdthx.Requests.UserSignInRequest;

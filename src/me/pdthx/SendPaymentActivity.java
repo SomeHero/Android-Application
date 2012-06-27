@@ -452,7 +452,6 @@ public final class SendPaymentActivity extends BaseActivity {
 		final Dialog d = new Dialog(SendPaymentActivity.this, R.style.CustomDialogTheme);
 		d.setContentView(R.layout.security_dialog);
 
-		d.getWindow().setLayout(400, 600);
 		d.show();
 
 		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);

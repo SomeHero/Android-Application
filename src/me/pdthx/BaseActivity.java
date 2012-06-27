@@ -27,6 +27,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
@@ -58,6 +59,8 @@ public class BaseActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -235,6 +238,7 @@ public class BaseActivity extends Activity {
 			signedInViaFacebook = false;
 			editor.remove("userId");
 			editor.remove("signedInViaFacebook");
+			editor.remove("setupSecurityPin");
 			editor.commit();
 
 
