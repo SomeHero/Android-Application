@@ -2,160 +2,168 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/background"
     android:orientation="vertical"
-    android:padding="10dip"
-	android:background="@drawable/background">
+    android:padding="10dip" >
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout01" 
-    android:layout_width="fill_parent" 
-    android:layout_height="30dp">
-<ImageView 
-    android:src="@drawable/logo"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:contentDescription="PaidThx Logo"
-    android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
- />
-<TextView android:text="Home" 
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/RelativeLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="30dp" >
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" 
             android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:contentDescription="PaidThx Logo"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="Home"
             android:textColor="#41924b" />
-</RelativeLayout> 
-<LinearLayout
+    </RelativeLayout>
+
+    <LinearLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dip"
-        android:padding="10dp"
+        android:background="@drawable/panel_background"
         android:orientation="vertical"
-        android:background="@drawable/panel_background" >
-                   <LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="280dip"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical">
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="40dip">
+        android:padding="10dp" >
 
-    <TableRow>
+        <LinearLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="280dip"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical" >
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_gravity="center"
-            android:src="@drawable/person_icon_small"
-            android:layout_height="match_parent"
-            
-    android:contentDescription="Home Icon"
-    android:gravity="center_vertical"
-            android:padding="3dip" />
+            <TableLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="40dip" >
 
-        <TextView
-        android:id="@+id/txtUserName"
-        android:text="UserName"
-            android:gravity="left|center_vertical"
-            android:textColor="#51a5ba"
-            android:textStyle="bold"
-            android:padding="3dip" />
-    </TableRow>
-    </TableLayout>
-                       <LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
-       <LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical"
-                android:width="0dp"
-        android:layout_weight="1" >
-    
-    <TextView
-        android:id="@+id/textView1"
-        android:textColor="#484848"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Money Sent" 
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="4dp" />
-        <TextView
-        android:id="@+id/txtTotalMoneySent"
-        android:textColor="#196779"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$250,000.12" 
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="4dp" />
+                <TableRow>
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:contentDescription="Home Icon"
+                        android:gravity="center_vertical"
+                        android:padding="3dip"
+                        android:src="@drawable/person_icon_small" />
+
+                    <TextView
+                        android:id="@+id/txtUserName"
+                        android:gravity="left|center_vertical"
+                        android:padding="3dip"
+                        android:text="UserName"
+                        android:textColor="#51a5ba"
+                        android:textStyle="bold" />
+                </TableRow>
+            </TableLayout>
+
+            <LinearLayout
+                android:id="@+id/relativeLayout2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:id="@+id/relativeLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:width="0dp" >
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="4dp"
+                        android:text="Money Sent"
+                        android:textColor="#484848"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtTotalMoneySent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="4dp"
+                        android:text="$250,000.12"
+                        android:textColor="#196779"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/relativeLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:width="0dp" >
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="4dp"
+                        android:text="Money Received"
+                        android:textColor="#484848"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtTotalMoneyReceived"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="4dp"
+                        android:text="$2,000.25"
+                        android:textColor="#1c8839"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="4dp"
+                android:text="Quick Links"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnQuickLinkSent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/btn_quick_link_sent" />
+
+            <Button
+                android:id="@+id/btnQuickLinkRequest"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/btn_quick_link_request" />
+        </LinearLayout>
     </LinearLayout>
-    
-              <LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical"
-                android:width="0dp"
-        android:layout_weight="1">
-        
-    <TextView
-        android:id="@+id/textView2"
-        android:textColor="#484848"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Money Received" 
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="4dp" />
-    
-        <TextView
-        android:id="@+id/txtTotalMoneyReceived"
-        android:textColor="#1c8839"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$2,000.25" 
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="4dp" />
-    
-    </LinearLayout>
-                           </LinearLayout>
 
-    
-                                       <TextView
-        android:id="@+id/textView1"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Quick Links" 
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="4dp" />
-    <Button
-        android:id="@+id/btnQuickLinkSent"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/btn_quick_link_sent" />
-
-    <Button
-        android:id="@+id/btnQuickLinkRequest"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/btn_quick_link_request" />
-</LinearLayout>
-</LinearLayout>
 </LinearLayout>

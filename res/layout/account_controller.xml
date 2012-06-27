@@ -108,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical" >
-
+
                 <Button
                     android:id="@+id/bankAddAcct"
                     android:layout_width="265dp"

@@ -112,6 +112,7 @@ public final class SendPaymentActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		tracker.trackPageView("/SendPaymentActivity");
 		setTitle("Send Money");
 
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -153,7 +154,7 @@ public final class SendPaymentActivity extends BaseActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		tracker.trackPageView("/SendPaymentActivity");
 		locationManager.requestLocationUpdates(
 				LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 		//		locationManager.requestLocationUpdates(
@@ -422,6 +423,7 @@ public final class SendPaymentActivity extends BaseActivity {
 				Friend pickedFriend = new Friend();
 				pickedFriend.setId(bundle.getString("contact_id"));
 				if (!pickedFriend.getId().equals("")) {
+					
 					friend = friendsList.get(friendsList.indexOf(pickedFriend));
 
 					if (friend.getType().equals("Facebook")) {

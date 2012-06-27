@@ -11,24 +11,26 @@
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
-  limitations under the License.
-  -->
+  limitations under the License.
+-->
 
 <resources>
-    <item type="id" name="actionbar_compat" />
-    <item type="id" name="actionbar_compat_title" />
-    <item type="id" name="actionbar_compat_item_refresh_progress" />
-    <item type="id" name="actionbar_compat_item_refresh" />
-    <item type="id" name="menu_refresh" />
-    <item type="id" name="USERSIGNIN_COMPLETE" />
-    <item type="id" name="USERREGISTRATION_COMPLETE" />
-    <item type="id" name="VALIDATEUSER_DIALOG" />
-    <item type="id" name="INVALIDUSERSIGNIN_DIALOG" />
-	<item type="id" name="CREATEACCOUNT_DIALOG" />
-	<item type="id" name="CREATEACCOUNTFAILED_DIALOG" />
-	<item type="id" name="SETUPACHACCOUNT_DIALOG" />
-	<item type="id" name="SETUPACHACCOUNTFAILED_DIALOG" />
-	<item type="id" name="INVALIDPASSCODELENGTH_DIALOG" />
-	<item type="id" name="SECURITYPINMISMATCH_DIALOG" />
-	<item type="id" name="UNHANDLEDEXCEPTION_DIALOG" />
+
+    <item name="actionbar_compat" type="id"/>
+    <item name="actionbar_compat_title" type="id"/>
+    <item name="actionbar_compat_item_refresh_progress" type="id"/>
+    <item name="actionbar_compat_item_refresh" type="id"/>
+    <item name="menu_refresh" type="id"/>
+    <item name="USERSIGNIN_COMPLETE" type="id"/>
+    <item name="USERREGISTRATION_COMPLETE" type="id"/>
+    <item name="VALIDATEUSER_DIALOG" type="id"/>
+    <item name="INVALIDUSERSIGNIN_DIALOG" type="id"/>
+    <item name="CREATEACCOUNT_DIALOG" type="id"/>
+    <item name="CREATEACCOUNTFAILED_DIALOG" type="id"/>
+    <item name="SETUPACHACCOUNT_DIALOG" type="id"/>
+    <item name="SETUPACHACCOUNTFAILED_DIALOG" type="id"/>
+    <item name="INVALIDPASSCODELENGTH_DIALOG" type="id"/>
+    <item name="SECURITYPINMISMATCH_DIALOG" type="id"/>
+    <item name="UNHANDLEDEXCEPTION_DIALOG" type="id"/>
+
 </resources>

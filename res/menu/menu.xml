@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <item  android:id="@+id/clear"
-     android:title="Clear"
-     android:icon="@android:drawable/menuitem_background"
-    />
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/clear"
+        android:icon="@android:drawable/menuitem_background"
+        android:title="Clear"/>
+
 </menu>

@@ -41,7 +41,7 @@ public class ProfileSetupActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		tracker.trackPageView("ProfileSetupActivity");
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); 
 		showProfileSetup();
 		

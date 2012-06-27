@@ -19,7 +19,6 @@
             android:layout_height="2dp"
             android:background="@drawable/tab_bg_selected"
             android:orientation="vertical" >
-
         </LinearLayout>
 
         <FrameLayout

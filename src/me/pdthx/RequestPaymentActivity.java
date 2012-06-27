@@ -1,5 +1,7 @@
 package me.pdthx;
 
+import java.io.File;
+import java.net.URI;
 import java.text.NumberFormat;
 
 import me.pdthx.CustomViews.CustomLockView;
@@ -13,20 +15,25 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RequestPaymentActivity extends BaseActivity {
@@ -44,6 +51,10 @@ public class RequestPaymentActivity extends BaseActivity {
 	
 	private Friend friend;
 
+	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	private Uri fileUri;
+	
+	private Button btnCamera;
 	private Button btnAddContacts;
 	private Button txtAmount;
 	private EditText txtComments;
@@ -60,7 +71,8 @@ public class RequestPaymentActivity extends BaseActivity {
 	final private int PAYMENTEXCEEDSLIMIT_DIALOG = 6;
 	final private int ADD_MONEY = 8;
 	final private int SUBMITREQUEST_ACTION = 1;
-
+	final private int CAMERA = 20;
+	
 	private View requestMoneyView = null;
 	private Response paymentResponse;
 
@@ -89,6 +101,7 @@ public class RequestPaymentActivity extends BaseActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		tracker.trackPageView("/RequestPaymentActivity");
 		setTitle("Request Money");
 	    
 	    locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -129,7 +142,7 @@ public class RequestPaymentActivity extends BaseActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		tracker.trackPageView("/RequestPaymentActivity");
 		locationManager.requestLocationUpdates(
 				LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 //		locationManager.requestLocationUpdates(
@@ -292,44 +305,17 @@ public class RequestPaymentActivity extends BaseActivity {
 				startActivityForResult(new Intent(RequestPaymentActivity.this, AddMoneyActivity.class), ADD_MONEY);			
 			}		
 		});
-//		txtAmount.addTextChangedListener(new TextWatcher() {
-//			String current = "";
-//
-//			@Override
-//			public void onTextChanged(CharSequence s, int start, int before,
-//					int count) {
-//				if (!s.toString().equals(current)) {
-//					EditText txtAmount = (EditText) findViewById(R.id.txtRequestMoneyAmount);
-//					txtAmount.removeTextChangedListener(this);
-//
-//					String cleanString = s.toString().replaceAll("[$,.]", "");
-//
-//					double parsed = Double.parseDouble(cleanString);
-//					String formatted = NumberFormat.getCurrencyInstance()
-//							.format((parsed / 100));
-//
-//					current = formatted;
-//					txtAmount.setText(formatted);
-//					txtAmount.setSelection(formatted.length());
-//
-//					txtAmount.addTextChangedListener(this);
-//				}
-//			}
-//
-//			@Override
-//			public void afterTextChanged(Editable arg0) {
-//				if (arg0.length() == 14) {
-//					arg0.replace(13, 14, "");
-//				}
-//			}
-//
-//			@Override
-//			public void beforeTextChanged(CharSequence arg0, int arg1,
-//					int arg2, int arg3) {
-//				
-//			}
-//		});
-//		
+		
+		btnCamera = (Button) findViewById(R.id.camera);
+		btnCamera.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v) {
+				
+				startActivityForResult(new Intent(RequestPaymentActivity.this, CameraActivity.class), CAMERA);
+			}	
+		});
+
 		btnAddContacts = (Button) findViewById(R.id.addRecipient);
 		btnAddContacts.setOnClickListener(new OnClickListener(){
 
@@ -409,15 +395,29 @@ public class RequestPaymentActivity extends BaseActivity {
 				String amount = bundle.getString("index");
 				txtAmount.setText(amount);
 			}
+			else if(requestCode == CAMERA)
+			{
+				try{
+//					byte[] raw = (byte[]) data.getExtras().get("data");
+//					Bitmap thumbnail = BitmapFactory.decodeByteArray(raw,0,raw.length);
+//					ImageView cameraImage = (ImageView) findViewById(R.id.cameraImage);
+//					cameraImage.setImageBitmap(thumbnail);
+				}
+				catch (Exception e)
+				{
+					
+				}
+			}
 			else {
 				launchRequestMoneyView();
 			}
 		}
 		else {
-			if (requestCode != ADDING_FRIEND && requestCode != ADD_MONEY) {
+			if (requestCode != ADDING_FRIEND && requestCode != ADD_MONEY && requestCode != CAMERA) {
 				finish();
 			}
 		}
+
 	}
 
 	protected void showSecurityPinDialog() {

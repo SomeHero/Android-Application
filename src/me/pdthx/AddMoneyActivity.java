@@ -22,13 +22,14 @@ public class AddMoneyActivity extends BaseActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		tracker.trackPageView("AddMoneyActivity");
 		launchAddMoneyView();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		tracker.trackPageView("AddMoneyActivity");
 
 	}
 

@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<!--
-   Copyright (c) 2010 Josh Clemm
--->
+<!--    Copyright (c) 2010 Josh Clemm -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/tabsLayout" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:background="@drawable/tab_bg_selector"
-	android:padding="10dip" android:gravity="center" android:orientation="vertical">
+    android:id="@+id/tabsLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/tab_bg_selector"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dip" >
 
-	<ImageView
-	    android:id="@+id/tabsIcon"
-	    android:layout_width="30dp"
-	    android:layout_height="30dp"
-	    android:maxHeight="30dp"
-	    android:maxWidth="30dp"
-	    android:src="@drawable/actionbar_back_indicator" />
+    <ImageView
+        android:id="@+id/tabsIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:maxHeight="30dp"
+        android:maxWidth="30dp"
+        android:src="@drawable/actionbar_back_indicator" />
 
-	<TextView android:id="@+id/tabsText" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:text="Title"
-		android:textSize="10dip" android:textColor="@drawable/tab_text_selector"
-		android:gravity="center" />
+    <TextView
+        android:id="@+id/tabsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Title"
+        android:textColor="@drawable/tab_text_selector"
+        android:textSize="10dip" />
+
 </LinearLayout>

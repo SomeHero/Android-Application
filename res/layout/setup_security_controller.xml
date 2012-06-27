@@ -2,71 +2,74 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/background"
     android:orientation="vertical"
-    android:padding="10dip"
-	android:background="@drawable/background">
+    android:padding="10dip" >
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout01" 
-    android:layout_width="fill_parent" 
-    android:layout_height="30dp">
-<ImageView 
-    android:src="@drawable/logo"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:contentDescription="PaidThx Logo"
-    android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
- />
-<TextView android:text="Setup a Pin" 
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/RelativeLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="30dp" >
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" 
             android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:contentDescription="PaidThx Logo"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="Setup a Pin"
             android:textColor="#41924b" />
-</RelativeLayout>   
-<LinearLayout
+    </RelativeLayout>
+
+    <LinearLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dip"
-        android:padding="10dp"
+        android:background="@drawable/panel_background"
         android:orientation="vertical"
-        android:background="@drawable/panel_background" >
-                   <LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="280dip"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical">
+        android:padding="10dp" >
 
-                                       <TextView
-        android:id="@+id/textView1"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Setup Your Security Pin" 
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="4dp" />
-
-                                       <TextView
-                                           android:id="@+id/textView2"
-                                           android:layout_width="wrap_content"
-                                           android:layout_height="wrap_content"
-                                           android:text="As you use PaidThx, you will find that we do not require you to logout and login between making payments.  However, what we do require, is that you correctly complete your security pin gesture each and every time you complete a transaction.  On the next screen we will ask you to create a security pin.  To create your pin, use your finger to connect 4 or more dots to form a unique gesture." 
-                                           android:layout_marginBottom="15dp"/>
-
-<Button
-            android:id="@+id/btnSetupSecurityPin"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="280dip"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_create_an_account"
-             android:layout_marginBottom="4dp" />
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical" >
 
-</LinearLayout>
-</LinearLayout>
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="4dp"
+                android:text="Setup Your Security Pin"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="As you use PaidThx, you will find that we do not require you to logout and login between making payments.  However, what we do require, is that you correctly complete your security pin gesture each and every time you complete a transaction.  On the next screen we will ask you to create a security pin.  To create your pin, use your finger to connect 4 or more dots to form a unique gesture." />
+
+            <Button
+                android:id="@+id/btnSetupSecurityPin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/btn_create_an_account" />
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

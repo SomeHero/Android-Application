@@ -1,5 +1,6 @@
 package me.pdthx;
 
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public final class FriendsListActivity extends BaseActivity  {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		tracker.trackPageView("Contact List");
 		pictureMap = new HashMap<String, Bitmap>();
 
 		showFriendsController();
@@ -91,6 +92,7 @@ public final class FriendsListActivity extends BaseActivity  {
 				Intent data = new Intent();
 				data.putExtra("contact_id", contacts.get(arg2).getId());
 
+				
 				setResult(RESULT_OK, data);
 				finish();
 			}
@@ -110,10 +112,6 @@ public final class FriendsListActivity extends BaseActivity  {
 
 				for (int x = 0; x < friendsList.size(); x++) {
 					String name = friendsList.get(x).getName().toLowerCase();
-//					if (s.charAt(currentLength - 1) == name.charAt(currentLength - 1)) {
-//						searched.add(name);
-//					}
-
 					if (name.length() > currentLength) {
 						int counter = 0;
 						for (int y = 0; y < currentLength; y++) {
@@ -130,7 +128,7 @@ public final class FriendsListActivity extends BaseActivity  {
 						}
 					}
 				}
-
+				
 				ArrayList<Friend> tempList = new ArrayList<Friend>();
 				tempList.addAll(friendsList);
 				contacts.clear();
@@ -144,7 +142,13 @@ public final class FriendsListActivity extends BaseActivity  {
 							break;
 						}
 					}
-				}				
+				}		
+				if(contacts.size() == 0)
+				{
+					Friend newContact = new Friend();
+					newContact.setName(searchBar.getText().toString());
+					contacts.add(newContact);
+				}
 				if(searchBar.getText().toString().length() == 0)
 				{
 					m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item,
@@ -157,7 +161,7 @@ public final class FriendsListActivity extends BaseActivity  {
 							contacts);
 				}
 				mListView.setAdapter(m_adapter);
-
+				
 			}
 
 			@Override

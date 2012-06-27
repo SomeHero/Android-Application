@@ -12,7 +12,7 @@
         android:background="@drawable/tab_paystreamtitle"
         android:gravity="center"
         android:orientation="vertical" >
-
+
         <EditText
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
@@ -22,7 +22,6 @@
 
             <requestFocus />
         </EditText>
-
     </LinearLayout>
 
     <LinearLayout
@@ -90,7 +89,7 @@
             android:layout_marginTop="5dp"
             android:divider="@drawable/paystream_divider"
             android:dividerHeight="1dp"
-            android:fadingEdge="none">
+            android:fadingEdge="none" >
         </ListView>
 
         <TextView

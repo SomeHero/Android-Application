@@ -56,9 +56,9 @@
 
             <Button
                 android:id="@+id/signin_facebook"
-                android:layout_marginTop="10dp"
                 android:layout_width="278dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/button_facebook" />
         </LinearLayout>
 
@@ -130,7 +130,7 @@
             android:layout_alignLeft="@+id/linearLayout2"
             android:layout_below="@+id/linearLayout3"
             android:orientation="vertical" >
-
+
             <Button
                 android:id="@+id/signin_email"
                 android:layout_width="275dp"
@@ -140,7 +140,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"
                 android:textStyle="bold" />
-
+
             <TextView
                 android:id="@+id/forgotInfo"
                 android:layout_width="match_parent"
@@ -149,7 +149,6 @@
                 android:layout_marginTop="15dp"
                 android:text="Forgot email or password? Click here."
                 android:textSize="12dp" />
-
         </LinearLayout>
     </RelativeLayout>
 

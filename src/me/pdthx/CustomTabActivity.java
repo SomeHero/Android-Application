@@ -39,7 +39,7 @@ public class CustomTabActivity extends TabActivity {
 
 		mTabHost = getTabHost(); // The activity TabHost
 		mTabHost.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
-
+ 
 		Intent intent; // Reusable Intent for each tab
 
 		sdk = ZubhiumSDK.getZubhiumSDKInstance(CustomTabActivity.this,

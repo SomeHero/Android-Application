@@ -12,14 +12,14 @@
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
-     limitations under the License.
+     limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:padding="10dip" >
-
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="458dp" >
@@ -34,7 +34,6 @@
                 android:id="@+id/RelativeLayout01"
                 android:layout_width="fill_parent"
                 android:layout_height="30dp" >
-
             </RelativeLayout>
 
             <LinearLayout
@@ -53,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:orientation="vertical" >
-
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
@@ -63,7 +62,7 @@
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:src="@drawable/amt_icon" />
-
+
                         <EditText
                             android:id="@+id/amount"
                             android:layout_width="122dp"
@@ -81,7 +80,6 @@
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:background="@drawable/go_normal" />
-
                     </LinearLayout>
 
                     <TextView
@@ -95,7 +93,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
-
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" >
@@ -128,25 +126,22 @@
                                 android:background="@drawable/btn_amount"
                                 android:text="$20" />
                         </LinearLayout>
-
                     </LinearLayout>
-
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/editText4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="AVAILABLE TO SEND TODAY"
-                    android:ems="10" />
-
+                    android:ems="10"
+                    android:text="AVAILABLE TO SEND TODAY" />
+
                 <EditText
                     android:id="@+id/editText2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="Amount to Send" />
-
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

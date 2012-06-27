@@ -32,53 +32,51 @@
                 android:layout_alignParentRight="true"
                 android:text="Paystream"
                 android:textColor="#41924b" />
+        </RelativeLayout>
+    </LinearLayout>
 
-	</RelativeLayout> 
-	</LinearLayout>
- 
-	    <SearchView
-	        android:id="@+id/searchBar"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:ems="10" >
-	
+    <SearchView
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10" >
 
-	        <requestFocus />
-	    </SearchView>
+        <requestFocus />
+    </SearchView>
 
-	<LinearLayout
+    <LinearLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dip"
         android:orientation="vertical" >
-	                   <LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical">
 
-	<ListView
-	    android:id="@+id/lvPaystream"
-	    android:layout_width="fill_parent"
-	    android:layout_height="397dp"
-	    android:divider="@drawable/paystream_divider"
-	    android:dividerHeight="1dp" >
+        <LinearLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical" >
 
-</ListView>
+            <ListView
+                android:id="@+id/lvPaystream"
+                android:layout_width="fill_parent"
+                android:layout_height="397dp"
+                android:divider="@drawable/paystream_divider"
+                android:dividerHeight="1dp" >
+            </ListView>
 
-<TextView android:text="Your paystream is empty."
-        android:id="@+id/txtEmptyPaystream"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/panel_background" 
-        android:layout_margin="10dp"
-        android:padding="14dp"
-        android:visibility="gone"/>
-		</LinearLayout>
+            <TextView
+                android:id="@+id/txtEmptyPaystream"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/panel_background"
+                android:padding="14dp"
+                android:text="Your paystream is empty."
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>
-
-</LinearLayout>
-

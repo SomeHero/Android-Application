@@ -3,6 +3,8 @@ package me.pdthx;
 
 import java.text.NumberFormat;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import me.pdthx.Login.TabUIActivity;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Responses.UserResponse;
@@ -38,8 +40,9 @@ public final class HomeActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);  
-		
-		
+
+		tracker.trackPageView("HomeActivity");
+
 		if(prefs.getString("userId", "").length() == 0) {
 			startActivityForResult(new Intent(this, SignInActivity.class), 1);
 		}

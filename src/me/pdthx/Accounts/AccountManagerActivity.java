@@ -3,6 +3,8 @@ package me.pdthx.Accounts;
 import me.pdthx.R;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ public class AccountManagerActivity extends Activity {
 	Button editAcct;
 	Button addAcct;
 	Button backAcctBtn;
+	Button checkButton;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,7 +36,6 @@ public class AccountManagerActivity extends Activity {
 		Button back = (Button)findViewById(R.id.btnACHBack);
 		back.setOnClickListener(new OnClickListener()
 		{
-
 			@Override
 			public void onClick(View v) {
 				showAccountScreen();
@@ -62,7 +64,7 @@ public class AccountManagerActivity extends Activity {
 			
 		});
 	}
-	
+
 	public void showAccountScreen()
 	{
 		setContentView(R.layout.account_controller);
@@ -108,5 +110,39 @@ public class AccountManagerActivity extends Activity {
 			}
 			
 		});
+		
+		if(checkCameraHardware(this)){
+			checkButton = (Button)findViewById(R.id.checkButton);
+			checkButton.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v) {
+					Camera checkCamera = getCameraInstance();
+					
+				}
+				
+			});
+		}
+	}
+	
+	public static Camera getCameraInstance(){
+	    Camera c = null;
+	    try {
+	        c = Camera.open(); // attempt to get a Camera instance
+	    }
+	    catch (Exception e){
+	        // Camera is not available (in use or does not exist)
+	    }
+	    return c; // returns null if camera is unavailable
+	}
+	
+	private boolean checkCameraHardware(Context context) {
+	    if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+	        // this device has a camera
+	        return true;
+	    } else {
+	        // no camera on this device
+	        return false;
+	    }
 	}
 }

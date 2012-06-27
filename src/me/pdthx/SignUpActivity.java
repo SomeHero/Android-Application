@@ -29,7 +29,7 @@ public class SignUpActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);    
-
+		tracker.trackPageView("SignUpActivity");
 		if (!signedInViaFacebook) {
 			showSignUpActivity();
 		}

@@ -1,5 +1,6 @@
 package me.pdthx;
 
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,6 +20,7 @@ import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 import com.zubhium.ZubhiumSDK;
 import com.zubhium.ZubhiumSDK.CrashReportingMode;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -52,13 +54,18 @@ public class BaseActivity extends Activity {
 	private ContactList contactList;
 
 	protected int RETURNFROM_PROFILESETUP = 10;
-
+	
+	GoogleAnalyticsTracker tracker;
 	private ZubhiumSDK sdk;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		tracker = GoogleAnalyticsTracker.getInstance();
+		tracker.startNewSession("UA-30208011-10", 5, this);
+		setContentView(R.layout.main);
+		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		signedInViaFacebook = prefs.getBoolean("signedInViaFacebook", false);
@@ -209,7 +216,7 @@ public class BaseActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
+		
 		if (prefs.getString("userId", "").length() != 0) {
 			MenuInflater menuInflater = getMenuInflater();
 			menuInflater.inflate(R.menu.main_menu, menu);

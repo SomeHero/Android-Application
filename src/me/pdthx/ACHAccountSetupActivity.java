@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.app.Activity;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +28,7 @@ public class ACHAccountSetupActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		
+		tracker.trackPageView("ACHAccountSetUpActivity");
 		progressDialog.dismiss();
 		setContentView(R.layout.setup_achaccount_controller);
 
@@ -35,6 +36,8 @@ public class ACHAccountSetupActivity extends BaseActivity {
 		btnACHRemindMeLater = (Button)findViewById(R.id.btnACHRemindMeLater);
 
 		showSetupACHController();
+		
+		 
 	}
 
 
