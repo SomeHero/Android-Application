@@ -12,7 +12,6 @@ import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.*;
 import com.facebook.android.Facebook.DialogListener;
 
-import me.pdthx.Accounts.ACHAccountSetupActivity;
 import me.pdthx.Models.Friend;
 import me.pdthx.Requests.UserFBSignInRequest;
 import me.pdthx.Requests.UserSignInRequest;
@@ -103,9 +102,9 @@ public class SignInActivity extends BaseActivity {
 				progressDialog.setMessage("Logging into PaidThx...");
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				progressDialog.show();
+				
 				break;
 			}
-
 		}
 
 	};

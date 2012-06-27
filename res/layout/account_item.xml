@@ -15,13 +15,13 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/amt_icon" />
-
+
         <TextView
             android:id="@+id/bankAccountName"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="TextView" />
+            android:text="Name of bank account very long" />
 
         <Button
             android:id="@+id/bankEditRemove"

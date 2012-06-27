@@ -2,18 +2,25 @@ package me.pdthx.Services;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+
 import me.pdthx.Models.MeCodeModel;
 import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Requests.UserChangeSecurityPinRequest;
 import me.pdthx.Requests.UserFBSignInRequest;
 import me.pdthx.Requests.UserMeCodeRequest;
+import me.pdthx.Requests.UserPersonalRequest;
 import me.pdthx.Requests.UserPushNotificationRequest;
 import me.pdthx.Requests.UserRegistrationRequest;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Requests.SecurityPinSetupRequest;
 import me.pdthx.Requests.UserSignInRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
+import me.pdthx.Responses.PaystreamResponse;
 import me.pdthx.Responses.Response;
+import me.pdthx.Responses.SecurityQuestionResponse;
 import me.pdthx.Responses.UserMeCodeResponse;
 import me.pdthx.Responses.UserRegistrationResponse;
 import me.pdthx.Responses.UserResponse;
@@ -40,22 +47,26 @@ public class UserService {
 	private static final String REGISTER_URL = "/Users?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String SETUPSECURITYPIN_URL = "/Users/%s/Setup_SecurityPin?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String CHANGESECURITYPIN_URL = "/Users/%s/change_securitypin";
-	private static final String SETUPACHACCOUNT_URL = "/Users/%s/PaymentAccounts?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String MECODE_URL = "/Users/%s/mecodes";
 	private static final String PUSHNOTIFICATION_URL = "/Users/%s/RegisterPushNotifications";
 	private static final String USER_URL = "/Users/";
+	private static final String SETUPACHACCOUNT_URL = "/Users/%s/PaymentAccounts?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String PERSONALIZE_URL = "/Users/%s/personalize_user?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String SECURITYQUESTIONS_URL = "/securityquestions?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+
 	public UserService() {
 
 	}
-	public static UserResponse getUser(
-			UserRequest userRequest) {
+
+	public static UserResponse getUser(UserRequest userRequest) {
 
 		UserResponse userResponse = new UserResponse();
 
 		HttpResponse response = null;
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpGet request = new HttpGet(ROOTURL + USER_URL  + userRequest.UserId + "?apiKey=" + APIKEY);
+			HttpGet request = new HttpGet(ROOTURL + USER_URL
+					+ userRequest.UserId + "?apiKey=" + APIKEY);
 
 			request.setHeader("content-type", "application/json");
 
@@ -104,7 +115,7 @@ public class UserService {
 				e.printStackTrace();
 			}
 
-			if(jsonResult == null)
+			if (jsonResult == null)
 				return null;
 
 			try {
@@ -113,13 +124,17 @@ public class UserService {
 				userResponse.DeviceToken = jsonResult.getString("deviceToken");
 				userResponse.MobileNumber = jsonResult.getString("mobileNumber");
 				userResponse.EmailAddress = jsonResult.getString("emailAddress");
+
 				userResponse.UserName = jsonResult.getString("userName");
 				userResponse.UserStatus = jsonResult.getString("userStatus");
 				userResponse.FirstName = jsonResult.getString("firstName");
 				userResponse.LastName = jsonResult.getString("lastName");
 				userResponse.UpperLimit = jsonResult.getInt("upperLimit");
-				userResponse.TotalMoneySent = jsonResult.getDouble("totalMoneySent");
-				userResponse.TotalMoneyReceived = jsonResult.getDouble("totalMoneyReceived");
+				userResponse.ImageUrl = jsonResult.getString("imageUrl");
+				userResponse.TotalMoneySent = jsonResult
+						.getDouble("totalMoneySent");
+				userResponse.TotalMoneyReceived = jsonResult
+						.getDouble("totalMoneyReceived");
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -128,7 +143,9 @@ public class UserService {
 
 		return userResponse;
 	}
-	public static UserSignInResponse signInUser(UserSignInRequest userSignInRequest) {
+
+	public static UserSignInResponse signInUser(
+			UserSignInRequest userSignInRequest) {
 		UserSignInResponse userSignInResponse = new UserSignInResponse();
 		HttpResponse response = null;
 		try {
@@ -199,26 +216,29 @@ public class UserService {
 					userSignInResponse.UserId = jsonResult.getString("userId");
 					userSignInResponse.MobileNumber = jsonResult
 							.getString("mobileNumber");
-					userSignInResponse.SetupSecurityPin = jsonResult.getBoolean("setupSecurityPin");
+					userSignInResponse.SetupSecurityPin = jsonResult
+							.getBoolean("setupSecurityPin");
 					userSignInResponse.PaymentAccountId = jsonResult
 							.getString("paymentAccountId");
-					userSignInResponse.UpperLimit = jsonResult.getInt("upperLimit");
+					userSignInResponse.UpperLimit = jsonResult
+							.getInt("upperLimit");
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
-			else {
+			} else {
 				userSignInResponse.Success = false;
-				userSignInResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+				userSignInResponse.ReasonPhrase = response.getStatusLine()
+						.getReasonPhrase();
 			}
 		}
 
 		return userSignInResponse;
 	}
 
-	public static UserSignInResponse signInUser(UserFBSignInRequest userFBSignInRequest) {
+	public static UserSignInResponse signInUser(
+			UserFBSignInRequest userFBSignInRequest) {
 		UserSignInResponse userSignInResponse = new UserSignInResponse();
 		HttpResponse response = null;
 		try {
@@ -292,7 +312,8 @@ public class UserService {
 					userSignInResponse.UserId = jsonResult.getString("userId");
 					userSignInResponse.MobileNumber = jsonResult
 							.getString("mobileNumber");
-					userSignInResponse.SetupSecurityPin = jsonResult.getBoolean("hasSecurityPin");
+					userSignInResponse.SetupSecurityPin = jsonResult
+							.getBoolean("hasSecurityPin");
 					userSignInResponse.PaymentAccountId = jsonResult
 							.getString("paymentAccountId");
 
@@ -301,18 +322,18 @@ public class UserService {
 					e.printStackTrace();
 				}
 
-			}
-			else {
+			} else {
 				userSignInResponse.Success = false;
-				userSignInResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+				userSignInResponse.ReasonPhrase = response.getStatusLine()
+						.getReasonPhrase();
 			}
 		}
 
 		return userSignInResponse;
 	}
 
-	public static UserRegistrationResponse registerUser(UserRegistrationRequest userRegistrationRequest)
-	{
+	public static UserRegistrationResponse registerUser(
+			UserRegistrationRequest userRegistrationRequest) {
 		UserRegistrationResponse userRegistrationResponse = new UserRegistrationResponse();
 		HttpResponse response = null;
 
@@ -379,15 +400,16 @@ public class UserService {
 			if (response.getStatusLine().getStatusCode() == 201) {
 				try {
 					userRegistrationResponse.Success = true;
-					userRegistrationResponse.UserId = jsonResult.getString("userId");
+					userRegistrationResponse.UserId = jsonResult
+							.getString("userId");
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
-			else {
+			} else {
 				userRegistrationResponse.Success = false;
-				userRegistrationResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+				userRegistrationResponse.ReasonPhrase = response
+						.getStatusLine().getReasonPhrase();
 			}
 
 		}
@@ -395,12 +417,16 @@ public class UserService {
 		return userRegistrationResponse;
 
 	}
-	public static ACHAccountSetupResponse setupACHAccount(ACHAccountSetupRequest achAccountSetupRequest) {
+
+	public static ACHAccountSetupResponse setupACHAccount(
+			ACHAccountSetupRequest achAccountSetupRequest) {
 		ACHAccountSetupResponse achAccountSetupResponse = new ACHAccountSetupResponse();
 		HttpResponse response = null;
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost request = new HttpPost(ROOTURL + String.format(SETUPACHACCOUNT_URL, achAccountSetupRequest.UserId));
+			HttpPost request = new HttpPost(ROOTURL
+					+ String.format(SETUPACHACCOUNT_URL,
+							achAccountSetupRequest.UserId));
 
 			JSONObject json = new JSONObject();
 			json.put("apiKey", APIKEY);
@@ -408,6 +434,12 @@ public class UserService {
 			json.put("routingNumber", achAccountSetupRequest.RoutingNumber);
 			json.put("accountNumber", achAccountSetupRequest.AccountNumber);
 			json.put("accountType", achAccountSetupRequest.AccountType);
+			json.put("securityPin", achAccountSetupRequest.SecurityPin);
+			json.put("securityQuestionAnswer",
+					achAccountSetupRequest.SecurityAnswer);
+			json.put("securityQuestionId",
+					achAccountSetupRequest.SecurityQuestionId);
+			json.put("nickname", achAccountSetupRequest.Nickname);
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);
@@ -461,28 +493,33 @@ public class UserService {
 			if (response.getStatusLine().getStatusCode() == 201) {
 
 				try {
-					achAccountSetupResponse.PaymentAccountId = jsonResult.getString("paymentAccountId");
+					achAccountSetupResponse.PaymentAccountId = jsonResult
+							.getString("paymentAccountId");
 					achAccountSetupResponse.Success = true;
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
-			else {
+			} else {
 				achAccountSetupResponse.Success = false;
-				achAccountSetupResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+				achAccountSetupResponse.ReasonPhrase = response.getStatusLine()
+						.getReasonPhrase();
 			}
 
 		}
 
 		return achAccountSetupResponse;
 	}
-	public static Response setupSecurityPin(SecurityPinSetupRequest userSecurityPinRequest) {
+
+	public static Response setupSecurityPin(
+			SecurityPinSetupRequest userSecurityPinRequest) {
 		Response setupPinResponse = new Response();
 		HttpResponse response = null;
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost request = new HttpPost(ROOTURL + String.format(SETUPSECURITYPIN_URL, userSecurityPinRequest.UserId));
+			HttpPost request = new HttpPost(ROOTURL
+					+ String.format(SETUPSECURITYPIN_URL,
+							userSecurityPinRequest.UserId));
 
 			JSONObject json = new JSONObject();
 			json.put("securityPin", userSecurityPinRequest.SecurityPin);
@@ -503,14 +540,13 @@ public class UserService {
 			e.printStackTrace();
 		}
 
-
 		if (response.getStatusLine().getStatusCode() == 200) {
 
 			setupPinResponse.Success = true;
-		}
-		else {
+		} else {
 			setupPinResponse.Success = false;
-			setupPinResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+			setupPinResponse.ReasonPhrase = response.getStatusLine()
+					.getReasonPhrase();
 		}
 
 		return setupPinResponse;
@@ -521,10 +557,13 @@ public class UserService {
 		HttpResponse response = null;
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost request = new HttpPost(ROOTURL + String.format(CHANGESECURITYPIN_URL, userSecurityPinRequest.UserId));
+			HttpPost request = new HttpPost(ROOTURL
+					+ String.format(CHANGESECURITYPIN_URL,
+							userSecurityPinRequest.UserId));
 
 			JSONObject json = new JSONObject();
-			json.put("currentSecurityPin", userSecurityPinRequest.CurrentSecurityPin);
+			json.put("currentSecurityPin",
+					userSecurityPinRequest.CurrentSecurityPin);
 			json.put("newSecurityPin", userSecurityPinRequest.NewSecurityPin);
 
 			StringEntity entity = new StringEntity(json.toString());
@@ -543,14 +582,13 @@ public class UserService {
 			e.printStackTrace();
 		}
 
-
 		if (response.getStatusLine().getStatusCode() == 200) {
 
 			changePinResponse.Success = true;
-		}
-		else {
+		} else {
 			changePinResponse.Success = false;
-			changePinResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+			changePinResponse.ReasonPhrase = response.getStatusLine()
+					.getReasonPhrase();
 		}
 
 		return changePinResponse;
@@ -561,7 +599,8 @@ public class UserService {
 		Response meCodeResponse = new Response();
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost request = new HttpPost(ROOTURL + String.format(MECODE_URL, userMeCodeRequest.UserId));
+			HttpPost request = new HttpPost(ROOTURL
+					+ String.format(MECODE_URL, userMeCodeRequest.UserId));
 
 			JSONObject json = new JSONObject();
 			json.put("MeCode", userMeCodeRequest.getMeCodes().get(0));
@@ -584,10 +623,10 @@ public class UserService {
 
 		if (response.getStatusLine().getStatusCode() == 201) {
 			meCodeResponse.Success = true;
-		}
-		else {
+		} else {
 			meCodeResponse.Success = false;
-			meCodeResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+			meCodeResponse.ReasonPhrase = response.getStatusLine()
+					.getReasonPhrase();
 		}
 
 		return meCodeResponse;
@@ -598,7 +637,8 @@ public class UserService {
 		HttpResponse response = null;
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost request = new HttpPost(ROOTURL + String.format(MECODE_URL, userRequest.UserId));
+			HttpPost request = new HttpPost(ROOTURL
+					+ String.format(MECODE_URL, userRequest.UserId));
 
 			request.setHeader("content-type", "application/json");
 
@@ -655,25 +695,28 @@ public class UserService {
 						MeCodeModel meCodeModel = new MeCodeModel();
 
 						meCodeModel.setId(jsonObject.getString("Id"));
-						meCodeModel.setApprovedDate(jsonObject.getString("ApprovedDate"));
-						meCodeModel.setCreateDate(jsonObject.getString("CreateDate"));
-						meCodeModel.setActive(jsonObject.getBoolean("IsActive"));
-						meCodeModel.setApproved(jsonObject.getBoolean("IsApproved"));
+						meCodeModel.setApprovedDate(jsonObject
+								.getString("ApprovedDate"));
+						meCodeModel.setCreateDate(jsonObject
+								.getString("CreateDate"));
+						meCodeModel
+								.setActive(jsonObject.getBoolean("IsActive"));
+						meCodeModel.setApproved(jsonObject
+								.getBoolean("IsApproved"));
 						meCodeModel.setMeCode(jsonObject.getString("MeCode"));
 
 						meCodeArray[i] = meCodeModel;
 					}
-				}
-				catch (JSONException e) {
+				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 
 				userMeCodeResponse.populateMeCodes(meCodeArray);
 				userMeCodeResponse.Success = true;
-			}
-			else {
+			} else {
 				userMeCodeResponse.Success = false;
-				userMeCodeResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+				userMeCodeResponse.ReasonPhrase = response.getStatusLine()
+						.getReasonPhrase();
 				return userMeCodeResponse;
 			}
 		}
@@ -681,7 +724,86 @@ public class UserService {
 		return userMeCodeResponse;
 	}
 
-	public static Response registerForPush(UserPushNotificationRequest userRequest) {
+	public static ArrayList<SecurityQuestionResponse> getSecurityQuestions() {
+		ArrayList<SecurityQuestionResponse> messageResponses = new ArrayList<SecurityQuestionResponse>();
+		HttpResponse response = null;
+		try {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpGet request = new HttpGet(ROOTURL + SECURITYQUESTIONS_URL);
+
+			request.setHeader("content-type", "application/json");
+
+			response = httpClient.execute(request);
+		} catch (ClientProtocolException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		HttpEntity entity = response.getEntity();
+
+		if (entity != null) {
+
+			InputStream instream = null;
+			String result = "";
+			try {
+				instream = entity.getContent();
+				result = RestClient.convertStreamToString(instream);
+				// Log.i(TAG, "Result of conversation: [" + result +
+				// "]");
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				instream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			Log.i("User", result);
+
+			JSONArray messages = null;
+			try {
+				messages = new JSONArray(result);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+
+			try {
+				// Loop the Array
+				for (int i = 0; i < messages.length(); i++) {
+					JSONObject jsonResult = messages.getJSONObject(i);
+
+					SecurityQuestionResponse messageResponse = new SecurityQuestionResponse();
+					messageResponse.Question = jsonResult.getString("Question");
+					messageResponse.Id = jsonResult.getInt("Id");
+					messageResponse.IsActive = jsonResult.getString("IsActive") != null;
+
+					// messageResponse.MessageId = jsonResult.getString("Id");
+
+					messageResponses.add(messageResponse);
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return messageResponses;
+	}
+
+	public static Response registerForPush(
+			UserPushNotificationRequest userRequest) {
 		HttpResponse response = null;
 		Response serverResponse = new Response();
 		try {
@@ -711,12 +833,57 @@ public class UserService {
 
 		if (response.getStatusLine().getStatusCode() == 201) {
 			serverResponse.Success = true;
-		}
-		else {
+		} else {
 			serverResponse.Success = false;
-			serverResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+			serverResponse.ReasonPhrase = response.getStatusLine()
+					.getReasonPhrase();
 		}
 
 		return serverResponse;
+	}
+
+	public static Response setUserPersonalization(
+			UserPersonalRequest userPersonalRequest) {
+		Response userResponse = new Response();
+		HttpResponse response = null;
+
+		try {
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost request = new HttpPost(
+					ROOTURL
+							+ String.format(PERSONALIZE_URL,
+									userPersonalRequest.UserId));
+
+			JSONObject json = new JSONObject();
+
+			json.put("apiKey", APIKEY);
+			json.put("firstName", userPersonalRequest.FirstName);
+			json.put("lastName", userPersonalRequest.LastName);
+			json.put("imageUri", userPersonalRequest.ImageUri);
+
+			StringEntity entity = new StringEntity(json.toString());
+			request.setEntity(entity);
+			request.setHeader("content-type", "application/json");
+
+			response = httpClient.execute(request);
+		} catch (ClientProtocolException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (response.getStatusLine().getStatusCode() == 200) {
+			userResponse.Success = true;
+		} else {
+			userResponse.Success = false;
+			userResponse.ReasonPhrase = response.getStatusLine()
+					.getReasonPhrase();
+		}
+
+		return userResponse;
 	}
 }

@@ -1,5 +1,6 @@
 package me.pdthx;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,6 +8,8 @@ import java.util.Date;
 import java.util.Iterator;
 
 import me.pdthx.Adapters.PaystreamAdapter;
+import me.pdthx.CustomViews.PullAndRefreshListView;
+import me.pdthx.CustomViews.PullAndRefreshListView.OnRefreshListener;
 import me.pdthx.Dialogs.IncomingPaymentDialog;
 import me.pdthx.Dialogs.IncomingRequestDialog;
 import me.pdthx.Dialogs.OutgoingPaymentDialog;
@@ -19,6 +22,7 @@ import me.pdthx.Services.PaystreamService;
 import me.pdthx.Services.UserService;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,6 +36,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import android.widget.TextView;
 
@@ -53,9 +58,10 @@ public final class PaystreamActivity extends BaseActivity implements
 	private int FILTER_PAYSTREAM = 1;
 	private int refreshCount = 0;
 	public static final String TAG = "PaystreamActivity";
-	private ListView mListView = null;
+	private PullAndRefreshListView mListView = null;
 	private TextView mEmptyTextView = null;
 	private static final int CLEARSEARCH = 11;
+	private int currentCategory;
 
 	private RadioGroup group;
 
@@ -120,7 +126,7 @@ public final class PaystreamActivity extends BaseActivity implements
 		paystreamCategory.setOnCheckedChangeListener(this);
 
 		m_transactions = new ArrayList<PaystreamTransaction>();
-		mListView = (ListView) findViewById(R.id.lvPaystream);
+		mListView = (PullAndRefreshListView) findViewById(R.id.lvPaystream);
 		m_adapter = new PaystreamAdapter(this, R.layout.transaction_item,
 				m_transactions);
 		mListView.setAdapter(m_adapter);
@@ -234,6 +240,15 @@ public final class PaystreamActivity extends BaseActivity implements
 
 		});
 
+		mListView.setOnRefreshListener(new OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				getAllOrders();
+				mListView.onRefreshComplete();
+			}
+		});
+
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -264,6 +279,17 @@ public final class PaystreamActivity extends BaseActivity implements
 
 				for (int i = 0; i < m_transactions.size(); i++)
 					m_adapter.add(m_transactions.get(i));
+
+				Toast.makeText(getBaseContext(),
+						"CHILD COUNT: " + mListView.getChildCount(), 3);
+				if (mListView.getChildAt(mListView.getChildCount() - 1)
+						.getVisibility() == View.GONE) {
+					mListView.findViewById(R.id.pull_to_refresh_header)
+							.setVisibility(View.GONE);
+				} else {
+					mListView.findViewById(R.id.pull_to_refresh_header)
+							.setVisibility(View.VISIBLE);
+				}
 			} else {
 				m_adapter.clear();
 				mEmptyTextView.setVisibility(View.VISIBLE);
@@ -530,7 +556,7 @@ public final class PaystreamActivity extends BaseActivity implements
 	}
 
 	private void getTransactionDetails(int index) {
-		PaystreamTransaction ref = m_transactions.get(index);
+		PaystreamTransaction ref = m_transactions.get(index - 1);
 
 		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
 		String date = dateFormat.format(ref.getCreateDate());
@@ -577,7 +603,7 @@ public final class PaystreamActivity extends BaseActivity implements
 				temp1.putExtra("time", theTime);
 				temp1.putExtra("recipient", recipient);
 				temp1.putExtra("sender", sender);
-				temp1.putExtra("amount", amount);
+				temp1.putExtra("amount", ref.getAmount());
 				temp1.putExtra("transactionType", transactionType);
 				temp1.putExtra("transactionStat", transactionStat);
 				temp1.putExtra("transactionId", transactionId);

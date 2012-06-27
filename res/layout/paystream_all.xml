@@ -5,24 +5,25 @@
     android:layout_gravity="center"
     android:background="#f6f6f6"
     android:orientation="vertical" >
-
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/tab_paystreamtitle"
+        android:background="@drawable/txtbox"
         android:gravity="center"
         android:orientation="vertical" >
-
-        <EditText
+
+	<EditText
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:ems="10"
             android:hint="Search For something" >
 
             <requestFocus />
         </EditText>
-    </LinearLayout>
+</LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,19 +31,13 @@
         android:background="#c8cbd1"
         android:orientation="vertical" >
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginBottom="5dp"
-        android:background="#a4a5a5"
-        android:orientation="vertical" >
-    </LinearLayout>
-
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f6f6f6"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:background="#FAFAFA"
         android:gravity="center" >
 
         <RadioGroup
@@ -81,26 +76,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-
-        <ListView
-            android:id="@+id/lvPaystream"
+
+        <me.pdthx.CustomViews.PullAndRefreshListView
+	    android:id="@+id/lvPaystream"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:divider="@drawable/paystream_divider"
             android:dividerHeight="1dp"
-            android:fadingEdge="none" >
-        </ListView>
-
+	    android:scrollbars="none"
+            android:fadingEdge="none" />
         <TextView
             android:id="@+id/txtEmptyPaystream"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/panel_background"
-            android:padding="14dp"
-            android:text="Your paystream is empty."
-            android:visibility="gone" />
+            android:padding="14dp" />
     </LinearLayout>
 
 </LinearLayout>

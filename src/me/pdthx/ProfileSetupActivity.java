@@ -8,6 +8,7 @@ import me.pdthx.Requests.UserChangeSecurityPinRequest;
 import me.pdthx.Requests.UserMeCodeRequest;
 import me.pdthx.Responses.Response;
 import me.pdthx.Services.UserService;
+import me.pdthx.Setup.CreateQuestionActivity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -229,7 +230,18 @@ public class ProfileSetupActivity extends BaseActivity {
 			}
 
 		});
+		
+		Button btnViewProfile = (Button) findViewById(R.id.btnViewProfile);
+		btnViewProfile.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(v.getContext(),
+						ProfileControllerActivity.class));
+			}
+
+		});
+		
 		Button btnChangeSecurityPin = (Button) findViewById(R.id.btnChangeSecurityPin);
 		TextView txtViewPin = (TextView) findViewById(R.id.txtViewPin);
 		TextView txtNotePin = (TextView) findViewById(R.id.txtNotePin);

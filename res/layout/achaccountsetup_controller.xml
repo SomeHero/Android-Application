@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fadingEdge="none"
+    android:background="#FAFAFA"
     android:scrollbars="none" >
 
     <LinearLayout
@@ -83,35 +84,43 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/txtNicknameonAcct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" 
+                android:hint="Nickname For Account i.e. 'My Bank'">
+            </EditText>
+
+            <EditText
                 android:id="@+id/txtNameOnAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="Name on Account" >
-
-                <requestFocus />
-            </EditText>
+                android:hint="Name on Account" />
 
             <EditText
                 android:id="@+id/txtRoutingNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="Routing Number" />
+                android:hint="Routing Number"
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/txtAccountNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="Account Number" />
+                android:hint="Account Number"
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/txtConfirmAccountNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="Confirm Account Number" />
+                android:hint="Confirm Account Number"
+                android:inputType="number" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -120,7 +129,7 @@
                 android:gravity="center" >
 
                 <RadioGroup
-                    android:id="@+id/paystreamSubCategories"
+                    android:id="@+id/achBankCategories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
@@ -169,6 +178,92 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"
                 android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/stepsToCompleteLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+"
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#969696" >
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_bg_unselected"
+                android:gravity="center|center_vertical"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp" >
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Join"
+                    android:textColor="#4D4A4B"
+                    android:textSize="10dp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_setup_checked" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Activate"
+                    android:textColor="#4D4A4B"
+                    android:textSize="10dp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/icon_setup_checked" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Personalize"
+                    android:textColor="#4D4A4B"
+                    android:textSize="10dp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_setup_checked" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enable"
+                    android:textColor="#4D4A4B"
+                    android:textSize="10dp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_setup_unchecked" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

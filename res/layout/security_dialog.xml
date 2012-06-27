@@ -1,44 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/dialog_background"
-    android:orientation="vertical"
-    android:paddingBottom="18dip"
-    android:paddingLeft="24dip"
-    android:paddingRight="24dip"
-    android:paddingTop="18dip" >
+    android:layout_height="fill_parent"
+    android:background="#FAFAFA"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/txtbox"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/setupSecurityHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Create Your Security Pin"
+            android:textColor="#000000"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/txtConfirmHeader"
+        android:id="@+id/setupSecurityBody"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="fill_horizontal"
+        android:layout_marginBottom="10dp"
         android:gravity="center_horizontal"
-        android:text="Confirm Your Payment"
-        android:textColor="#ffffff"
-        android:textSize="18dip"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/txtConfirmBody"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="fill_horizontal"
-        android:gravity="center_horizontal"
-        android:text="To confirm your payment of $25.00 to 804-387-9693, swipe you pin below."
-        android:textColor="#ffffff"
+        android:text="To setup a security pin, connect 4 or more dots using a swiping motion with your finger."
+        android:textColor="#000000"
         android:textSize="12dip" />
 
-    <me.pdthx.CustomViews.CustomLockView
-        android:id="@+id/ctrlSecurityPin"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginTop="8dip" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="346dp"
+        android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btnCancelSendMoney"
-        android:text="Cancel" />
+        <me.pdthx.CustomViews.CustomLockView
+            android:id="@+id/ctrlSecurityPin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="8dip" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btnCancelSendMoney"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blue_button_selector"
+            android:text="Cancel Payment"
+            android:textSize="18dp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </LinearLayout>
