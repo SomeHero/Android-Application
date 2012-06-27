@@ -22,7 +22,7 @@ public class SignUpUIActivity extends BaseActivity {
 	final private int USERREGISTRATION_PASSWORDMISMATCH = 7;
 	private UserRegistrationRequest request;
 	private UserRegistrationResponse response;
-	
+
 	private EditText enterEmail;
 	private EditText enterPW;
 	private String emailAddress;
@@ -33,10 +33,10 @@ public class SignUpUIActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		
-		
+
+
 		//implement facebook button
-		setContentView(View.inflate(this, R.layout.signup, null));
+		setContentView(R.layout.signup);
 
 		enterEmail = (EditText) findViewById(R.id.enter_email);
 		enterPW = (EditText) findViewById(R.id.enter_pw);
@@ -82,10 +82,10 @@ public class SignUpUIActivity extends BaseActivity {
 
 				alertDialog.show();
         		break;
-        	}	
+        	}
 
         }
-        
+
 	};
 
 	public void showSignUpActivity() {
@@ -139,7 +139,7 @@ public class SignUpUIActivity extends BaseActivity {
 
 					});
 					thread.start();
-				} 
+				}
 				else {
 					signUpHandler.sendEmptyMessage(USERREGISTRATION_PASSWORDMISMATCH);
 				}

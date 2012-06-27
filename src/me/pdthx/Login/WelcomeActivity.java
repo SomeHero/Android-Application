@@ -1,6 +1,5 @@
 package me.pdthx.Login;
 import me.pdthx.BaseActivity;
-import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +15,7 @@ public class WelcomeActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(View.inflate(this, R.layout.welcome, null));
+		setContentView(R.layout.welcome);
 
 		signIn = (Button) findViewById(R.id.signin_button);
 		signUp = (Button) findViewById(R.id.signup_button);
@@ -45,7 +44,7 @@ public class WelcomeActivity extends BaseActivity {
 
 		});
 	}
-	
+
 	public void switchTabInActivity(int indexTabToSwitchTo){
 		TabUIActivity ParentActivity;
 		ParentActivity = (TabUIActivity) this.getParent();
