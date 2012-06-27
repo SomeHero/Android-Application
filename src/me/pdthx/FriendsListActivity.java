@@ -1,6 +1,10 @@
 package me.pdthx;
 
-
+import me.pdthx.helpers.PhoneNumberFormatter;
+import android.app.ProgressDialog;
+import android.provider.ContactsContract;
+import android.net.Uri;
+import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -9,7 +13,6 @@ import java.util.HashMap;
 
 import me.pdthx.Adapters.FriendAdapter;
 import me.pdthx.Models.Friend;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,236 +34,282 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public final class FriendsListActivity extends BaseActivity  {
 
-	private ProgressDialog m_ProgressDialog = null; 
-	private FriendAdapter m_adapter;
-	public static final String TAG = "FriendListActivity";
-	private ListView mListView = null;
-	private TextView mEmptyTextView = null;
-	private final static int SETFRIENDIMAGE = 1;
-	private static HashMap<String, Bitmap> pictureMap;
-	private EditText searchBar = null;
-	private ArrayList<Friend> contacts = new ArrayList<Friend>();
+    private FriendAdapter m_adapter;
+    public static final String TAG = "FriendListActivity";
+    private ListView mListView = null;
+    private TextView mEmptyTextView = null;
+    private final static int SETFRIENDIMAGE = 1;
+    private static HashMap<String, Bitmap> pictureMap;
+    private EditText searchBar = null;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		tracker.trackPageView("Contact List");
-		pictureMap = new HashMap<String, Bitmap>();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        tracker.trackPageView("Recipient");
+        setContentView(R.layout.friend_controller);
+        progressDialog.setMessage("Loading contacts... please wait.");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
 
-		showFriendsController();
-
-	}
-
-	private void showFriendsController() {
-		setContentView(R.layout.friend_controller);
-		m_ProgressDialog = ProgressDialog.show(FriendsListActivity.this,    
-				"Please wait...", "Retrieving your friends...", true);
-
-		mListView = (ListView) findViewById(R.id.lvFriends);
-		mListView.setOnScrollListener(mOnScrollListener);
-
-		mEmptyTextView = (TextView)findViewById(R.id.txtEmptyFriendList);
-
-		if(friendsList != null && friendsList.size() > 0) {
-			for(int x = 0; x < friendsList.size(); x++)
-			{
-				contacts.add(friendsList.get(x));
-			}
-			Collections.sort(friendsList);
-			mEmptyTextView.setVisibility(View.GONE);
-			m_adapter = new FriendAdapter(this, R.layout.friend_item, friendsList);
-			mListView.setAdapter(m_adapter);
-			mListView.setFastScrollEnabled(true);
-			m_adapter.notifyDataSetChanged();
-
-		}
-		else {
-			Log.e("Friend list problem", "Friend List not populated");
-			mEmptyTextView.setVisibility(View.VISIBLE);
-		}
-
-		m_ProgressDialog.dismiss();
-
-		loadViewableImages(mListView.getFirstVisiblePosition(), mListView.getChildCount());
+        if (contactThread != null && contactThread.isAlive())
+        {
+            try
+            {
+                contactThread.join();
+            }
+            catch (InterruptedException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
 
 
-		mListView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
+        pictureMap = new HashMap<String, Bitmap>();
 
-				Intent data = new Intent();
-				data.putExtra("contact_id", contacts.get(arg2).getId());
+        showFriendsController();
 
-				
-				setResult(RESULT_OK, data);
-				finish();
-			}
-		});
+    }
 
-		searchBar = (EditText) findViewById(R.id.searchBar);
-		searchBar.addTextChangedListener(new TextWatcher() {
+    private void showFriendsController() {
 
-			String current = "";
+        mListView = (ListView) findViewById(R.id.lvFriends);
+        searchBar = (EditText) findViewById(R.id.searchBar);
+        mListView.setOnScrollListener(mOnScrollListener);
 
-			@Override
-			public void afterTextChanged(Editable s) {
+        mEmptyTextView = (TextView)findViewById(R.id.txtEmptyFriendList);
 
-				ArrayList<String>searched = new ArrayList<String>();
-				current = s.toString();
-				int currentLength = current.length();
+        if(friendsList != null && friendsList.size() > 0) {
+            Collections.sort(friendsList);
+            mEmptyTextView.setVisibility(View.GONE);
+            m_adapter = new FriendAdapter(this, R.layout.friend_item, friendsList);
+            mListView.setAdapter(m_adapter);
+            mListView.setFastScrollEnabled(true);
+            m_adapter.notifyDataSetChanged();
 
-				for (int x = 0; x < friendsList.size(); x++) {
-					String name = friendsList.get(x).getName().toLowerCase();
-					if (name.length() > currentLength) {
-						int counter = 0;
-						for (int y = 0; y < currentLength; y++) {
-							char currentChar = current.charAt(y);
-							char recipientChar = name.charAt(y);
+        }
+        else {
+            Log.e("Friend list problem", "Friend List not populated");
+            mEmptyTextView.setVisibility(View.VISIBLE);
+        }
 
-							if (currentChar == recipientChar) {
-								counter++;
-							}
-							if (counter == currentLength) {
-								searched.add(name);
-							}
+        progressDialog.dismiss();
 
-						}
-					}
-				}
-				
-				ArrayList<Friend> tempList = new ArrayList<Friend>();
-				tempList.addAll(friendsList);
-				contacts.clear();
-				for(int i = 0; i < searched.size(); i++)
-				{
-					for (int j = 0; j < friendsList.size(); j++)
-					{
-						if(tempList.get(j).getName().toLowerCase().equals(searched.get(i)))
-						{															
-							contacts.add(tempList.get(j));					
-							break;
-						}
-					}
-				}		
-				if(contacts.size() == 0)
-				{
-					Friend newContact = new Friend();
-					newContact.setName(searchBar.getText().toString());
-					contacts.add(newContact);
-				}
-				if(searchBar.getText().toString().length() == 0)
-				{
-					m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item,
-							friendsList);
-					contacts.clear();
-				}
-				else
-				{
-					m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item,
-							contacts);
-				}
-				mListView.setAdapter(m_adapter);
-				
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) 
-			{
+        loadViewableImages(mListView.getFirstVisiblePosition(), mListView.getChildCount());
 
 
-			}
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                long arg3) {
 
-		});
-	}
+                Intent data = new Intent();
+                Friend chosenFriend = m_adapter.getItem(arg2);
 
-	private OnScrollListener mOnScrollListener = new OnScrollListener() {
+                if (!chosenFriend.getId().equals(""))
+                {
+                    data.putExtra("id", chosenFriend.getId());
+                }
+                else
+                {
+                    data.putExtra("paypoint", chosenFriend.getPaypoint());
+                }
 
-		@Override
-		public void onScroll(AbsListView view, int firstVisibleItem,
-				int visibleItemCount, int totalItemCount) {
-			// TODO Auto-generated method stub
-		}
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        });
 
-		@Override
-		public void onScrollStateChanged(AbsListView view, int scrollState) {
-			// TODO Auto-generated method stub
-			switch (scrollState) {
+        searchBar.addTextChangedListener(new TextWatcher() {
 
-			case SCROLL_STATE_IDLE :
+            String current = "";
 
-				loadViewableImages(view.getFirstVisiblePosition(), view.getChildCount());
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                ArrayList<Friend> searched = new ArrayList<Friend>();
+                current = s.toString();
+
+                for (int x = 0; x < friendsList.size(); x++) {
+
+                    Friend friend = friendsList.get(x);
+                    if (friend.masterSearch(current.toLowerCase())) {
+                        searched.add(friend);
+                    }
+                }
+
+                if(searchBar.getText().toString().length() == 0)
+                {
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item,
+                        friendsList);
+                }
+                else
+                {
+                    if (searched.size() > 0)
+                    {
+                        m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item,
+                            searched);
+                    }
+                    else
+                    {
+                        Log.d("No match found", "Maybe new person?");
+                        Friend friend = new Friend();
+
+                        friend.setName("'" + current + "' not found");
+                        friend.setPaypoint("Continue typing or check entry");
+
+                        if (current.matches("[0-9()-]+"))
+                        {
+                            String phone = current.replaceAll("[^0-9]", "");
+                            if (phone.length() == 10 || phone.length() == 7)
+                            {
+                                friend.setName("New Phone Contact");
+                                friend.setPaypoint(PhoneNumberFormatter.formatNumber(phone));
+                            }
+                        }
+
+                        if (current.contains("@") && current.contains("."))
+                        {
+                            friend.setName("New Email Address");
+                            friend.setPaypoint(current);
+                        }
+
+                        if (current.charAt(0) == '$')
+                        {
+                            friend.setName("New MeCode");
+                            friend.setPaypoint(current);
+                        }
+
+                        ArrayList<Friend> newContact = new ArrayList<Friend>();
+                        newContact.add(friend);
+                        m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, newContact);
+                    }
+                }
+                mListView.setAdapter(m_adapter);
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                int count)
+            {
 
 
+            }
 
+        });
+    }
 
-				break;
+    private OnScrollListener mOnScrollListener = new OnScrollListener() {
 
-			case SCROLL_STATE_TOUCH_SCROLL:
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem,
+            int visibleItemCount, int totalItemCount) {
+            // TODO Auto-generated method stub
+        }
 
-				break;
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            // TODO Auto-generated method stub
+            switch (scrollState) {
 
-			case SCROLL_STATE_FLING :
-				break;
+                case SCROLL_STATE_IDLE :
 
-			}
+                    loadViewableImages(view.getFirstVisiblePosition(), view.getChildCount());
 
-		}
-	};
+                    break;
 
-	private void loadViewableImages(int first, int count) {
-		for (int i = 0; i < count; i++) {
+                case SCROLL_STATE_TOUCH_SCROLL:
 
-			Friend friend = (Friend) mListView.getAdapter().getItem(i + first);
-			ImageView imageView = (ImageView) mListView.getChildAt(i).findViewById(R.id.imgFriend);
-			if (friend.getPicture() == null && friend.getType().equals("Facebook")) {
-				if (!pictureMap.containsKey(friend.getId())) {
-					Log.d("Retrieving Image for:", friend.getName());
-					fetchDrawableOnThread(friend, imageView);
-				}
-				else {
-					imageView.setImageBitmap(pictureMap.get(friend.getId()));
-				}
-			}
+                    break;
 
-		}
-	}
+                case SCROLL_STATE_FLING :
+                    break;
 
-	private void fetchDrawableOnThread(final Friend friend, final ImageView imageView) {
-		final Handler handler = new Handler() {
-			@Override
-			public void handleMessage(Message message) {
-				Bitmap image = (Bitmap) message.obj;
+            }
 
-				friend.setPicture(image);
-				pictureMap.put(friend.getId(), image);
-				imageView.setImageBitmap(image);
-				m_adapter.notifyDataSetChanged();
-			}
-		};
+        }
+    };
 
-		Thread thread = new Thread() {
-			public void run() {
-				try {
-					URL url = new URL("http://graph.facebook.com/" + friend.getId() + "/picture");
-					Bitmap mIcon = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-					Message message = handler.obtainMessage(SETFRIENDIMAGE, mIcon);
-					handler.sendMessage(message);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+    private void loadViewableImages(int first, int count) {
+        for (int i = 0; i < count; i++) {
 
-			}
-		};
-		thread.start();
-	}
+            Friend friend = (Friend) mListView.getAdapter().getItem(i + first);
+            ImageView imageView = (ImageView) mListView.getChildAt(i).findViewById(R.id.imgFriend);
+            if (friend.getPicture() == null) {
+                Bitmap picture = pictureMap.get(friend.getId());
+                if (picture == null) {
+                    if (friend.isFBContact()) {
+                        fetchDrawableOnThread(friend, imageView);
+                    }
+                    else {
+                        picture = loadContactPhoto(friend.getPictureUri());
+
+                        if (picture != null)
+                        {
+                            friend.setPicture(picture);
+                            pictureMap.put(friend.getId(), picture);
+                            imageView.setImageBitmap(picture);
+                        }
+                        else {
+                            imageView.setImageResource(R.drawable.avatar_unknown);
+                        }
+                    }
+                }
+                else {
+                    imageView.setImageBitmap(picture);
+                }
+            }
+            else {
+                imageView.setImageBitmap(friend.getPicture());
+            }
+        }
+
+    }
+
+    private void fetchDrawableOnThread(final Friend friend, final ImageView imageView) {
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message message) {
+                Bitmap image = (Bitmap) message.obj;
+
+                friend.setPicture(image);
+                pictureMap.put(friend.getId(), image);
+                imageView.setImageBitmap(image);
+                m_adapter.notifyDataSetChanged();
+            }
+        };
+
+        Thread thread = new Thread() {
+            public void run() {
+                try {
+                    URL url = new URL("http://graph.facebook.com/" + friend.getId() + "/picture");
+                    Bitmap mIcon = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    Message message = handler.obtainMessage(SETFRIENDIMAGE, mIcon);
+                    handler.sendMessage(message);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        thread.start();
+    }
+
+    public Bitmap loadContactPhoto(Uri uri) {
+        InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(
+            getContentResolver(), uri);
+        if (input == null) {
+            return null;
+        }
+        return BitmapFactory.decodeStream(input);
+    }
 
 }

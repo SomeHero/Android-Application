@@ -110,7 +110,7 @@ OnCheckedChangeListener{
 
 		btnACHRemindMeLater.setOnClickListener(new OnClickListener() {
 			public void onClick(View argO) {
-				setResult(RESULT_OK);
+			    setResult(RESULT_OK);
 				finish();
 			}
 		});

@@ -45,7 +45,7 @@ public class SignInActivity extends BaseActivity {
 
 	private final int ACCOUNT_SETUP = 1;
 	private final int FACEBOOK_SETUP = 2;
-	private final int ACHACCOUNT_SETUP = 3;	
+	private final int ACHACCOUNT_SETUP = 3;
 
 	final private int USERSIGNIN_INVALID = 0;
 	final private int USERSIGNIN_FAILED = 4;
@@ -54,8 +54,8 @@ public class SignInActivity extends BaseActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		setContentView(View.inflate(this, R.layout.signin_controller, null));		
+		tracker.trackPageView("Join");
+		setContentView(View.inflate(this, R.layout.signin_controller, null));
 
 		showSignInActivity();
 	}
@@ -94,11 +94,11 @@ public class SignInActivity extends BaseActivity {
 
 			alertDialog.show();
 			break;
-			
+
 			case(FACEBOOK_SIGNIN):
 				signInRunner();
 				break;
-				
+
 			case(AUTHENTICATE):
 				progressDialog.setMessage("Logging into PaidThx...");
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -164,9 +164,9 @@ public class SignInActivity extends BaseActivity {
 
 				login = txtUserName.getText().toString();
 				password = txtPassword.getText().toString();
-				
+
 				signInHandler.sendEmptyMessage(AUTHENTICATE);
-				
+
 				signInRunner();
 			}
 		});
@@ -184,10 +184,10 @@ public class SignInActivity extends BaseActivity {
 
 	private void signInRunner() {
 		Thread thread = null;
-		
+
 		signInHandler.sendEmptyMessage(AUTHENTICATE);
-		
-		
+
+
 		thread = new Thread(new Runnable() {
 
 			@Override
@@ -219,7 +219,7 @@ public class SignInActivity extends BaseActivity {
 					progressDialog.dismiss();
 
 					if (userSignInResponse.PaymentAccountId.equals("")) {
-						startActivityForResult(new Intent(SignInActivity.this, 
+						startActivityForResult(new Intent(SignInActivity.this,
 								ACHAccountSetupActivity.class), ACHACCOUNT_SETUP);
 					}
 					else {
@@ -241,9 +241,9 @@ public class SignInActivity extends BaseActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		if (resultCode == Activity.RESULT_OK) {
-			
+
 			if (requestCode == ACCOUNT_SETUP) {
-								
+
 				login = data.getStringExtra("email");
 				password = data.getStringExtra("password");
 
@@ -258,7 +258,7 @@ public class SignInActivity extends BaseActivity {
 				progressDialog.setMessage("Requesting information from Facebook...");
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				progressDialog.show();
-				
+
 				facebook.authorizeCallback(requestCode, resultCode, data);
 				mAsyncRunner.request("me", new RequestListener(){
 
@@ -274,7 +274,7 @@ public class SignInActivity extends BaseActivity {
 							lastName = result.getString("last_name");
 							email = result.getString("email");
 							signedInViaFacebook = true;
-							
+
 							if (!facebookFriendsAdded) {
 								requestFacebookFriends();
 							}
@@ -287,12 +287,12 @@ public class SignInActivity extends BaseActivity {
 
 					@Override
 					public void onIOException(IOException e, Object state) {
-						// TODO Auto-generated method stub	
+						// TODO Auto-generated method stub
 					}
 					@Override
 					public void onFileNotFoundException(
 							FileNotFoundException e, Object state) {
-						// TODO Auto-generated method stub						
+						// TODO Auto-generated method stub
 					}
 					@Override
 					public void onMalformedURLException(
@@ -301,7 +301,7 @@ public class SignInActivity extends BaseActivity {
 					}
 					@Override
 					public void onFacebookError(FacebookError e, Object state) {
-						// TODO Auto-generated method stub	
+						// TODO Auto-generated method stub
 					}
 
 				});
@@ -314,7 +314,7 @@ public class SignInActivity extends BaseActivity {
 			}
 		}
 	}
-	
+
 	private void requestFacebookFriends() {
 		mAsyncRunner.request("me/friends", new RequestListener(){
 
@@ -333,7 +333,7 @@ public class SignInActivity extends BaseActivity {
 						Friend f = new Friend();
 						f.setId(id);
 						f.setName(n);
-						f.setType("Facebook");
+						f.setFBContact(true);
 						friendsList.add(f);
 						Log.d(f.getName() + ": " + f.getId(), "Facebook Friends");			//SWEEETTNNEEESESSS
 
@@ -345,7 +345,7 @@ public class SignInActivity extends BaseActivity {
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();      
+					e.printStackTrace();
 				}
 			}
 

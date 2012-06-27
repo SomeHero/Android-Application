@@ -1,6 +1,6 @@
 package me.pdthx;
 
-
+import android.content.pm.ActivityInfo;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -38,7 +38,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class BaseActivity extends Activity {
-	
+
 	public static final String TAG = "BaseActivity";
 	protected SharedPreferences prefs;
 	protected AlertDialog alertDialog;
@@ -52,27 +52,29 @@ public class BaseActivity extends Activity {
 	private static boolean contactListAdded = false;
 	protected static boolean facebookFriendsAdded = false;
 	private ContactList contactList;
+	protected static Thread contactThread;
 
 	protected int RETURNFROM_PROFILESETUP = 10;
-	
-	GoogleAnalyticsTracker tracker;
+
+	protected GoogleAnalyticsTracker tracker;
 	private ZubhiumSDK sdk;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		tracker = GoogleAnalyticsTracker.getInstance();
 		tracker.startNewSession("UA-30208011-10", 5, this);
 		setContentView(R.layout.main);
-		
+
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		signedInViaFacebook = prefs.getBoolean("signedInViaFacebook", false);
 
 		alertDialog = new AlertDialog.Builder(BaseActivity.this).create();
 		progressDialog = new ProgressDialog(BaseActivity.this);
-		
+
 		Editor editor = prefs.edit();
 		editor.putString("deviceToken", Secure.getString(getBaseContext().getContentResolver(),
 				Secure.ANDROID_ID));
@@ -84,27 +86,51 @@ public class BaseActivity extends Activity {
 			sdk.setCrashReportingMode(CrashReportingMode.SILENT);
 		}
 
-		if (!contactListAdded && friendsList.size() == 0) {
-			contactList = new ContactList(getBaseContext());
+		validateFBLogin();
+
+		if (signedInViaFacebook && !facebookFriendsAdded)
+		{
+			if (friendsList.size() == 0)
+			{
+				requestFacebookFriends();
+			}
+			else
+			{
+				facebookFriendsAdded = true;
+			}
+		}
+
+		if (contactList == null || contactList.getContacts().size() == 0)
+		{
+			Runnable run = new Runnable() {
+				public void run() {
+					contactList = new ContactList(getBaseContext());
+					friendsList.addAll(contactList.getContacts());
+				}
+			};
+
+			if (!contactListAdded)
+			{
+				contactListAdded = true;
+				contactThread = new Thread(run);
+				contactThread.start();
+			}
+		}
+		else
+		{
 			friendsList.addAll(contactList.getContacts());
 			contactListAdded = true;
 		}
 
-		validateFBLogin();
-
-		if (signedInViaFacebook && !facebookFriendsAdded) {
-			requestFacebookFriends();
-		}
-
 	}
-	
+
 	public void registerPushNotifications() {
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 1, new Intent(), 0));
 		registrationIntent.putExtra("sender", "android.paidthx@gmail.com");
 		startService(registrationIntent);
 	}
-	
+
 
 	private void validateFBLogin() {
 		String access_token = prefs.getString("access_token", null);
@@ -116,32 +142,35 @@ public class BaseActivity extends Activity {
 			facebook.setAccessExpires(expires);
 		}
 	}
-	
+
 	public void signInWithFacebook(String[] permissions) {
-		facebook.authorize(this, permissions, 2,
-				new DialogListener() {
-					public void onComplete(Bundle values) {
-						Editor editor = prefs.edit();
-						editor.putString("access_token",
-								facebook.getAccessToken());
-						editor.putLong("access_expires",
-								facebook.getAccessExpires());
-						editor.commit();
-					}
+		if (!facebook.isSessionValid())
+		{
+			facebook.authorize(this, permissions, 2,
+					new DialogListener() {
+				public void onComplete(Bundle values) {
+					Editor editor = prefs.edit();
+					editor.putString("access_token",
+							facebook.getAccessToken());
+					editor.putLong("access_expires",
+							facebook.getAccessExpires());
+					editor.commit();
+				}
 
-					public void onFacebookError(FacebookError error) {
-						Log.d(error.toString(), error.toString());
-						
-					}
+				public void onFacebookError(FacebookError error) {
+					Log.d(error.toString(), error.toString());
 
-					public void onError(DialogError e) {
-						Log.d(e.toString(), e.toString());
-					}
+				}
 
-					public void onCancel() {
-						Log.d("Canceled", "Canceled");
-					}
-				});
+				public void onError(DialogError e) {
+					Log.d(e.toString(), e.toString());
+				}
+
+				public void onCancel() {
+					Log.d("Canceled", "Canceled");
+				}
+			});
+		}
 	}
 
 	private void requestFacebookFriends() {
@@ -164,7 +193,7 @@ public class BaseActivity extends Activity {
 							Friend f = new Friend();
 							f.setId(id);
 							f.setName(n);
-							f.setType("Facebook");
+							f.setFBContact(true);
 							friendsList.add(f);
 							Log.d(f.getName() + ": " + f.getId(), "Facebook Friends");			//SWEEETTNNEEESESSS
 
@@ -211,12 +240,13 @@ public class BaseActivity extends Activity {
 
 	public void onResume() {
 		super.onResume();
-		facebook.extendAccessToken(this, null);
+		facebook.extendAccessTokenIfNeeded(this, null);
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		
+
 		if (prefs.getString("userId", "").length() != 0) {
 			MenuInflater menuInflater = getMenuInflater();
 			menuInflater.inflate(R.menu.main_menu, menu);
@@ -231,27 +261,10 @@ public class BaseActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		Editor editor = prefs.edit();
-
 		switch (item.getItemId()) {
 		case R.id.signOutMenuItem:
-			contactListAdded = false;
-			facebookFriendsAdded = false;
-			friendsList.clear();
 
-			signedInViaFacebook = false;
-			editor.remove("userId");
-			editor.remove("signedInViaFacebook");
-			editor.commit();
-
-
-			if (!facebook.isSessionValid()) {
-				startActivityForResult(new Intent(this, TabUIActivity.class), 1);
-			}
-			else {
-				facebookLogout();
-
-			}
+			logout();
 
 			break;
 		case R.id.profileMenuItem:
@@ -264,31 +277,50 @@ public class BaseActivity extends Activity {
 	}
 
 
-	public void facebookLogout() {
-		mAsyncRunner.logout(this, new RequestListener() {
-			@Override
-			public void onComplete(String response, Object state) {
-				startActivityForResult(new Intent(BaseActivity.this, TabUIActivity.class), 1);
-			}
+	public void logout() {
 
-			@Override
-			public void onIOException(IOException e, Object state) {
-			}
+		facebookFriendsAdded = false;
+		friendsList.clear();
 
-			@Override
-			public void onFileNotFoundException(FileNotFoundException e,
-					Object state) {
-			}
+		contactListAdded = false;
+		signedInViaFacebook = false;
+		Editor editor = prefs.edit();
+		editor.remove("userId");
+		editor.remove("signedInViaFacebook");
+		editor.remove("facebookFriendsAdded");
+		editor.commit();
 
-			@Override
-			public void onMalformedURLException(MalformedURLException e,
-					Object state) {
-			}
 
-			@Override
-			public void onFacebookError(FacebookError e, Object state) {
-			}
+		if (!facebook.isSessionValid()) {
+			startActivityForResult(new Intent(this, TabUIActivity.class), 1);
+		}
+		else {
 
-		});
+			mAsyncRunner.logout(this, new RequestListener() {
+				@Override
+				public void onComplete(String response, Object state) {
+					startActivityForResult(new Intent(BaseActivity.this, TabUIActivity.class), 1);
+				}
+
+				@Override
+				public void onIOException(IOException e, Object state) {
+				}
+
+				@Override
+				public void onFileNotFoundException(FileNotFoundException e,
+						Object state) {
+				}
+
+				@Override
+				public void onMalformedURLException(MalformedURLException e,
+						Object state) {
+				}
+
+				@Override
+				public void onFacebookError(FacebookError e, Object state) {
+				}
+
+			});
+		}
 	}
 }

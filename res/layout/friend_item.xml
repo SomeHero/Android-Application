@@ -5,10 +5,10 @@
     android:orientation="vertical" >
 
     <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/list_header_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="#6d6e71"
         android:paddingBottom="2dip"
         android:paddingLeft="5dip"
         android:paddingTop="2dip"
@@ -39,39 +39,31 @@
 
             <TextView
                 android:id="@+id/txtRecipientUri"
-                android:layout_width="fill_parent"
-                android:layout_height="52dp"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingBottom="8dp"
                 android:text="name"
                 android:textColor="#3c3c3c"
                 android:textSize="14dp"
                 android:textStyle="bold" />
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="100dip"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/txtPhoneNumber"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:gravity="center|center_vertical"
-                android:text="phone"
-                android:textColor="#757678"
-                android:textSize="12dp" />
-
-            <TextView
-                android:id="@+id/txtEmail"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center|center_vertical"
-                android:text="email"
-                android:textColor="#1c8839"
-                android:textSize="17dp" />
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/txtPaypoint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center|center_vertical"
+                    android:text="paypoint"
+                    android:textColor="#1c8839"
+                    android:textSize="12dp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

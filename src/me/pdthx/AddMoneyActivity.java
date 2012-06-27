@@ -22,22 +22,15 @@ public class AddMoneyActivity extends BaseActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		tracker.trackPageView("AddMoneyActivity");
 		launchAddMoneyView();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		tracker.trackPageView("AddMoneyActivity");
+		tracker.trackPageView("Amount");
 
 	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-
 
 	protected void launchAddMoneyView() {
 		setContentView(R.layout.money_amount_controller);
@@ -94,7 +87,7 @@ public class AddMoneyActivity extends BaseActivity {
 				data.putExtra("index", amount.getText().toString());
 
 				setResult(RESULT_OK, data);
-				finish();	
+				finish();
 			}
 
 		});
@@ -105,7 +98,7 @@ public class AddMoneyActivity extends BaseActivity {
 				data.putExtra("index", "1");
 
 				setResult(RESULT_OK, data);
-				finish();	
+				finish();
 			}
 
 		});
@@ -116,7 +109,7 @@ public class AddMoneyActivity extends BaseActivity {
 				data.putExtra("index", "5");
 
 				setResult(RESULT_OK, data);
-				finish();	
+				finish();
 			}
 
 		});
@@ -127,7 +120,7 @@ public class AddMoneyActivity extends BaseActivity {
 				data.putExtra("index", "10");
 
 				setResult(RESULT_OK, data);
-				finish();	
+				finish();
 			}
 
 		});
@@ -138,7 +131,7 @@ public class AddMoneyActivity extends BaseActivity {
 				data.putExtra("index", "20");
 
 				setResult(RESULT_OK, data);
-				finish();	
+				finish();
 			}
 
 		});

@@ -66,7 +66,7 @@ public class UserService {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} 
+		}
 
 		HttpEntity entity = response.getEntity();
 
@@ -109,7 +109,8 @@ public class UserService {
 
 			try {
 				userResponse.UserId = jsonResult.getString("userId");
-				//userResponse.DeviceToken = jsonResult.getString("deviceToken");
+				userResponse.RegistrationId = jsonResult.getString("registrationId");
+				userResponse.DeviceToken = jsonResult.getString("deviceToken");
 				userResponse.MobileNumber = jsonResult.getString("mobileNumber");
 				userResponse.EmailAddress = jsonResult.getString("emailAddress");
 				userResponse.UserName = jsonResult.getString("userName");
@@ -137,6 +138,7 @@ public class UserService {
 			JSONObject json = new JSONObject();
 			json.put("userName", userSignInRequest.Login);
 			json.put("password", userSignInRequest.Password);
+			//json.put("deviceToken", userFBSignInRequest.DeviceToken);
 
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);
@@ -283,7 +285,7 @@ public class UserService {
 				e.printStackTrace();
 			}
 
-			if (response.getStatusLine().getStatusCode() == 200) {
+			if (response.getStatusLine().getStatusCode() == 200 || response.getStatusLine().getStatusCode() == 201) {
 
 				try {
 					userSignInResponse.Success = true;
@@ -513,7 +515,7 @@ public class UserService {
 
 		return setupPinResponse;
 	}
-	
+
 	public static Response changeSecurityPin(UserChangeSecurityPinRequest userSecurityPinRequest) {
 		Response changePinResponse = new Response();
 		HttpResponse response = null;
@@ -587,7 +589,7 @@ public class UserService {
 			meCodeResponse.Success = false;
 			meCodeResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
 		}
-		
+
 		return meCodeResponse;
 	}
 
@@ -651,21 +653,21 @@ public class UserService {
 					for (int i = 0; i < jsonArrayLength; i++) {
 						JSONObject jsonObject = jsonArray.getJSONObject(i);
 						MeCodeModel meCodeModel = new MeCodeModel();
-						
+
 						meCodeModel.setId(jsonObject.getString("Id"));
 						meCodeModel.setApprovedDate(jsonObject.getString("ApprovedDate"));
 						meCodeModel.setCreateDate(jsonObject.getString("CreateDate"));
 						meCodeModel.setActive(jsonObject.getBoolean("IsActive"));
 						meCodeModel.setApproved(jsonObject.getBoolean("IsApproved"));
 						meCodeModel.setMeCode(jsonObject.getString("MeCode"));
-						
+
 						meCodeArray[i] = meCodeModel;
 					}
 				}
 				catch (JSONException e) {
 					e.printStackTrace();
 				}
-				
+
 				userMeCodeResponse.populateMeCodes(meCodeArray);
 				userMeCodeResponse.Success = true;
 			}
@@ -675,16 +677,16 @@ public class UserService {
 				return userMeCodeResponse;
 			}
 		}
-		
+
 		return userMeCodeResponse;
 	}
-	
+
 	public static Response registerForPush(UserPushNotificationRequest userRequest) {
 		HttpResponse response = null;
 		Response serverResponse = new Response();
 		try {
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpPost request = new HttpPost(ROOTURL + 
+			HttpPost request = new HttpPost(ROOTURL +
 					String.format(PUSHNOTIFICATION_URL, userRequest.UserId));
 
 			JSONObject json = new JSONObject();
@@ -714,7 +716,7 @@ public class UserService {
 			serverResponse.Success = false;
 			serverResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
 		}
-		
+
 		return serverResponse;
 	}
 }

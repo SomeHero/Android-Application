@@ -16,7 +16,7 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class DialogPaystream extends Activity implements OnTouchListener {
+public class DialogPaystream extends BaseActivity implements OnTouchListener {
 
 	private String header = "";
 	private String senderUri = "";
@@ -88,8 +88,9 @@ public class DialogPaystream extends Activity implements OnTouchListener {
 	private void setupButtons() {
 		pic = (ImageView) findViewById(R.id.paypic);
         if(pic != null) {
-        	if(transactionType.equalsIgnoreCase("Withdrawal"))
+        	if(transactionType.equalsIgnoreCase("Withdrawal")){
         		pic.setImageResource(R.drawable.paystream_sent_icon);
+        	}
         	else
         		pic.setImageResource(R.drawable.paystream_received_icon);
         }

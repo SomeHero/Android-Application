@@ -62,12 +62,12 @@ public final class PaystreamActivity extends BaseActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		tracker.trackPageView("PaystreamActivity");
+		tracker.trackPageView("Paystream");
 		System.out.println(prefs.getString("userId", ""));
 		System.out.println(prefs.getString("mobileNumber", ""));
 
 		if (prefs.getString("userId", "").length() == 0) {
-			startActivityForResult(new Intent(this, SignInActivity.class), 1);
+			logout();
 		} else {
 			showPaystreamController();
 			Bundle extras = getIntent().getExtras();
@@ -137,7 +137,6 @@ public final class PaystreamActivity extends BaseActivity implements
 			String current = "";
 			@Override
 			public void afterTextChanged(Editable s) {
-
 				ArrayList<PaystreamTransaction> searched = new ArrayList<PaystreamTransaction>();
 				current = s.toString().toLowerCase();
 				int checked = group.getCheckedRadioButtonId();
@@ -295,7 +294,7 @@ public final class PaystreamActivity extends BaseActivity implements
 			String currentHeader = "";
 			for (Iterator<PaystreamResponse> i = messages.iterator(); i
 					.hasNext();) {
-				PaystreamResponse currentTransaction = (PaystreamResponse) i
+				PaystreamResponse currentTransaction = i
 						.next();
 
 				PaystreamTransaction o1 = new PaystreamTransaction();
@@ -326,7 +325,7 @@ public final class PaystreamActivity extends BaseActivity implements
 			currentHeader = "";
 			for (Iterator<PaystreamResponse> i = messages.iterator(); i
 					.hasNext();) {
-				PaystreamResponse currentTransaction = (PaystreamResponse) i
+				PaystreamResponse currentTransaction = i
 						.next();
 				if (currentTransaction.MessageType.equalsIgnoreCase("Payment")
 						&& currentTransaction.Direction.equalsIgnoreCase("Out")) {
@@ -357,7 +356,7 @@ public final class PaystreamActivity extends BaseActivity implements
 			currentHeader = "";
 			for (Iterator<PaystreamResponse> i = messages.iterator(); i
 					.hasNext();) {
-				PaystreamResponse currentTransaction = (PaystreamResponse) i
+				PaystreamResponse currentTransaction = i
 						.next();
 
 				if (currentTransaction.MessageType.equalsIgnoreCase("Payment")
@@ -390,7 +389,7 @@ public final class PaystreamActivity extends BaseActivity implements
 			currentHeader = "";
 			for (Iterator<PaystreamResponse> i = messages.iterator(); i
 					.hasNext();) {
-				PaystreamResponse currentTransaction = (PaystreamResponse) i
+				PaystreamResponse currentTransaction = i
 						.next();
 
 				if (!currentTransaction.MessageType.equalsIgnoreCase("Payment")) {

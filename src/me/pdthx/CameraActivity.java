@@ -17,7 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-public class CameraActivity extends Activity {
+public class CameraActivity extends BaseActivity {
 	
 	private static final int MEDIA_TYPE_IMAGE = 1;
     private Camera mCamera;
@@ -26,6 +26,7 @@ public class CameraActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tracker.trackPageView("Take Check Image");
         showCameraPreview();
     }
     public void showCameraPreview()

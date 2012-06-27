@@ -3,9 +3,6 @@ package me.pdthx;
 
 import java.text.NumberFormat;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
-import me.pdthx.Login.TabUIActivity;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Responses.UserResponse;
 import me.pdthx.Services.UserService;
@@ -29,7 +26,7 @@ public final class HomeActivity extends BaseActivity {
 
 	public static final String TAG = "HomeActivity";
 	private String userId = "";
-	
+
 	private String SENT = "SMS_SENT";
     private String DELIVERED = "SMS_DELIVERED";
     private String phoneNumber = "12892100266";
@@ -41,7 +38,7 @@ public final class HomeActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);  
 
-		tracker.trackPageView("HomeActivity");
+		tracker.trackPageView("Home");
 
 		if(prefs.getString("userId", "").length() == 0) {
 			startActivityForResult(new Intent(this, SignInActivity.class), 1);
@@ -65,7 +62,7 @@ public final class HomeActivity extends BaseActivity {
 		ParentActivity = (CustomTabActivity) this.getParent();
 		ParentActivity.switchTab(indexTabToSwitchTo);
 	}
-	
+
 	public void setupSMS() {
 		sentPI = PendingIntent.getBroadcast(this, 0,
 	            new Intent(SENT), 0);
@@ -80,29 +77,29 @@ public final class HomeActivity extends BaseActivity {
                 switch (getResultCode())
                 {
                     case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS sent", 
+                        Toast.makeText(getBaseContext(), "SMS sent",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(getBaseContext(), "Generic failure", 
+                        Toast.makeText(getBaseContext(), "Generic failure",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Toast.makeText(getBaseContext(), "No service", 
+                        Toast.makeText(getBaseContext(), "No service",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NULL_PDU:
-                        Toast.makeText(getBaseContext(), "Null PDU", 
+                        Toast.makeText(getBaseContext(), "Null PDU",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(getBaseContext(), "Radio off", 
+                        Toast.makeText(getBaseContext(), "Radio off",
                                 Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
         }, new IntentFilter(SENT));
- 
+
         //---when the SMS has been delivered---
         registerReceiver(new BroadcastReceiver(){
             @Override
@@ -110,19 +107,19 @@ public final class HomeActivity extends BaseActivity {
                 switch (getResultCode())
                 {
                     case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS delivered", 
+                        Toast.makeText(getBaseContext(), "SMS delivered",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case Activity.RESULT_CANCELED:
-                        Toast.makeText(getBaseContext(), "SMS not delivered", 
+                        Toast.makeText(getBaseContext(), "SMS not delivered",
                                 Toast.LENGTH_SHORT).show();
-                        break;                        
+                        break;
                 }
             }
-        }, new IntentFilter(DELIVERED)); 
+        }, new IntentFilter(DELIVERED));
 	}
-	
-	
+
+
 	private void showHomeController() {
 		userId = prefs.getString("userId", "");
 
@@ -133,42 +130,42 @@ public final class HomeActivity extends BaseActivity {
 
 		if(userResponse == null)
 		{
-			startActivity(new Intent(this, TabUIActivity.class));
-		} 
+		    logout();
+		}
 		else {
-			if (userResponse.DeviceToken == null || 
-					userResponse.DeviceToken.equals("null") || 
-					!prefs.getString("deviceToken", "").equals(userResponse.DeviceToken)) {
+			if (userResponse.DeviceToken == null ||
+					userResponse.DeviceToken.equals("null") ||
+					userResponse.RegistrationId.equals("null")) {
 				registerPushNotifications();
 			}
-			
-			if (userResponse.MobileNumber != null && 
+
+			if (userResponse.MobileNumber != null &&
 					userResponse.MobileNumber.equals("null")) {
-				
+
 				setupSMS();
 				String message = userResponse.UserId;
 
 				SmsManager sms = SmsManager.getDefault();
 
     	        try {
-    	        	sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);  
+    	        	sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
     	        }
     	        catch(Exception e)
     	        {
     	        	e.printStackTrace();
     	        }
 			}
-			
-			
+
+
 			Editor editor = prefs.edit();
 			editor.putInt("upperLimit", userResponse.UpperLimit);
-			
-			if (userResponse.UserName != null && 
+
+			if (userResponse.UserName != null &&
 					userResponse.UserName.contains("fb_")) {
 				editor.putBoolean("signedInViaFacebook", true);
 			}
 			editor.commit();
-			
+
 			setContentView(R.layout.home_controller);
 
 			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
