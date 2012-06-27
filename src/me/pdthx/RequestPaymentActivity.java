@@ -1,5 +1,6 @@
 package me.pdthx;
 
+import java.io.FileInputStream;
 import java.text.NumberFormat;
 
 import me.pdthx.CustomViews.CustomLockView;
@@ -13,6 +14,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -27,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RequestPaymentActivity extends BaseActivity {
@@ -395,10 +399,12 @@ public class RequestPaymentActivity extends BaseActivity {
 			else if(requestCode == CAMERA)
 			{
 				try{
-//					byte[] raw = (byte[]) data.getExtras().get("data");
-//					Bitmap thumbnail = BitmapFactory.decodeByteArray(raw,0,raw.length);
-//					ImageView cameraImage = (ImageView) findViewById(R.id.cameraImage);
-//					cameraImage.setImageBitmap(thumbnail);
+
+					String path = (String) data.getExtras().get("index");
+					FileInputStream in = new FileInputStream(path);
+					Bitmap thumbnail = BitmapFactory.decodeStream(in); 
+					ImageView cameraImage = (ImageView) findViewById(R.id.cameraImage);
+					cameraImage.setImageBitmap(thumbnail);
 				}
 				catch (Exception e)
 				{
