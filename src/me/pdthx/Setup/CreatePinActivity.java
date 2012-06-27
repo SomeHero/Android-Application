@@ -33,6 +33,7 @@ public class CreatePinActivity extends BaseActivity {
 	private String routingNumber;
 	private String accountNumber;
 	private String accountType;
+	private String nickname;
 
 	private Activity parent = null;
 
@@ -63,6 +64,7 @@ public class CreatePinActivity extends BaseActivity {
 		routingNumber = extras.getString("routingNumber");
 		accountNumber = extras.getString("accountNumber");
 		accountType = extras.getString("accountType");
+		nickname = extras.getString("nickname");
 		
 		final CustomLockView ctrlSecurityPin = (CustomLockView)findViewById(R.id.ctrlSecurityPin);
 		ctrlSecurityPin.invalidate();
@@ -79,6 +81,7 @@ public class CreatePinActivity extends BaseActivity {
 					confirmAcct.putExtra("accountNumber", accountNumber);
 					confirmAcct.putExtra("accountType", accountType);
 					confirmAcct.putExtra("securityPin", passcode);
+					confirmAcct.putExtra("nickname", nickname);
 					
 					finish();
 					startActivity(confirmAcct);
