@@ -39,7 +39,7 @@ public class PaymentServices {
 
 			JSONObject json = new JSONObject();
 			json.put("apiKey", APIKEY);
-			json.put("userId", paymentRequest.UserId);
+			json.put("senderId", paymentRequest.UserId);
 			json.put("securityPin", paymentRequest.SecurityPin);
 			json.put("senderUri", paymentRequest.SenderUri);
 			json.put("recipientUri", paymentRequest.RecipientUri);
@@ -107,7 +107,7 @@ public class PaymentServices {
 
 		return paymentResponse;
 	}
-	
+
 	public static Response requestMoney(PaymentRequest paymentRequest) {
 		Response paymentResponse = new Response();
 
@@ -119,7 +119,7 @@ public class PaymentServices {
 
 			JSONObject json = new JSONObject();
 			json.put("apiKey", APIKEY);
-			//json.put("userId", paymentRequest.UserId);
+			json.put("senderId", paymentRequest.UserId);
 			json.put("securityPin", paymentRequest.SecurityPin);
 			json.put("senderUri", paymentRequest.SenderUri);
 			json.put("recipientUri", paymentRequest.RecipientUri);
@@ -129,7 +129,7 @@ public class PaymentServices {
 			json.put("messageType", "PaymentRequest");
 			json.put("latitude", paymentRequest.Latitude);
 			json.put("longitude", paymentRequest.Longitude);
-			
+
 			StringEntity entity = new StringEntity(json.toString());
 			request.setEntity(entity);
 			request.setHeader("content-type", "application/json");

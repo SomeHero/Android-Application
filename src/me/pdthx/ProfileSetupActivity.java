@@ -1,5 +1,7 @@
 package me.pdthx;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import me.pdthx.Accounts.AccountManagerActivity;
 import me.pdthx.CustomViews.CustomLockView;
 import me.pdthx.Requests.UserChangeSecurityPinRequest;
@@ -42,9 +44,9 @@ public class ProfileSetupActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); 
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		showProfileSetup();
-		
+
 	}
 
 	private Handler profileSetupHandler = new Handler() {
@@ -158,6 +160,41 @@ public class ProfileSetupActivity extends BaseActivity {
 			public void onClick(View argO) {
 
 				EditText txtMeCode = (EditText) findViewById(R.id.meCode);
+				txtMeCode.addTextChangedListener(new TextWatcher() {
+
+                    @Override
+                    public void afterTextChanged(Editable s)
+                    {
+                        if (s.toString().charAt(0) != '$')
+                        {
+                            s.insert(0, "$");
+                        }
+
+                    }
+
+                    @Override
+                    public void beforeTextChanged(
+                        CharSequence s,
+                        int start,
+                        int count,
+                        int after)
+                    {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onTextChanged(
+                        CharSequence s,
+                        int start,
+                        int before,
+                        int count)
+                    {
+                        // TODO Auto-generated method stub
+
+                    }
+
+				});
 				if (txtMeCode.getText().toString().charAt(0) != '$') {
 					profileSetupHandler.sendEmptyMessage(INVALID_DOLLAR);
 				} else {

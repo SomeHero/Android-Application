@@ -32,16 +32,16 @@ import android.widget.TextView;
 public class RequestPaymentActivity extends BaseActivity {
 
 	public static final String TAG = "RequestMoneyActivity";
-	
+
 	private String recipientUri;
 	private double amount = 0;
 	private String comments = "";
 	private String errorMessage = "";
-	
+
 	private Location location;
 	private LocationManager locationManager;
 	private LocationListener locationListener;
-	
+
 	private Friend friend;
 
 	private Button btnAddContacts;
@@ -90,7 +90,7 @@ public class RequestPaymentActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTitle("Request Money");
-	    
+
 	    locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		locationListener = new LocationListener() {
 
@@ -125,7 +125,7 @@ public class RequestPaymentActivity extends BaseActivity {
 
 		launchRequestMoneyView();
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -251,7 +251,7 @@ public class RequestPaymentActivity extends BaseActivity {
 			});
 
 			return alertDialog;
-			
+
 		case PAYMENTEXCEEDSLIMIT_DIALOG:
 			alertDialog = new AlertDialog.Builder(RequestPaymentActivity.this)
 			.create();
@@ -268,7 +268,7 @@ public class RequestPaymentActivity extends BaseActivity {
 			return alertDialog;
 
 		}
-		
+
 		return null;
 	}
 
@@ -277,7 +277,7 @@ public class RequestPaymentActivity extends BaseActivity {
 		requestMoneyView = View.inflate(this, R.layout.requestmoney_controller, null);
 		setContentView(requestMoneyView);
 
-		
+
 		txtComments = (EditText) findViewById(R.id.txtRequestMoneyComments);
 		btnRequestMoney = (Button) findViewById(R.id.btnSubmit);
 		Typeface type = Typeface.createFromAsset(getAssets(),"HelveticaWorld-Bold.ttf");
@@ -289,8 +289,8 @@ public class RequestPaymentActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				startActivityForResult(new Intent(RequestPaymentActivity.this, AddMoneyActivity.class), ADD_MONEY);			
-			}		
+				startActivityForResult(new Intent(RequestPaymentActivity.this, AddMoneyActivity.class), ADD_MONEY);
+			}
 		});
 //		txtAmount.addTextChangedListener(new TextWatcher() {
 //			String current = "";
@@ -326,20 +326,20 @@ public class RequestPaymentActivity extends BaseActivity {
 //			@Override
 //			public void beforeTextChanged(CharSequence arg0, int arg1,
 //					int arg2, int arg3) {
-//				
+//
 //			}
 //		});
-//		
+//
 		btnAddContacts = (Button) findViewById(R.id.addRecipient);
 		btnAddContacts.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				startActivityForResult(new Intent(RequestPaymentActivity.this, FriendsListActivity.class), ADDING_FRIEND);			
+				startActivityForResult(new Intent(RequestPaymentActivity.this, FriendsListActivity.class), ADDING_FRIEND);
 			}
-			
+
 		});
-		
+
 		btnRequestMoney.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -364,13 +364,13 @@ public class RequestPaymentActivity extends BaseActivity {
 					isValid = false;
 				}
 				if (isValid) {
-					
+
 					Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
 					if (isBetterLocation(lastKnownLocation, location)) {
 						location = lastKnownLocation;
 					}
-					
+
 					if(prefs.getString("userId", "").length() == 0) {
 						startActivityForResult(new Intent(RequestPaymentActivity.this, SignInActivity.class), 1);
 					} else {
@@ -382,24 +382,34 @@ public class RequestPaymentActivity extends BaseActivity {
 
 		btnRequestMoney.setVisibility(View.VISIBLE);
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			if (requestCode == ADDING_FRIEND) {
 				Bundle bundle = data.getExtras();
-				friend = friendsList.get(bundle.getInt("index"));
-				
-				if (friend.getType().equals("Facebook")) {
-					recipientUri = "fb_" + friend.getId();
-					btnAddContacts.setText(friend.getName() + ": " + friend.getId());
-				}
-				else {
-					recipientUri = "" + friend.getPhoneNumber();
-					btnAddContacts.setText(friend.getName() + ": " + friend.getPhoneNumber());
-				}
-				
-				
+				if (bundle.getString("id") != null)
+                {
+                    Friend chosenContact = new Friend();
+                    chosenContact.setId(bundle.getString("id"));
+                    friend = friendsList.get(friendsList.indexOf(chosenContact));
+
+                    if (friend.isFBContact()) {
+                        recipientUri = "fb_" + friend.getId();
+                        btnAddContacts.setText(friend.getName() + ": " + friend.getId());
+                    }
+                    else {
+                        recipientUri = "" + friend.getPaypoint();
+                        btnAddContacts.setText(friend.toString());
+                    }
+                }
+                else
+                {
+                    recipientUri = "" + friend.getPaypoint();
+                    btnAddContacts.setText(friend.toString());
+                }
+
+
 			}
 			else if(requestCode == ADD_MONEY){
 				Bundle bundle = data.getExtras();
@@ -426,19 +436,19 @@ public class RequestPaymentActivity extends BaseActivity {
 
 		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
 		TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
-	
+
 		txtConfirmHeader.setText("Confirm Your Request");
 		txtConfirmBody.setText(
-				String.format("To confirm your request for %s from %s, swipe you pin below.", 
+				String.format("To confirm your request for %s from %s, swipe you pin below.",
 						txtAmount.getText(), friend.getName()));
-		
+
 		Button btnCancel = (Button) d.findViewById(R.id.btnCancelSendMoney);
 		btnCancel.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
 		        d.dismiss();
 		    }
 		});
-	    
+
 		final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
 		ctrlSecurityPin.invalidate();
 		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
@@ -447,14 +457,14 @@ public class RequestPaymentActivity extends BaseActivity {
 				passcode = ctrlSecurityPin.getPasscode();
 
 				if (passcode.length() > 3) {
-					
+
 					amount = Double.parseDouble(txtAmount.getText().toString()
 							.replaceAll("[$,]*", ""));
 					comments = txtComments.getText().toString();
 					passcode = ctrlSecurityPin.getPasscode();
 
 					d.dismiss();
-					
+
 					showDialog(SUBMITREQUEST_DIALOG);
 				} else
 					showDialog(INVALIDPASSCODELENGTH_DIALOG);
@@ -465,7 +475,7 @@ public class RequestPaymentActivity extends BaseActivity {
 	}
 
 	protected void SubmitRequest() {
-		
+
 		PaymentRequest paymentRequest = new PaymentRequest();
 		paymentRequest.SenderAccountId = prefs.getString("paymentAccountId", "");
 		paymentRequest.SenderUri = prefs.getString("login", "");
@@ -473,7 +483,7 @@ public class RequestPaymentActivity extends BaseActivity {
 		paymentRequest.Amount = amount;
 		paymentRequest.Comments = comments;
 		paymentRequest.SecurityPin = passcode;
-		
+
 		if (location != null) {
 			paymentRequest.Latitude = location.getLatitude();
 			paymentRequest.Longitude = location.getLongitude();
@@ -481,7 +491,7 @@ public class RequestPaymentActivity extends BaseActivity {
 
 		paymentResponse = PaymentServices.requestMoney(paymentRequest);
 	}
-	
+
 	/** Determines whether one Location reading is better than the current Location fix
 	 * @param location  The new Location that you want to evaluate
 	 * @param currentBestLocation  The current Location fix, to which you want to compare the new one

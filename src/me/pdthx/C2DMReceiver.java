@@ -13,11 +13,11 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class C2DMReceiver extends BroadcastReceiver {
-	
+
 	private String userId = "";
 	private String registrationId = "";
 	private String deviceToken = "";
-	
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")) {
@@ -26,8 +26,8 @@ public class C2DMReceiver extends BroadcastReceiver {
 	        handleMessage(context, intent);
 	    }
 	}
-	
-	public void createNotification(Context context, String notificationTitleText, String userId, String transactionId) {
+
+	public void createNotification(Context context, String notificationTitleText, String mUserId, String transactionId) {
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		Notification notification = new Notification(R.drawable.icon,
@@ -36,7 +36,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
 		Intent intent = new Intent(context, PaystreamActivity.class);
-	    intent.putExtra("userId", userId);
+	    intent.putExtra("userId", mUserId);
 	    intent.putExtra("transactionId", transactionId);
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
 				intent, 0);
@@ -49,18 +49,18 @@ public class C2DMReceiver extends BroadcastReceiver {
 	private void handleMessage(Context context, Intent intent) {
 		String notificationString = intent.getExtras().getString("notificationString");
 	    String transactionId = intent.getExtras().getString("transactionId");
-	    String userId = intent.getExtras().getString("userId");
-	    createNotification(context, notificationString, userId, transactionId);
-	    
+	    String mUserId = intent.getExtras().getString("userId");
+	    createNotification(context, notificationString, mUserId, transactionId);
+
 	}
 
 	private void handleRegistration(Context context, Intent intent) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		registrationId = intent.getExtras().getString("registration_id");		
+		registrationId = intent.getExtras().getString("registration_id");
 		Log.d("Registration Got back from Google", registrationId);
 		deviceToken = prefs.getString("deviceToken", "");
 		userId = prefs.getString("userId", "");
-		
+
 		Thread thread = new Thread(new Runnable() {
 
 			@Override
@@ -76,10 +76,10 @@ public class C2DMReceiver extends BroadcastReceiver {
 					e.printStackTrace();
 				}
 			}
-			
+
 		});
 		thread.start();
-		
+
 		//TODO Send this information to the server.
 	}
 

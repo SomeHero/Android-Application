@@ -62,7 +62,7 @@ OnCheckedChangeListener {
 		System.out.println(prefs.getString("mobileNumber", ""));
 
 		if (prefs.getString("userId", "").length() == 0) {
-			startActivityForResult(new Intent(this, SignInActivity.class), 1);
+			logout();
 		} else {
 			showPaystreamController();
 			Bundle extras = getIntent().getExtras();
@@ -139,7 +139,7 @@ OnCheckedChangeListener {
 				int currentLength = current.length();
 
 				for (int x = 0; x < transactionsList.size(); x++) {
-					String recipient = transactionsList.get(x).getRecipientUri()						
+					String recipient = transactionsList.get(x).getRecipientUri()
 							.toString();
 
 					if (recipient.length() > currentLength) {
@@ -168,12 +168,12 @@ OnCheckedChangeListener {
 					for (int j = 0; j < transactionsList.size(); j++)
 					{
 						if(tempList.get(j).getRecipientUri().equals(searched.get(i)))
-						{															
-							m_transactions.add(tempList.get(j));					
+						{
+							m_transactions.add(tempList.get(j));
 							break;
 						}
 					}
-				}				
+				}
 				if(searchBar.getText().toString().length() == 0)
 				{
 					m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item,
@@ -197,7 +197,7 @@ OnCheckedChangeListener {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
-					int count) 
+					int count)
 			{
 
 
@@ -261,7 +261,7 @@ OnCheckedChangeListener {
 			String currentHeader = "";
 			for (Iterator<PaystreamResponse> i = messages.iterator(); i
 					.hasNext();) {
-				PaystreamResponse currentTransaction = (PaystreamResponse) i
+				PaystreamResponse currentTransaction = i
 						.next();
 
 				PaystreamTransaction o1 = new PaystreamTransaction();
@@ -323,7 +323,7 @@ OnCheckedChangeListener {
 			String currentHeader = "";
 			for (Iterator<PaystreamResponse> i = messages.iterator(); i
 					.hasNext();) {
-				PaystreamResponse currentTransaction = (PaystreamResponse) i
+				PaystreamResponse currentTransaction = i
 						.next();
 				if (currentTransaction.MessageType.equalsIgnoreCase("Payment")
 						&& currentTransaction.Direction.equalsIgnoreCase("Out")) {
@@ -387,7 +387,7 @@ OnCheckedChangeListener {
 			String currentHeader = "";
 			for (Iterator<PaystreamResponse> i = messages.iterator(); i
 					.hasNext();) {
-				PaystreamResponse currentTransaction = (PaystreamResponse) i
+				PaystreamResponse currentTransaction = i
 						.next();
 
 				if (currentTransaction.MessageType.equalsIgnoreCase("Payment")
@@ -452,7 +452,7 @@ OnCheckedChangeListener {
 			String currentHeader = "";
 			for (Iterator<PaystreamResponse> i = messages.iterator(); i
 					.hasNext();) {
-				PaystreamResponse currentTransaction = (PaystreamResponse) i
+				PaystreamResponse currentTransaction = i
 						.next();
 
 				if (!currentTransaction.MessageType.equalsIgnoreCase("Payment")) {
