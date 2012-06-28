@@ -3,7 +3,6 @@ package me.pdthx.Accounts;
 import java.util.ArrayList;
 
 import me.pdthx.BaseActivity;
-import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
 import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
@@ -16,7 +15,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,15 +26,16 @@ import android.widget.TextView;
 
 public class EnterAnswerActivity extends BaseActivity{
 	private Activity parent = null;
-	
+
 	private String nameOnAccount;
 	private String routingNumber;
 	private String accountNumber;
 	private String accountType;
 	private String questions[];
 	private String passcode;
+	private String nickname;
 	private int currentId;
-	
+
 	final private int USERDATA_FAILED = 2;
 	final private int SETUPACHACCOUNT_FAILED = 3;
 	final private int USERREGISTRATION_FAILED = 4;
@@ -52,18 +51,18 @@ public class EnterAnswerActivity extends BaseActivity{
 		super.onCreate(savedInstanceState);
 		parent = this;
 		setContentView(R.layout.create_security_question);
-		
+
 		TextView header = (TextView)findViewById(R.id.setupSecurityQuestionHeader);
 		header.setText("Confirm Security Question");
-		
+
 		TextView body = (TextView)findViewById(R.id.setupSecurityBody);
 		body.setText("Pick your account's security question and enter the answer below in order" +
 				"to confirm your bank account creation.");
-		
+
 		final TextView txtAnswer = (TextView) findViewById(R.id.security_question_selected);
 
 		final WheelView list = (WheelView) findViewById(R.id.security_question_list);
-		
+
 		int curr = 1;
 		final ArrayList<SecurityQuestionResponse> securityQuestions = UserService
 				.getSecurityQuestions();
@@ -101,6 +100,7 @@ public class EnterAnswerActivity extends BaseActivity{
 				accountNumber = extras.getString("accountNumber");
 				accountType = extras.getString("accountType");
 				passcode = extras.getString("securityPin");
+				nickname = extras.getString("nickname");
 
 				achAccountSetupRequest = new ACHAccountSetupRequest();
 				achAccountSetupRequest.AccountNumber = accountNumber;
@@ -109,6 +109,7 @@ public class EnterAnswerActivity extends BaseActivity{
 				achAccountSetupRequest.RoutingNumber = routingNumber;
 				achAccountSetupRequest.SecurityPin = passcode;
 				achAccountSetupRequest.SecurityAnswer = answer;
+				achAccountSetupRequest.Nickname = nickname;
 				achAccountSetupRequest.SecurityQuestionId = currentId;
 				achAccountSetupRequest.UserId = prefs.getString("userId", "");
 
@@ -263,8 +264,8 @@ public class EnterAnswerActivity extends BaseActivity{
 
 	};
 
-	
-	
+
+
 }
 
 /**

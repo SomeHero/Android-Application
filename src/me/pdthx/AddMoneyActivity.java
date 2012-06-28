@@ -60,7 +60,7 @@ public class AddMoneyActivity extends BaseActivity {
 				current = formatted;
 				amount.setText(formatted);
 				amount.setSelection(formatted.length());
-				
+
 				amount.addTextChangedListener(this);
 			}
 		}
@@ -95,7 +95,7 @@ public class AddMoneyActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				Intent data = new Intent();
-				data.putExtra("index", "1");
+				data.putExtra("index", "1.00");
 
 				setResult(RESULT_OK, data);
 				finish();
@@ -106,7 +106,7 @@ public class AddMoneyActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				Intent data = new Intent();
-				data.putExtra("index", "5");
+				data.putExtra("index", "5.00");
 
 				setResult(RESULT_OK, data);
 				finish();
@@ -117,7 +117,7 @@ public class AddMoneyActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				Intent data = new Intent();
-				data.putExtra("index", "10");
+				data.putExtra("index", "10.00");
 
 				setResult(RESULT_OK, data);
 				finish();
@@ -128,7 +128,7 @@ public class AddMoneyActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				Intent data = new Intent();
-				data.putExtra("index", "20");
+				data.putExtra("index", "20.00");
 
 				setResult(RESULT_OK, data);
 				finish();

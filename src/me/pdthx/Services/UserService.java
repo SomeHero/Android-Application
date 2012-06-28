@@ -2,10 +2,7 @@ package me.pdthx.Services;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
-
 import me.pdthx.Models.MeCodeModel;
 import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Requests.UserChangeSecurityPinRequest;
@@ -18,7 +15,6 @@ import me.pdthx.Requests.UserRequest;
 import me.pdthx.Requests.SecurityPinSetupRequest;
 import me.pdthx.Requests.UserSignInRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
-import me.pdthx.Responses.PaystreamResponse;
 import me.pdthx.Responses.Response;
 import me.pdthx.Responses.SecurityQuestionResponse;
 import me.pdthx.Responses.UserMeCodeResponse;
@@ -140,7 +136,6 @@ public class UserService {
 				e.printStackTrace();
 			}
 		}
-
 		return userResponse;
 	}
 
@@ -222,6 +217,8 @@ public class UserService {
 							.getString("paymentAccountId");
 					userSignInResponse.UpperLimit = jsonResult
 							.getInt("upperLimit");
+					userSignInResponse.hasACHAccount = jsonResult
+					    .getBoolean("hasACHAccount");
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -316,6 +313,8 @@ public class UserService {
 							.getBoolean("hasSecurityPin");
 					userSignInResponse.PaymentAccountId = jsonResult
 							.getString("paymentAccountId");
+					userSignInResponse.hasACHAccount = jsonResult
+                        .getBoolean("hasACHAccount");
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

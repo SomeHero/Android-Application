@@ -186,6 +186,7 @@ public class SignInUIActivity extends BaseActivity {
                     editor.putBoolean("setupSecurityPin",
                         userSignInResponse.SetupSecurityPin);
                     editor.putInt("upperLimit", userSignInResponse.UpperLimit);
+                    editor.putBoolean("hasACHAccount", userSignInResponse.hasACHAccount);
 
                     if (signedInViaFacebook) {
                         editor.putString("login", "fb_" + login);

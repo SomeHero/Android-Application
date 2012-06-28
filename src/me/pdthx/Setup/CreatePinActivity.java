@@ -5,14 +5,10 @@ import me.pdthx.R;
 import me.pdthx.CustomViews.CustomLockView;
 import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
-import me.pdthx.Responses.UserRegistrationResponse;
-import me.pdthx.Services.UserService;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,11 +24,13 @@ public class CreatePinActivity extends BaseActivity {
 	final private int USERSECURITYPIN_INVALIDLENGTH = 5;
 	protected ACHAccountSetupRequest achAccountSetupRequest;
 	protected ACHAccountSetupResponse achAccountSetupResponse;
-	
+
 	private String nameOnAccount;
 	private String routingNumber;
 	private String accountNumber;
 	private String accountType;
+	private String nickname;
+	private int tab;
 
 	private Activity parent = null;
 
@@ -41,7 +39,7 @@ public class CreatePinActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.setup_security_controller);
-		
+
 		Button btnSetupSecurityPin = (Button)findViewById(R.id.btnSetupSecurityPin);
 		btnSetupSecurityPin.setOnClickListener(new OnClickListener(){
 
@@ -49,21 +47,23 @@ public class CreatePinActivity extends BaseActivity {
 			public void onClick(View arg0) {
 				showPinController();
 			}
-			
+
 		});
 	}
-	
+
 	public void showPinController()
 	{
 		setContentView(R.layout.setup_security_dialog);
 		parent = this;
-				
+
 		Bundle extras = getIntent().getExtras();
 		nameOnAccount = extras.getString("nameOnAccount");
 		routingNumber = extras.getString("routingNumber");
 		accountNumber = extras.getString("accountNumber");
 		accountType = extras.getString("accountType");
-		
+		nickname = extras.getString("nickname");
+		tab = extras.getInt("tab");
+
 		final CustomLockView ctrlSecurityPin = (CustomLockView)findViewById(R.id.ctrlSecurityPin);
 		ctrlSecurityPin.invalidate();
 		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
@@ -79,7 +79,9 @@ public class CreatePinActivity extends BaseActivity {
 					confirmAcct.putExtra("accountNumber", accountNumber);
 					confirmAcct.putExtra("accountType", accountType);
 					confirmAcct.putExtra("securityPin", passcode);
-					
+					confirmAcct.putExtra("nickname", nickname);
+					confirmAcct.putExtra("tab", tab);
+
 					finish();
 					startActivity(confirmAcct);
 				} else
@@ -115,7 +117,7 @@ public class CreatePinActivity extends BaseActivity {
 
 				alertDialog.show();
 				break;
-				
+
 			case (USERSECURITYPIN_INVALIDLENGTH):
 				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("Invalid Length");
@@ -156,24 +158,24 @@ public class CreatePinActivity extends BaseActivity {
 	/*
 	 * progressDialog.setMessage("Setting up ACH Account..."); progressDialog
 	 * .setProgressStyle(ProgressDialog.STYLE_SPINNER); progressDialog.show();
-	 * 
+	 *
 	 * Thread thread = new Thread(new Runnable() {
-	 * 
+	 *
 	 * @Override public void run() { // TODO Auto-generated method stub try {
 	 * response = UserService.setupACHAccount(request); } catch (Exception e) {
 	 * e.printStackTrace(); } progressDialog.dismiss();
-	 * 
+	 *
 	 * if (response.Success) { Editor editor = prefs.edit();
-	 * 
+	 *
 	 * editor.putString("paymentAccountId", response.PaymentAccountId);
 	 * editor.commit();
-	 * 
+	 *
 	 * setResult(RESULT_OK); finish();
-	 * 
+	 *
 	 * startActivity(new Intent( getApplicationContext(),
 	 * CreatePinActivity.class)); } else { achSetupHandler
 	 * .sendEmptyMessage(SETUPACHACCOUNT_FAILED); } }
-	 * 
+	 *
 	 * }); thread.start();
 	 */
 }
