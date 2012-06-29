@@ -12,6 +12,8 @@ import org.json.JSONObject;
 
 import me.pdthx.Login.TabUIActivity;
 import me.pdthx.Models.Friend;
+import me.pdthx.Settings.SettingsActivity;
+
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.Facebook.DialogListener;
@@ -271,7 +273,7 @@ public class BaseActivity extends Activity {
 			break;
 		case R.id.profileMenuItem:
 
-			startActivity(new Intent(this, ProfileSetupActivity.class));
+			startActivity(new Intent(this, SettingsActivity.class));
 			break;
 		}
 

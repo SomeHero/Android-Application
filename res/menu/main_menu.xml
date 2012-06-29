@@ -8,7 +8,7 @@
         </item>
         <item
             android:id="@+id/profileMenuItem"
-            android:title="View Profile">
+            android:title="Settings">
         </item>
     </group>
 

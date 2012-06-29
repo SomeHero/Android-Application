@@ -27,6 +27,6 @@
         android:background="@drawable/blue_button_selector"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:text="button title" />
+        android:text="OK" />
 
 </LinearLayout>
