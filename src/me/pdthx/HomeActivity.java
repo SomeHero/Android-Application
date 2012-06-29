@@ -8,6 +8,7 @@ import java.text.NumberFormat;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Responses.UserResponse;
 import me.pdthx.Services.UserService;
+import me.pdthx.Settings.SettingsActivity;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -256,6 +257,16 @@ public final class HomeActivity extends BaseActivity {
 			 * 
 			 * switchTabInActivity(2); } });
 			 */
+			
+			Button navSettings = (Button)findViewById(R.id.homeNavBtn);
+			navSettings.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View arg0) {
+					startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+				}
+				
+			});
 		}
 	}
 }

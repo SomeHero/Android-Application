@@ -31,17 +31,6 @@
             android:textColor="#575757"
             android:textSize="20dp"
             android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/profileSettingsBtn"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/nav_setting_btn"
-            android:text=" " />
     </RelativeLayout>
 
     <LinearLayout
@@ -53,7 +42,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:fadingEdge="none"
+        android:scrollbars="none" >
+"
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -374,10 +366,10 @@
                             android:id="@+id/profile_facebookBtn"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
+                            android:layout_margin="9dp"
                             android:clickable="true"
                             android:gravity="center"
-                            android:paddingBottom="1px" >
+                            android:paddingBottom="2px" >
 
                             <ImageView
                                 android:id="@+id/facebookPicProfile"
@@ -413,10 +405,10 @@
                             android:id="@+id/profile_twitterBtn"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
+                            android:layout_margin="9dp"
                             android:clickable="true"
                             android:gravity="center"
-                            android:paddingBottom="1px" >
+                            android:paddingBottom="2px" >
 
                             <ImageView
                                 android:id="@+id/twitterPicProfile"
@@ -475,6 +467,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="1px"
+                            android:layout_marginBottom="5dp"
                             android:background="#C2C2C2"
                             android:orientation="vertical" >
                         </LinearLayout>
@@ -482,18 +475,18 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
                             android:gravity="right" >
-
-                            <Button
+
+                            <ToggleButton
                                 android:id="@+id/makePublicProfileBtn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="10dp"
-                                android:background="@drawable/txtbox"
-                                android:text="Make Public"
-                                android:textColor="#4D4D4D"
-                                android:textSize="10dp" />
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginRight="15dp"
+                                android:background="@drawable/toggle_btn_selector"
+                                android:textOff=" "
+                                android:textOn=" " />
+
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
