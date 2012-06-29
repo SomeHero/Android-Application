@@ -20,16 +20,14 @@ import me.pdthx.Responses.ACHAccountSetupResponse;
 import me.pdthx.Services.UserService;
 
 public class ACHAccountSetupActivity extends BaseActivity implements
-OnCheckedChangeListener{
+    OnCheckedChangeListener{
 
 	final private int SETUPACHACCOUNT_FAILED = 3;
 	final private int USERREGISTRATION_ACHNUMBERMISMATCH = 8;
 	private Button btnEnablePayments;
 	private Button btnACHRemindMeLater;
-	private Button btnRemoveAcct;
 	private ACHAccountSetupRequest request;
 	private ACHAccountSetupResponse response;
-
 	private boolean isCheckingAcct;
 
 	@Override
@@ -139,7 +137,7 @@ OnCheckedChangeListener{
 							.toString().trim();
 					request.AccountNumber = txtAccountNumber.getText()
 							.toString().trim();
-					request.AccountType = "Savings";
+					request.AccountType = isCheckingAcct ? "Checking" : "Savings";
 
 					progressDialog.setMessage("Setting up ACH Account...");
 					progressDialog

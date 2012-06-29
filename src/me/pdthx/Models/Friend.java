@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 
 public class Friend implements Comparable<Friend> {
     private String name = "";
+    private String firstName = "";
+    private String lastName = "";
     private String id = "";
     private boolean fbContact = false;
     private String paypoint = "";
@@ -26,6 +28,9 @@ public class Friend implements Comparable<Friend> {
     }
 
     public void setName(String name) {
+        String[] names = NameSeparator.separateName(name);
+        firstName = names[0];
+        lastName = names[1];
         this.name = name;
     }
 
@@ -71,9 +76,6 @@ public class Friend implements Comparable<Friend> {
 
     public boolean masterSearch(String s) {
         String search = s.trim().toLowerCase();
-        String[] names = NameSeparator.separateName(name);
-        String firstName = names[0].toLowerCase();
-        String lastName = names[1].toLowerCase();
 
         if (search.contains(" "))
         {

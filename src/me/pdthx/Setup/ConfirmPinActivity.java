@@ -1,12 +1,9 @@
 package me.pdthx.Setup;
 
 import me.pdthx.BaseActivity;
-import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
 import me.pdthx.CustomViews.CustomLockView;
-import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Requests.SecurityPinSetupRequest;
-import me.pdthx.Responses.ACHAccountSetupResponse;
 import me.pdthx.Responses.Response;
 import me.pdthx.Services.UserService;
 import android.app.Activity;
@@ -41,6 +38,7 @@ public class ConfirmPinActivity extends BaseActivity {
 	private String accountType;
 	private String nickname;
 	private String passcode;
+	private int tab;
 	private Activity parent = null;
 
 	// private EditText txtMobileNumber;
@@ -62,8 +60,9 @@ public class ConfirmPinActivity extends BaseActivity {
 		accountType = extras.getString("accountType");
 		passcode = extras.getString("securityPin");
 		nickname = extras.getString("nickname");
-		
-		
+		tab = extras.getInt("tab");
+
+
 		final CustomLockView ctrlSecurityPin = (CustomLockView) findViewById(R.id.ctrlSecurityPin);
 		ctrlSecurityPin.invalidate();
 		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
@@ -105,7 +104,8 @@ public class ConfirmPinActivity extends BaseActivity {
 									createQuestion.putExtra("accountType", accountType);
 									createQuestion.putExtra("securityPin", passcode);
 									createQuestion.putExtra("nickname", nickname);
-									
+									createQuestion.putExtra("tab", tab);
+
 									setResult(RESULT_OK);
 									finish();
 									startActivity(createQuestion);
@@ -256,24 +256,24 @@ public class ConfirmPinActivity extends BaseActivity {
 	/*
 	 * progressDialog.setMessage("Setting up ACH Account..."); progressDialog
 	 * .setProgressStyle(ProgressDialog.STYLE_SPINNER); progressDialog.show();
-	 * 
+	 *
 	 * Thread thread = new Thread(new Runnable() {
-	 * 
+	 *
 	 * @Override public void run() { // TODO Auto-generated method stub try {
 	 * response = UserService.setupACHAccount(request); } catch (Exception e) {
 	 * e.printStackTrace(); } progressDialog.dismiss();
-	 * 
+	 *
 	 * if (response.Success) { Editor editor = prefs.edit();
-	 * 
+	 *
 	 * editor.putString("paymentAccountId", response.PaymentAccountId);
 	 * editor.commit();
-	 * 
+	 *
 	 * setResult(RESULT_OK); finish();
-	 * 
+	 *
 	 * startActivity(new Intent( getApplicationContext(),
 	 * CreatePinActivity.class)); } else { achSetupHandler
 	 * .sendEmptyMessage(SETUPACHACCOUNT_FAILED); } }
-	 * 
+	 *
 	 * }); thread.start();
 	 */
 }

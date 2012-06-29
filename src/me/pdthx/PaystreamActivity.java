@@ -1,6 +1,5 @@
 package me.pdthx;
 
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,7 +21,6 @@ import me.pdthx.Services.PaystreamService;
 import me.pdthx.Services.UserService;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -34,7 +32,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -159,11 +156,11 @@ public final class PaystreamActivity extends BaseActivity implements
 					}
 					if (searched.size() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, m_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}
-				} 
+				}
 				else if (checked == 2131165311) {
 					searched.clear();
 					for (int x = 0; x < send_transactions.size(); x++)
@@ -175,10 +172,10 @@ public final class PaystreamActivity extends BaseActivity implements
 						}
 					}
 
-					
+
 					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, send_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}
@@ -194,10 +191,10 @@ public final class PaystreamActivity extends BaseActivity implements
 						}
 					}
 
-					
+
 					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, recieve_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}
@@ -212,10 +209,10 @@ public final class PaystreamActivity extends BaseActivity implements
 						}
 					}
 
-					
+
 					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, other_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}

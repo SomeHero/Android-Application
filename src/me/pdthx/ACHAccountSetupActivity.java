@@ -32,6 +32,8 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 	private Button btnBack;
 	private RadioGroup btnAcctType;
 	private boolean isCheckingAcct;
+	private int tab;
+
 	private ACHAccountSetupRequest request;
 	private ACHAccountSetupResponse response;
 
@@ -39,11 +41,11 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		tracker.trackPageView("ACHAccountSetUpActivity");
-		progressDialog.dismiss();
-		setContentView(R.layout.setup_achaccount_controller);
 
 		progressDialog.dismiss();
 		setContentView(R.layout.achaccountsetup_controller);
+
+		tab = getIntent().getExtras().getInt("tab");
 
 		btnAddAccount = (Button) findViewById(R.id.btnSubmitACHAccount);
 		btnAddAccount.setText("Add Account");
@@ -55,8 +57,8 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 		btnAcctType = (RadioGroup) findViewById(R.id.achBankCategories);
 		btnAcctType.setOnCheckedChangeListener(this);
 		showSetupACHController();
-		
-		 
+
+
 	}
 
 	Handler achSetupHandler = new Handler() {
@@ -145,13 +147,14 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 						.trim()
 						.equals(((EditText) findViewById(R.id.txtConfirmAccountNumber))
 								.getText().toString().trim())) {
-					
+
 					Intent createPin = new Intent(getApplicationContext(), CreatePinActivity.class);
 					createPin.putExtra("nameOnAccount", txtNameOnAccount.getText().toString().trim());
 					createPin.putExtra("routingNumber", txtRoutingNumber.getText().toString().trim());
 					createPin.putExtra("accountNumber", txtAccountNumber.getText().toString().trim());
 					createPin.putExtra("nickname", txtNickname.getText().toString().trim());
-					
+					createPin.putExtra("tab", tab);
+
 					if(isCheckingAcct)
 					{
 						createPin.putExtra("accountType", "Checking");

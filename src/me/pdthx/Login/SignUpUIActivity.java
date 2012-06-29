@@ -132,29 +132,29 @@ public class SignUpUIActivity extends BaseActivity {
 							progressDialog.dismiss();
 
 							if (response.Success) {
-								
+
 //								Intent data = new Intent();
 //								data.putExtra("email", emailAddress);
 //								data.putExtra("password", password);
 //
 //								setResult(RESULT_OK, data);
 //								finish();
-//								
+//
 //								Intent setUp = new Intent(
 //										getApplicationContext(),
-//										PersonalizeActivity.class); 
+//										PersonalizeActivity.class);
 //								setUp.putExtra("email", emailAddress);
 //								setUp.putExtra("password", password);
 //								startActivity(setUp);
-								
+
 								UserSignInRequest signInRequest = new UserSignInRequest();
 								UserSignInResponse signInResponse;
 								signInRequest.Login = emailAddress;
 								signInRequest.Password = password;
-								
-								
+
+
 								signInResponse = UserService.signInUser(signInRequest);
-								
+
 								if (signInResponse.Success && response.UserId.equals(signInResponse.UserId)) {
 									Editor editor = prefs.edit();
 									editor.putString("userId", signInResponse.UserId);
@@ -165,6 +165,7 @@ public class SignUpUIActivity extends BaseActivity {
 									editor.putBoolean("setupSecurityPin",
 											signInResponse.SetupSecurityPin);
 									editor.putInt("upperLimit", signInResponse.UpperLimit);
+									editor.putBoolean("hasACHAccount", signInResponse.hasACHAccount);
 
 //									if (signedInViaFacebook) {
 //										editor.putString("login", "fb_" + login);
@@ -176,7 +177,7 @@ public class SignUpUIActivity extends BaseActivity {
 									finish();
 									Intent setUp = new Intent(
 											getApplicationContext(),
-											PersonalizeActivity.class); 
+											PersonalizeActivity.class);
 									startActivity(setUp);
 								}
 								else
@@ -184,7 +185,7 @@ public class SignUpUIActivity extends BaseActivity {
 									signUpHandler
 									.sendEmptyMessage(USERREGISTRATION_FAILED);
 								}
-								
+
 
 								// signUpHandler.sendEmptyMessage(R.id.USERREGISTRATION_COMPLETE);
 							} else {

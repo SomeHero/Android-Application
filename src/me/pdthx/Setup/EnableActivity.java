@@ -4,11 +4,8 @@ import me.pdthx.ACHAccountSetupActivity;
 import me.pdthx.BaseActivity;
 import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,7 +29,7 @@ public class EnableActivity extends BaseActivity {
 
 	private void setupEnable() {
 		setContentView(R.layout.enable_payments);
-		
+
 		userName = (TextView) findViewById(R.id.enable_username);
 		amountWaiting = (TextView) findViewById(R.id.enable_amountWaiting);
 		incomingPaymentUserImg = (ImageView) findViewById(R.id.enable_incoming_UserImg);
