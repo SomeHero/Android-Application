@@ -1,8 +1,8 @@
 package me.pdthx.Setup;
 
+import android.content.SharedPreferences.Editor;
+import android.util.Log;
 import java.util.ArrayList;
-import java.util.Calendar;
-
 import me.pdthx.BaseActivity;
 import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
@@ -17,16 +17,13 @@ import me.pdthx.Widget.Adapters.ArrayWheelAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,7 +37,9 @@ public class CreateQuestionActivity extends BaseActivity {
 	private String accountType;
 	private String questions[];
 	private String passcode;
-	private int currentId;
+	private int currentId = 1;
+	private String errorMessage;
+	private int tab;
 
 	private Activity parent = null;
 
@@ -65,11 +64,12 @@ public class CreateQuestionActivity extends BaseActivity {
 
 		final WheelView list = (WheelView) findViewById(R.id.security_question_list);
 
-		int curr = 1;
+		int curr = 0;
 		final ArrayList<SecurityQuestionResponse> securityQuestions = UserService
 				.getSecurityQuestions();
 		questions = new String[securityQuestions.size()];
 		for (int i = 0; i < securityQuestions.size(); i++) {
+		    Log.d("Adding security question: " + i, securityQuestions.get(i).Question);
 			questions[i] = securityQuestions.get(i).Question;
 		}
 		ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this,
@@ -83,7 +83,7 @@ public class CreateQuestionActivity extends BaseActivity {
 			@Override
 			public void onChanged(WheelView wheel, int oldValue, int newValue) {
 				txtAnswer.setText(questions[newValue]);
-				currentId = newValue;
+				currentId = newValue + 1;
 			}
 
 		});
@@ -103,6 +103,7 @@ public class CreateQuestionActivity extends BaseActivity {
 				accountType = extras.getString("accountType");
 				passcode = extras.getString("securityPin");
 				nickname = extras.getString("nickname");
+				tab = extras.getInt("tab");
 
 				achAccountSetupRequest = new ACHAccountSetupRequest();
 				achAccountSetupRequest.AccountNumber = accountNumber;
@@ -133,11 +134,21 @@ public class CreateQuestionActivity extends BaseActivity {
 						progressDialog.dismiss();
 
 						if (achAccountSetupResponse.Success) {
+
+						    Editor edit = prefs.edit();
+						    edit.putBoolean("hasACHAccount", true);
+						    edit.putString("paymentAccountId", achAccountSetupResponse.PaymentAccountId);
+						    edit.commit();
+
 							setResult(RESULT_OK);
 							finish();
-							startActivity(new Intent(getApplicationContext(),
-									CustomTabActivity.class));
+
+							Intent intent = new Intent(getApplicationContext(),
+                                CustomTabActivity.class);
+							intent.putExtra("tab", tab);
+							startActivity(intent);
 						} else {
+						    errorMessage = achAccountSetupResponse.ReasonPhrase;
 							signUpHandler.sendEmptyMessage(USERDATA_FAILED);
 						}
 					}
@@ -157,7 +168,7 @@ public class CreateQuestionActivity extends BaseActivity {
 			case (USERDATA_FAILED):
 				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("Setup Failed");
-				alertDialog.setMessage("There was an error sending the data.");
+				alertDialog.setMessage(errorMessage);
 				alertDialog.setButton("OK",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
