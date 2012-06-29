@@ -1,6 +1,5 @@
 package me.pdthx;
 
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,12 +48,12 @@ public final class HomeActivity extends BaseActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			showHomeController();
-		}
-		else {
+		} else {
 			finish();
 		}
 	}
-	public void switchTabInActivity(int indexTabToSwitchTo){
+
+	public void switchTabInActivity(int indexTabToSwitchTo) {
 		CustomTabActivity ParentActivity;
 		ParentActivity = (CustomTabActivity) this.getParent();
 		ParentActivity.switchTab(indexTabToSwitchTo);
@@ -116,7 +115,6 @@ public final class HomeActivity extends BaseActivity {
 //        }, new IntentFilter(DELIVERED));
 //	}
 
-
 	private void showHomeController() {
 		userId = prefs.getString("userId", "");
 
@@ -151,12 +149,11 @@ public final class HomeActivity extends BaseActivity {
     	        }
 			}*/
 
-
 			Editor editor = prefs.edit();
 			editor.putInt("upperLimit", userResponse.UpperLimit);
 
-			if (userResponse.UserName != null &&
-					userResponse.UserName.contains("fb_")) {
+			if (userResponse.UserName != null
+					&& userResponse.UserName.contains("fb_")) {
 				editor.putBoolean("signedInViaFacebook", true);
 			}
 			editor.commit();
@@ -173,8 +170,7 @@ public final class HomeActivity extends BaseActivity {
 								.openConnection().getInputStream());
 						imgUserName.setImageBitmap(mIcon);
 					} else {
-						imgUserName
-								.setImageResource(R.drawable.avatar_unknown);
+						imgUserName.setImageResource(R.drawable.avatar_unknown);
 					}
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
@@ -207,9 +203,7 @@ public final class HomeActivity extends BaseActivity {
 			if(!userResponse.EmailAddress.equals("null"))
 			{
 				txtEmail.setText(userResponse.EmailAddress);
-			}
-			else
-			{
+			} else {
 				txtEmail.setText(" ");
 			}
 
@@ -230,28 +224,50 @@ public final class HomeActivity extends BaseActivity {
 				}
 			});
 			/*NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-
-			TextView txtTotalMoneySent = (TextView)findViewById(R.id.txtTotalMoneySent);
-			txtTotalMoneySent.setText(currencyFormatter.format(userResponse.TotalMoneySent));
-
-			TextView txtTotalMoneyReceived = (TextView)findViewById(R.id.txtTotalMoneyReceived);
-			txtTotalMoneyReceived.setText(currencyFormatter.format(userResponse.TotalMoneyReceived));
-
-			Button btnSendMoney = (Button)findViewById(R.id.btnQuickLinkSent);
+			Button btnSendMoney = (Button) findViewById(R.id.home_sendmoneyBtn);
 			btnSendMoney.setOnClickListener(new OnClickListener() {
 				public void onClick(View argO) {
 
 					switchTabInActivity(1);
 				}
 			});
-			Button btnRequestMoney = (Button)findViewById(R.id.btnQuickLinkRequest);
+
+			Button btnRequestMoney = (Button) findViewById(R.id.home_requestmoneyBtn);
 
 			btnRequestMoney.setOnClickListener(new OnClickListener() {
 				public void onClick(View argO) {
 
 					switchTabInActivity(2);
 				}
-			});*/
+			});
+			/*
+			 * NumberFormat currencyFormatter =
+			 * NumberFormat.getCurrencyInstance();
+			 *
+			 * TextView txtTotalMoneySent =
+			 * (TextView)findViewById(R.id.txtTotalMoneySent);
+			 * txtTotalMoneySent.
+			 * setText(currencyFormatter.format(userResponse.TotalMoneySent));
+			 *
+			 * TextView txtTotalMoneyReceived =
+			 * (TextView)findViewById(R.id.txtTotalMoneyReceived);
+			 * txtTotalMoneyReceived
+			 * .setText(currencyFormatter.format(userResponse
+			 * .TotalMoneyReceived));
+			 *
+			 * Button btnSendMoney =
+			 * (Button)findViewById(R.id.btnQuickLinkSent);
+			 * btnSendMoney.setOnClickListener(new OnClickListener() { public
+			 * void onClick(View argO) {
+			 *
+			 * switchTabInActivity(1); } }); Button btnRequestMoney =
+			 * (Button)findViewById(R.id.btnQuickLinkRequest);
+			 *
+			 * btnRequestMoney.setOnClickListener(new OnClickListener() { public
+			 * void onClick(View argO) {
+			 *
+			 * switchTabInActivity(2); } });
+			 */
 		}
 	}
 }

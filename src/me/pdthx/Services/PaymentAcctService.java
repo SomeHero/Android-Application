@@ -34,7 +34,7 @@ public class PaymentAcctService {
 	private static final String UPDATEORDELETEACCT = "/paymentaccounts/%s"; // /api/users/{userId}
 	private static final String USER_URL = "/Users/";
 	private static final String PREFERREDSEND_URL = "/Users/%s/paymentaccounts/set_preferred_send_account";
-	private static final String PREFERREDRECEIVE_URL = "/User/%s/paymentaccounts/set_preferred_receive_account";
+	private static final String PREFERREDRECEIVE_URL = "/Users/%s/paymentaccounts/set_preferred_receive_account";
 
 	public static ArrayList<ACHAccountResponse> getAccounts(
 			UserSignInResponse userInfo) {
@@ -288,24 +288,8 @@ public class PaymentAcctService {
 				e.printStackTrace();
 			}
 
-			JSONObject jsonResult = null;
-			try {
-				jsonResult = new JSONObject(result);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
 			if (response.getStatusLine().getStatusCode() == 200) {
-				try {
-					achAccountResponse.Success = true;
-					achAccountResponse.BankId = jsonResult
-							.getString("paymentAccountId");
-
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				achAccountResponse.Success = true;
 			} else {
 				achAccountResponse.Success = false;
 				achAccountResponse.ReasonPhrase = response.getStatusLine()
