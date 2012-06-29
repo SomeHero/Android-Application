@@ -160,7 +160,7 @@ public final class HomeActivity extends BaseActivity {
 
 			setContentView(R.layout.homescreen);
 
-			ImageView imgUserName =  (ImageView)findViewById(R.id.home_userImg);
+			ImageView imgUserName = (ImageView) findViewById(R.id.home_userImg);
 			if (imgUserName != null) {
 				URL url;
 				try {
@@ -224,6 +224,7 @@ public final class HomeActivity extends BaseActivity {
 				}
 			});
 			/*NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+
 			Button btnSendMoney = (Button) findViewById(R.id.home_sendmoneyBtn);
 			btnSendMoney.setOnClickListener(new OnClickListener() {
 				public void onClick(View argO) {
@@ -243,22 +244,35 @@ public final class HomeActivity extends BaseActivity {
 			/*
 			 * NumberFormat currencyFormatter =
 			 * NumberFormat.getCurrencyInstance();
+<<<<<<< HEAD
 			 *
+=======
+			 *
+>>>>>>> 8b0d758dfc94f90184323cbdbf36649c639afdd3
 			 * TextView txtTotalMoneySent =
 			 * (TextView)findViewById(R.id.txtTotalMoneySent);
 			 * txtTotalMoneySent.
 			 * setText(currencyFormatter.format(userResponse.TotalMoneySent));
+<<<<<<< HEAD
 			 *
+=======
+			 *
+>>>>>>> 8b0d758dfc94f90184323cbdbf36649c639afdd3
 			 * TextView txtTotalMoneyReceived =
 			 * (TextView)findViewById(R.id.txtTotalMoneyReceived);
 			 * txtTotalMoneyReceived
 			 * .setText(currencyFormatter.format(userResponse
 			 * .TotalMoneyReceived));
+<<<<<<< HEAD
 			 *
+=======
+			 *
+>>>>>>> 8b0d758dfc94f90184323cbdbf36649c639afdd3
 			 * Button btnSendMoney =
 			 * (Button)findViewById(R.id.btnQuickLinkSent);
 			 * btnSendMoney.setOnClickListener(new OnClickListener() { public
 			 * void onClick(View argO) {
+<<<<<<< HEAD
 			 *
 			 * switchTabInActivity(1); } }); Button btnRequestMoney =
 			 * (Button)findViewById(R.id.btnQuickLinkRequest);
@@ -266,6 +280,15 @@ public final class HomeActivity extends BaseActivity {
 			 * btnRequestMoney.setOnClickListener(new OnClickListener() { public
 			 * void onClick(View argO) {
 			 *
+=======
+			 *
+			 * switchTabInActivity(1); } }); Button btnRequestMoney =
+			 * (Button)findViewById(R.id.btnQuickLinkRequest);
+			 *
+			 * btnRequestMoney.setOnClickListener(new OnClickListener() { public
+			 * void onClick(View argO) {
+			 *
+>>>>>>> 8b0d758dfc94f90184323cbdbf36649c639afdd3
 			 * switchTabInActivity(2); } });
 			 */
 		}
