@@ -57,6 +57,7 @@
             <Button
                 android:id="@+id/signin_facebook"
                 android:layout_width="278dp"
+                android:background="@drawable/button_facebook"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"/>
         </LinearLayout>
@@ -136,6 +137,7 @@
                 android:layout_height="60dp"
                 android:text="Sign in with E-mail"
                 android:textColor="#FFFFFF"
+                android:background="@drawable/button_selector"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
