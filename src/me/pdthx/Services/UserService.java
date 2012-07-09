@@ -51,6 +51,7 @@ public class UserService {
 	private static final String REGISTER_URL = "/Users?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String SETUPSECURITYPIN_URL = "/Users/%s/Setup_SecurityPin?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String CHANGESECURITYPIN_URL = "/Users/%s/change_securitypin";
+	private static final String CHANGEPASSWORD_URL = "/Users/%s/change_password";
 	private static final String MECODE_URL = "/Users/%s/mecodes";
 	private static final String PUSHNOTIFICATION_URL = "/Users/%s/RegisterPushNotifications";
 	private static final String USER_URL = "/Users/";
@@ -608,7 +609,7 @@ public class UserService {
 	    try {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost request = new HttpPost(ROOTURL
-                    + String.format(CHANGESECURITYPIN_URL,
+                    + String.format(CHANGEPASSWORD_URL,
                             userChangePasswordRequest.UserId));
 
             JSONObject json = new JSONObject();
