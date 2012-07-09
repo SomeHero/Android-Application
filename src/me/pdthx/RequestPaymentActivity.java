@@ -620,8 +620,4 @@ public class RequestPaymentActivity extends BaseActivity {
         }
         return provider1.equals(provider2);
     }
-
-
-
-
 }

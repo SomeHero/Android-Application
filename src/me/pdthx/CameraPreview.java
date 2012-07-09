@@ -1,6 +1,3 @@
-/**
- * 
- */
 package me.pdthx;
 
 import java.io.IOException;
@@ -17,16 +14,17 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     public CameraPreview(Context context, Camera camera) {
         super(context);
-        mCamera = camera;
+         mCamera = camera;
 
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
         mHolder = getHolder();
         mHolder.addCallback(this);
+        
         // deprecated setting, but required on Android versions prior to 3.0
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
-
+ 
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
@@ -38,7 +36,17 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
+    	if(mCamera != null)
+    	{
+    		mCamera.stopPreview();
+    		mCamera.release();
+    		mCamera = null;
+    	}
         // empty. Take care of releasing the Camera preview in your activity.
+//		mCamera.setPreviewCallback(null);
+//		mCamera.stopPreview();
+//		
+//		mCamera.release();
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
@@ -53,6 +61,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // stop preview before making changes
         try {
             mCamera.stopPreview();
+//            mCamera.release();
         } catch (Exception e){
           // ignore: tried to stop a non-existent preview
         }

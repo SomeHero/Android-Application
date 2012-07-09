@@ -19,19 +19,15 @@
         android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
-    <permission
-        android:name="me.pdthx.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+    
 
-    <uses-permission android:name="me.pdthx.permission.C2D_MESSAGE" />
+    <uses-permission android:name="me.pdthx.permission.C2D_MESSAGE" ><permission android:name="me.pdthx.permission.C2D_MESSAGE" android:protectionLevel="signature" /></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <permission
-        android:name="com.example.myapp.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+    
 
-    <uses-permission android:name="me.pdthx.permission.C2D_MESSAGE" />
+    <uses-permission android:name="me.pdthx.permission.C2D_MESSAGE" ><permission android:name="com.example.myapp.permission.C2D_MESSAGE" android:protectionLevel="signature" /></uses-permission>
 
     <!-- This app has permission to register and receive message -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
