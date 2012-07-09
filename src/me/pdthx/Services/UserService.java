@@ -1,5 +1,6 @@
 package me.pdthx.Services;
 
+import me.pdthx.Requests.UserChangePasswordRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -599,6 +600,48 @@ public class UserService {
 		}
 
 		return changePinResponse;
+	}
+
+	public static Response changePassword(UserChangePasswordRequest userChangePasswordRequest) {
+	    HttpResponse response = null;
+	    Response changePasswordResponse = new Response();
+	    try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost request = new HttpPost(ROOTURL
+                    + String.format(CHANGESECURITYPIN_URL,
+                            userChangePasswordRequest.UserId));
+
+            JSONObject json = new JSONObject();
+            json.put("currentPassword",
+                    userChangePasswordRequest.CurrentPassword);
+            json.put("newPassword", userChangePasswordRequest.NewPassword);
+
+            StringEntity entity = new StringEntity(json.toString());
+            request.setEntity(entity);
+            request.setHeader("content-type", "application/json");
+
+            response = httpClient.execute(request);
+        } catch (ClientProtocolException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        if (response.getStatusLine().getStatusCode() == 200) {
+
+            changePasswordResponse.Success = true;
+        } else {
+            changePasswordResponse.Success = false;
+            changePasswordResponse.ReasonPhrase = response.getStatusLine()
+                    .getReasonPhrase();
+        }
+
+        return changePasswordResponse;
 	}
 
 	public static Response createMeCode(UserMeCodeRequest userMeCodeRequest) {

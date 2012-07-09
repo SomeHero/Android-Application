@@ -38,333 +38,400 @@ import android.widget.TextView;
 
 public class RequestPaymentActivity extends BaseActivity {
 
-	public static final String TAG = "RequestMoneyActivity";
+    public static final String TAG = "RequestMoneyActivity";
 
-	private String recipientUri;
-	private double amount = 0;
-	private String comments = "";
-	private String errorMessage = "";
+    private String recipientUri;
+    private double amount = 0;
+    private String comments = "";
+    private String errorMessage = "";
 
-	private Location location;
-	private LocationManager locationManager;
-	private LocationListener locationListener;
+    private Location location;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
-	private Friend friend;
-	
-	private ImageButton btnCamera;
-	private Button btnAddContacts;
-	private Button txtAmount;
-	private EditText txtComments;
-	private Button btnRequestMoney;
-	private String passcode = "";
+    private Friend friend;
 
-	final private int ADDING_FRIEND = 6;
-	final private int SUBMITREQUEST_DIALOG = 0;
-	final private int NORECIPIENTSPECIFIED_DIALOG = 1;
-	final private int NOAMOUNTSPECIFIED_DIALOG = 2;
-	final private int SUBMITREQUESTFAILED_DIALOG = 3;
-	final private int SUBMITREQUESTSUCCESS_DIALOG = 4;
-	final private int INVALIDPASSCODELENGTH_DIALOG = 5;
-	final private int PAYMENTEXCEEDSLIMIT_DIALOG = 6;
-	final private int ADD_MONEY = 8;
-	final private int SUBMITREQUEST_ACTION = 1;
-	final private int CAMERA = 20;
-	
-	private View requestMoneyView = null;
-	private Response paymentResponse;
+    private Button btnCamera;
+    private Button btnAddContacts;
+    private Button txtAmount;
+    private EditText txtComments;
+    private Button btnRequestMoney;
+    private String passcode = "";
+    private boolean addingACHAccount = false;
 
-	private Dialog dialog = null;
-	private Handler dialogHandler = new Handler() {
-		public void handleMessage(Message msg) {
-			dialog.dismiss();
-			switch (msg.what) {
-			case SUBMITREQUEST_ACTION:
-				removeDialog(SUBMITREQUEST_DIALOG);
+    final private int ADDING_FRIEND = 6;
+    final private int SUBMITREQUEST_DIALOG = 0;
+    final private int NORECIPIENTSPECIFIED_DIALOG = 1;
+    final private int NOAMOUNTSPECIFIED_DIALOG = 2;
+    final private int SUBMITREQUESTFAILED_DIALOG = 3;
+    final private int SUBMITREQUESTSUCCESS_DIALOG = 4;
+    final private int INVALIDPASSCODELENGTH_DIALOG = 5;
+    final private int PAYMENTEXCEEDSLIMIT_DIALOG = 6;
 
-				if (paymentResponse != null
-						&& paymentResponse.Success) {
-					showDialog(SUBMITREQUESTSUCCESS_DIALOG);
+    final private int ADDACCOUNT_DIALOG = 7;
+    final private int ADD_MONEY = 8;
+    final private int SUBMITREQUEST_ACTION = 1;
+    final private int CAMERA = 20;
 
-				} else if (paymentResponse != null) {
-					errorMessage = paymentResponse.ReasonPhrase;
-					showDialog(SUBMITREQUESTFAILED_DIALOG);
-				} else {
-					showDialog(SUBMITREQUESTFAILED_DIALOG);
-				}
-				break;
-			}
-		}
-	};
+    private View requestMoneyView = null;
+    private Response paymentResponse;
 
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setTitle("Request Money");
+    private Dialog dialog = null;
+    private Handler dialogHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SUBMITREQUEST_ACTION:
+                    removeDialog(SUBMITREQUEST_DIALOG);
 
-	    locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		locationListener = new LocationListener() {
+                    if (paymentResponse != null
+                        && paymentResponse.Success) {
+                        showDialog(SUBMITREQUESTSUCCESS_DIALOG);
 
-			@Override
-			public void onLocationChanged(Location arg0) {
-				// TODO Auto-generated method stub
-				if (isBetterLocation(arg0, location)) {
-					location = arg0;
-				}
-			}
+                    } else if (paymentResponse != null) {
+                        errorMessage = paymentResponse.ReasonPhrase;
+                        showDialog(SUBMITREQUESTFAILED_DIALOG);
+                    } else {
+                        showDialog(SUBMITREQUESTFAILED_DIALOG);
+                    }
+                    break;
 
-			@Override
-			public void onProviderDisabled(String arg0) {
-				// TODO Auto-generated method stub
+                case ADDACCOUNT_DIALOG:
+                    alertDialog.setTitle("No ACH Account Setup");
+                    alertDialog.setMessage("This user account has no bank account attached, " +
+                        "in order to send a payment, you must add a bank account. " +
+                        "After adding a bank account, you will return to this screen " +
+                        "with all the information filled in.");
+                    alertDialog.setButton("Cancel", new DialogInterface.OnClickListener() {
 
-			}
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            // TODO Auto-generated method stub
+                            dialog.dismiss();
+                        }
 
-			@Override
-			public void onProviderEnabled(String provider) {
-				// TODO Auto-generated method stub
+                    });
+                    alertDialog.setButton2("OK", new DialogInterface.OnClickListener() {
 
-			}
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            // TODO Auto-generated method stub
+                            Intent intent = new Intent(RequestPaymentActivity.this, ACHAccountSetupActivity.class);
+                            intent.putExtra("tab", 2);
+                            dialog.dismiss();
+                            addingACHAccount = true;
+                            startActivity(intent);
+                        }
 
-			@Override
-			public void onStatusChanged(String provider, int status,
-					Bundle extras) {
-				// TODO Auto-generated method stub
+                    });
+                    alertDialog.dismiss();
+                    break;
+            }
+        }
+    };
 
-			}
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitle("Request Money");
 
-		};
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
 
-		launchRequestMoneyView();
-	}
+            @Override
+            public void onLocationChanged(Location arg0) {
+                // TODO Auto-generated method stub
+                if (isBetterLocation(arg0, location)) {
+                    location = arg0;
+                }
+            }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		tracker.trackPageView("Request Money");
-		locationManager.requestLocationUpdates(
-				LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-//		locationManager.requestLocationUpdates(
-//				LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            @Override
+            public void onProviderDisabled(String arg0) {
+                // TODO Auto-generated method stub
 
+            }
 
-	}
+            @Override
+            public void onProviderEnabled(String provider) {
+                // TODO Auto-generated method stub
 
-	@Override
-	public void onPause() {
-		super.onPause();
+            }
 
-		locationManager.removeUpdates(locationListener);
-	}
+            @Override
+            public void onStatusChanged(String provider, int status,
+                Bundle extras) {
+                // TODO Auto-generated method stub
 
-	protected android.app.Dialog onCreateDialog(int id) {
-		
-		AlertDialog alertDialog = null;
-		ProgressDialog progressDialog = null;
-		Thread thread = null;
-		switch (id) {
-		case SUBMITREQUEST_DIALOG:
-			progressDialog = new ProgressDialog(this);
-			tracker.trackPageView("Request Money: Confirm");
-			progressDialog.setMessage("Submitting Request...");
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            }
 
-			thread = new Thread(new Runnable() {
+        };
 
-				@Override
-				public void run() {
-					try {
-						SubmitRequest();
+        launchRequestMoneyView();
+    }
 
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					dialogHandler.sendEmptyMessage(SUBMITREQUEST_ACTION);
-				}
+    @Override
+    public void onResume() {
+        super.onResume();
+        tracker.trackPageView("Request Money");
+        locationManager.requestLocationUpdates(
+            LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
-			});
-			dialog = progressDialog;
-			thread.start();
-
-			return dialog;
-		case SUBMITREQUESTFAILED_DIALOG:
-			alertDialog = new AlertDialog.Builder(this).create();
-			alertDialog.setTitle("Failed");
-
-			alertDialog
-					.setMessage(errorMessage);
-			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-
-				}
-			});
-
-			return alertDialog;
-		case SUBMITREQUESTSUCCESS_DIALOG:
-			tracker.trackPageView("Request Money: Completed");
-			alertDialog = new AlertDialog.Builder(this).create();
-			alertDialog.setTitle("Request Sumitted");
-			NumberFormat nf = NumberFormat.getCurrencyInstance();
-
-			alertDialog.setMessage(String.format(
-					"Your request for %s was sent to %s.", nf.format(amount),
-					recipientUri));
-			
-			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					removeDialog(4);
-					dialog.dismiss();
-
-					friend = null;
-					btnAddContacts.setText("Add recipient");
-					txtAmount.setText("$0.00");
-					txtComments.setText("");
-				}
-			});
-			return alertDialog;
-		case NORECIPIENTSPECIFIED_DIALOG:
-			alertDialog = new AlertDialog.Builder(RequestPaymentActivity.this)
-					.create();
-			alertDialog.setTitle("Invalid Recipient");
-			alertDialog
-					.setMessage("Your recipient does not have a valid paypoint.");
-
-			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-			});
-
-			return alertDialog;
-		case NOAMOUNTSPECIFIED_DIALOG:
-			alertDialog = new AlertDialog.Builder(RequestPaymentActivity.this)
-					.create();
-			alertDialog.setTitle("Please Specify an Amount");
-			alertDialog.setMessage("You must specify the amount to send.");
-
-			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-			});
-
-			return alertDialog;
-
-		case INVALIDPASSCODELENGTH_DIALOG:
-			alertDialog = new AlertDialog.Builder(RequestPaymentActivity.this)
-					.create();
-			alertDialog.setTitle("Invalid Passcode");
-			alertDialog
-					.setMessage("Your passcode is atleast 4 buttons. Please try again.");
-
-			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-			});
-
-			return alertDialog;
-
-		case PAYMENTEXCEEDSLIMIT_DIALOG:
-			alertDialog = new AlertDialog.Builder(RequestPaymentActivity.this)
-			.create();
-			alertDialog.setTitle("Exceeds Limit");
-			alertDialog
-			.setMessage("The payment exceeds your upper limit. Please try again.");
-
-			alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-			});
-
-			return alertDialog;
-
-		}
-
-		return null;
-	}
-
-	protected void launchRequestMoneyView() {
-
-		requestMoneyView = View.inflate(this, R.layout.requestmoney_controller, null);
-		setContentView(requestMoneyView);
+//        if (prefs.getBoolean("addingACHAccount", false))
+//        {
+//            addingContact(prefs.getString("friend", ""), prefs.getString("paypoint", ""));
+//            String prefsAmount = prefs.getString("amount", "0.00");
+//            txtAmount.setText("$" + prefsAmount);
+//            txtComments.setText(prefs.getString("comments", ""));
+//            Editor edit = prefs.edit();
+//            edit.remove("paypoint").remove("amount").remove("friend").remove("comments").remove("addingACHAccount");
+//        }
 
 
-		txtComments = (EditText) findViewById(R.id.txtRequestMoneyComments);
-		btnRequestMoney = (Button) findViewById(R.id.btnSubmit);
-		Typeface type = Typeface.createFromAsset(getAssets(),"HelveticaWorld-Bold.ttf");
-		btnRequestMoney.setTypeface(type);
-		btnRequestMoney.setTextColor(Color.WHITE);
+    }
 
-		txtAmount = (Button) findViewById(R.id.txtRequestMoneyAmount);
-		txtAmount.setOnClickListener(new OnClickListener(){
+    @Override
+    public void onPause() {
+        super.onPause();
 
-			@Override
-			public void onClick(View v) {
-				startActivityForResult(new Intent(RequestPaymentActivity.this, AddMoneyActivity.class), ADD_MONEY);
-			}
-		});
-		
-		btnCamera = (ImageButton) findViewById(R.id.camera);
-		btnCamera.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v) {
-				startActivityForResult(new Intent(RequestPaymentActivity.this, CameraActivity.class), CAMERA);
-			}	
-		});
+        locationManager.removeUpdates(locationListener);
 
-		btnAddContacts = (Button) findViewById(R.id.addRecipient);
-		btnAddContacts.setOnClickListener(new OnClickListener(){
+//        if (addingACHAccount)
+//        {
+//            Editor edit = prefs.edit();
+//            edit.putBoolean("addingACHAccount", addingACHAccount);
+//            edit.putString("paypoint", recipientUri);
+//            edit.putString("amount", String.valueOf(amount));
+//            edit.putString("friend", friend.getId());
+//            edit.putString("comments", comments);
+//            edit.commit();
+//        }
+    }
 
-			@Override
-			public void onClick(View v) {
-				startActivityForResult(new Intent(RequestPaymentActivity.this, FriendsListActivity.class), ADDING_FRIEND);
-			}
+    protected android.app.Dialog onCreateDialog(int id) {
 
-		});
+        Thread thread = null;
+        switch (id) {
+            case SUBMITREQUEST_DIALOG:
+                progressDialog = new ProgressDialog(this);
+                tracker.trackPageView("Request Money: Confirm");
+                progressDialog.setMessage("Submitting Request...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-		btnRequestMoney.setOnClickListener(new OnClickListener() {
+                thread = new Thread(new Runnable() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				boolean isValid = true;
+                    @Override
+                    public void run() {
+                        try {
+                            SubmitRequest();
 
-				amount = Double.parseDouble(txtAmount.getText().toString()
-						.replaceAll("[$,]*", ""));
-				comments = txtComments.getText().toString();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        dialogHandler.sendEmptyMessage(SUBMITREQUEST_ACTION);
+                    }
 
-				if (isValid & recipientUri.length() == 0) {
-					showDialog(NORECIPIENTSPECIFIED_DIALOG);
-					isValid = false;
-				}
-				if (isValid & amount == 0) {
-					showDialog(NOAMOUNTSPECIFIED_DIALOG);
-					isValid = false;
-				}
-				if (isValid && amount > prefs.getInt("upperLimit", 0)) {
-					showDialog(PAYMENTEXCEEDSLIMIT_DIALOG);
-					isValid = false;
-				}
-				if (isValid) {
+                });
+                dialog = progressDialog;
+                thread.start();
 
-					Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                return dialog;
+            case SUBMITREQUESTFAILED_DIALOG:
+                alertDialog = new AlertDialog.Builder(this).create();
+                alertDialog.setTitle("Failed");
 
-					if (isBetterLocation(lastKnownLocation, location)) {
-						location = lastKnownLocation;
-					}
+                alertDialog
+                .setMessage(errorMessage);
+                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
 
-					if(prefs.getString("userId", "").length() == 0) {
-						startActivityForResult(new Intent(RequestPaymentActivity.this, SignInActivity.class), 1);
-					} else {
-						showSecurityPinDialog();
-					}
-				}
-			}
-		});
+                    }
+                });
 
-		btnRequestMoney.setVisibility(View.VISIBLE);
-	}
+                return alertDialog;
+            case SUBMITREQUESTSUCCESS_DIALOG:
+                tracker.trackPageView("Request Money: Completed");
+                alertDialog = new AlertDialog.Builder(this).create();
+                alertDialog.setTitle("Request Sumitted");
+                NumberFormat nf = NumberFormat.getCurrencyInstance();
+
+                alertDialog.setMessage(String.format(
+                    "Your request for %s was sent to %s.", nf.format(amount),
+                    recipientUri));
+
+                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeDialog(4);
+                        dialog.dismiss();
+
+                        friend = null;
+                        btnAddContacts.setText("Add recipient");
+                        txtAmount.setText("$0.00");
+                        txtComments.setText("");
+                    }
+                });
+                return alertDialog;
+            case NORECIPIENTSPECIFIED_DIALOG:
+                alertDialog = new AlertDialog.Builder(RequestPaymentActivity.this)
+                .create();
+                alertDialog.setTitle("Invalid Recipient");
+                alertDialog
+                .setMessage("Your recipient does not have a valid paypoint.");
+
+                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                return alertDialog;
+            case NOAMOUNTSPECIFIED_DIALOG:
+                alertDialog = new AlertDialog.Builder(RequestPaymentActivity.this)
+                .create();
+                alertDialog.setTitle("Please Specify an Amount");
+                alertDialog.setMessage("You must specify the amount to send.");
+
+                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                return alertDialog;
+
+            case INVALIDPASSCODELENGTH_DIALOG:
+                alertDialog = new AlertDialog.Builder(RequestPaymentActivity.this)
+                .create();
+                alertDialog.setTitle("Invalid Passcode");
+                alertDialog
+                .setMessage("Your passcode is atleast 4 buttons. Please try again.");
+
+                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                return alertDialog;
+
+            case PAYMENTEXCEEDSLIMIT_DIALOG:
+                alertDialog = new AlertDialog.Builder(RequestPaymentActivity.this)
+                .create();
+                alertDialog.setTitle("Exceeds Limit");
+                alertDialog
+                .setMessage("The payment exceeds your upper limit. Please try again.");
+
+                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                return alertDialog;
+
+        }
+
+        return null;
+    }
+
+    protected void launchRequestMoneyView() {
+
+        requestMoneyView = View.inflate(this, R.layout.requestmoney_controller, null);
+        setContentView(requestMoneyView);
+
+
+        txtComments = (EditText) findViewById(R.id.txtRequestMoneyComments);
+        btnRequestMoney = (Button) findViewById(R.id.btnSubmit);
+        Typeface type = Typeface.createFromAsset(getAssets(),"HelveticaWorld-Bold.ttf");
+        btnRequestMoney.setTypeface(type);
+        btnRequestMoney.setTextColor(Color.WHITE);
+
+        txtAmount = (Button) findViewById(R.id.txtRequestMoneyAmount);
+        txtAmount.setOnClickListener(new OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(RequestPaymentActivity.this, AddMoneyActivity.class), ADD_MONEY);
+            }
+        });
+
+        btnCamera = (Button) findViewById(R.id.camera);
+        btnCamera.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+
+                startActivityForResult(new Intent(RequestPaymentActivity.this, CameraActivity.class), CAMERA);
+            }
+        });
+
+        btnAddContacts = (Button) findViewById(R.id.addRecipient);
+        btnAddContacts.setOnClickListener(new OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(RequestPaymentActivity.this, FriendsListActivity.class), ADDING_FRIEND);
+            }
+
+        });
+
+        btnRequestMoney.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                boolean isValid = true;
+
+                try {
+                    amount = Double.parseDouble(txtAmount.getText().toString()
+                        .replaceAll("[$,]*", ""));
+                }
+                catch (NumberFormatException e)
+                {
+                    amount = 0;
+                }
+                comments = txtComments.getText().toString();
+
+                if (isValid & recipientUri.length() == 0) {
+                    showDialog(NORECIPIENTSPECIFIED_DIALOG);
+                    isValid = false;
+                }
+                if (isValid & amount == 0) {
+                    showDialog(NOAMOUNTSPECIFIED_DIALOG);
+                    isValid = false;
+                }
+                if (isValid && amount > prefs.getInt("upperLimit", 0)) {
+                    showDialog(PAYMENTEXCEEDSLIMIT_DIALOG);
+                    isValid = false;
+                }
+                if (isValid) {
+
+                    Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+                    if (isBetterLocation(lastKnownLocation, location)) {
+                        location = lastKnownLocation;
+                    }
+
+                    if(prefs.getString("userId", "").length() == 0) {
+                        startActivity(new Intent(RequestPaymentActivity.this, SignInUIActivity.class));
+                    } else {
+
+                        if (prefs.getBoolean("hasACHAccount", false) || !prefs.getString("paymentAccountId", "").equals(""))
+                        {
+                            showSecurityPinDialog();
+                        }
+                        else
+                        {
+                            dialogHandler.sendEmptyMessage(ADDACCOUNT_DIALOG);
+                        }
+                    }
+                }
+            }
+        });
+
+        btnRequestMoney.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -412,8 +479,8 @@ public class RequestPaymentActivity extends BaseActivity {
         d.getWindow().setLayout(400, 600);
         d.show();
 
-        TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
-        TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
+        TextView txtConfirmHeader = (TextView)d.findViewById(R.id.setupSecurityHeader);
+        TextView txtConfirmBody = (TextView)d.findViewById(R.id.setupSecurityBody);
 
         txtConfirmHeader.setText("Confirm Your Request");
         txtConfirmBody.setText(
@@ -481,6 +548,7 @@ public class RequestPaymentActivity extends BaseActivity {
     protected void SubmitRequest() {
 
         PaymentRequest paymentRequest = new PaymentRequest();
+        paymentRequest.UserId = prefs.getString("userId", "");
         paymentRequest.SenderAccountId = prefs.getString("paymentAccountId", "");
         paymentRequest.SenderUri = prefs.getString("login", "");
         paymentRequest.RecipientUri = recipientUri;
