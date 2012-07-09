@@ -3,15 +3,11 @@ package me.pdthx;
 import java.io.FileInputStream;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.app.Activity;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -21,12 +17,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import me.pdthx.Models.Friend;
 import me.pdthx.Requests.ACHAccountSetupRequest;
-import me.pdthx.Requests.UserCheckImageRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
-import me.pdthx.Responses.UserCheckImageResponse;
-import me.pdthx.Services.UserService;
 import me.pdthx.Setup.CreatePinActivity;
 
 public class ACHAccountSetupActivity extends BaseActivity implements
@@ -39,7 +31,7 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 	private Button btnRemoveAccount;
 	private Button btnUpdateAccount;
 	private Button btnBack;
-	private Button btnCheckImage;
+	private LinearLayout btnCheckImage;
 	private RadioGroup btnAcctType;
 	private boolean isCheckingAcct;
 	private int tab;
@@ -56,7 +48,7 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 
 		progressDialog.dismiss();
 		setContentView(R.layout.achaccountsetup_controller);
-		btnCheckImage = (Button) findViewById(R.id.checkButton);
+		btnCheckImage = (LinearLayout) findViewById(R.id.takePhotoBtn);
 		tab = getIntent().getExtras().getInt("tab");
 
 		btnAddAccount = (Button) findViewById(R.id.btnSubmitACHAccount);

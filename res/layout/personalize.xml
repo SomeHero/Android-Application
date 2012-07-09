@@ -141,7 +141,6 @@
             android:id="@+id/personalize_btn"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@drawable/button_selector"
             android:text="Save &amp; Continue"
             android:textColor="#FFFFFF"
             android:textSize="15dp"
