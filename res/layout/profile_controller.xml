@@ -45,7 +45,6 @@
         android:layout_height="wrap_content"
         android:fadingEdge="none"
         android:scrollbars="none" >
-"
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,7 +95,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal" >
 
                     <LinearLayout
@@ -107,7 +106,7 @@
                         <TextView
                             android:id="@+id/textView2"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:text="First Name"
                             android:textColor="#4D4D4D"
@@ -124,7 +123,7 @@
                         <TextView
                             android:id="@+id/textView2"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:text="Last Name"
                             android:textColor="#4D4D4D"
@@ -141,7 +140,7 @@
                         <TextView
                             android:id="@+id/textView2"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:text="Phone"
                             android:textColor="#4D4D4D"
@@ -158,7 +157,7 @@
                         <TextView
                             android:id="@+id/textView2"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:text="Email"
                             android:textColor="#4D4D4D"
@@ -175,7 +174,7 @@
                         <TextView
                             android:id="@+id/textView2"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:text="Facebook"
                             android:textColor="#4D4D4D"
@@ -192,7 +191,7 @@
                         <TextView
                             android:id="@+id/textView2"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:text="Twitter"
                             android:textColor="#4D4D4D"
@@ -209,7 +208,7 @@
                         <TextView
                             android:id="@+id/textView2"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:text="About Me"
                             android:textColor="#4D4D4D"
@@ -226,7 +225,7 @@
                         <TextView
                             android:id="@+id/textView2"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:text="Make Public"
                             android:textColor="#4D4D4D"
@@ -241,7 +240,7 @@
                         <LinearLayout
                             android:id="@+id/profile_firstNameBtn"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:clickable="true"
                             android:gravity="center" >
@@ -272,7 +271,7 @@
                         <LinearLayout
                             android:id="@+id/profile_lastNameBtn"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:clickable="true"
                             android:gravity="center" >
@@ -303,7 +302,7 @@
                         <LinearLayout
                             android:id="@+id/profile_phoneNumberBtn"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:clickable="true"
                             android:gravity="center" >
@@ -334,7 +333,7 @@
                         <LinearLayout
                             android:id="@+id/profile_emailBtn"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:clickable="true"
                             android:gravity="center" >
@@ -365,16 +364,16 @@
                         <LinearLayout
                             android:id="@+id/profile_facebookBtn"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="9dp"
+                            android:layout_height="20dp"
+                            android:layout_margin="10dp"
                             android:clickable="true"
                             android:gravity="center"
                             android:paddingBottom="2px" >
 
                             <ImageView
                                 android:id="@+id/facebookPicProfile"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
                                 android:src="@drawable/facebook" />
 
                             <TextView
@@ -404,16 +403,16 @@
                         <LinearLayout
                             android:id="@+id/profile_twitterBtn"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="9dp"
+                            android:layout_height="20dp"
+                            android:layout_margin="10dp"
                             android:clickable="true"
                             android:gravity="center"
                             android:paddingBottom="2px" >
 
                             <ImageView
                                 android:id="@+id/twitterPicProfile"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
                                 android:src="@drawable/twitter" />
 
                             <TextView
@@ -443,7 +442,7 @@
                         <LinearLayout
                             android:id="@+id/profile_aboutMeBtn"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
                             android:layout_margin="10dp"
                             android:clickable="true"
                             android:gravity="center" >
@@ -476,7 +475,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="right" >
-
+
                             <ToggleButton
                                 android:id="@+id/makePublicProfileBtn"
                                 android:layout_width="wrap_content"
@@ -486,7 +485,6 @@
                                 android:background="@drawable/toggle_btn_selector"
                                 android:textOff=" "
                                 android:textOn=" " />
-
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
