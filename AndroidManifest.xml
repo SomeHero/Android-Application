@@ -220,9 +220,6 @@
             android:label="@string/app_name" >
         </activity>
         
->>>>>>> 719bc4c06e3498bee5aa94be043f3e54b32772f4
     </application>
     
-	
-
 </manifest>
