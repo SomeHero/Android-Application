@@ -133,7 +133,7 @@ public final class PaystreamActivity extends BaseActivity implements
 				current = s.toString().toLowerCase();
 				int checked = group.getCheckedRadioButtonId();
 
-				if (checked == 2131165349) {
+				if (checked == R.id.paystreamAll) {
 					searched.clear();
 					for (int x = 0; x < m_transactions.size(); x++)
 					{
@@ -144,12 +144,12 @@ public final class PaystreamActivity extends BaseActivity implements
 					}
 					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, m_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}
-				} 
-				else if (checked == 2131165350) {
+				}
+				else if (checked == R.id.paystreamSent) {
 					searched.clear();
 					for (int x = 0; x < send_transactions.size(); x++)
 					{
@@ -160,15 +160,15 @@ public final class PaystreamActivity extends BaseActivity implements
 						}
 					}
 
-					
+
 					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, send_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}
 				}
-				else if (checked == 2131165351) {
+				else if (checked == R.id.paystreamReceived) {
 					searched.clear();
 					for (int x = 0; x < recieve_transactions.size(); x++)
 					{
@@ -179,14 +179,14 @@ public final class PaystreamActivity extends BaseActivity implements
 						}
 					}
 
-					
+
 					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, recieve_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}
-				} else if (checked == 2131165352) {
+				} else if (checked == R.id.paystreamOther) {
 					searched.clear();
 					for (int x = 0; x < other_transactions.size(); x++)
 					{
@@ -197,10 +197,10 @@ public final class PaystreamActivity extends BaseActivity implements
 						}
 					}
 
-					
+
 					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, other_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}

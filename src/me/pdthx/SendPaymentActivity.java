@@ -1,21 +1,23 @@
 /*
-* Copyright (C) 2009 The Android Open Source Project
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (C) 2009 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package me.pdthx;
 
+import android.content.SharedPreferences.Editor;
+import me.pdthx.Login.SignInUIActivity;
 import java.text.NumberFormat;
 
 import me.pdthx.CustomViews.CustomLockView;
@@ -54,9 +56,9 @@ public final class SendPaymentActivity extends BaseActivity {
     private String comments = "";
     private String errorMessage = "";
 
-private Location location;
-private LocationManager locationManager;
-private LocationListener locationListener;
+    private Location location;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
 
     private Friend friend;
@@ -66,6 +68,7 @@ private LocationListener locationListener;
     private EditText txtComments;
     private Button btnSendMoney;
     private String passcode = "";
+    private boolean addingACHAccount = false;
 
     final private int ADDING_FRIEND = 6;
     final private int SUBMITPAYMENT_DIALOG = 0;
@@ -74,7 +77,9 @@ private LocationListener locationListener;
     final private int PAYMENTEXCEEDSLIMIT_DIALOG = 5;
     final private int SUBMITPAYMENTFAILED_DIALOG = 3;
     final private int SUBMITPAYMENTSUCCESS_DIALOG = 4;
+    final private int ADDACCOUNT_DIALOG = 10;
     final private int ADD_MONEY = 8;
+    final private int ADD_ACCOUNT = 9;
     final private int INVALIDPASSCODELENGTH_DIALOG = 12;
 
     final private int SUBMITPAYMENT_ACTION = 0;
@@ -86,7 +91,6 @@ private LocationListener locationListener;
 
     private Handler dialogHandler = new Handler() {
         public void handleMessage(Message msg) {
-            dialog.dismiss();
 
             switch (msg.what) {
 
@@ -96,7 +100,7 @@ private LocationListener locationListener;
                     if (paymentResponse != null
                         && paymentResponse.Success) {
                         showDialog(SUBMITPAYMENTSUCCESS_DIALOG);
-                        launchSendMoneyView();
+                        setContentView(R.layout.contactmanager);
                     } else if (paymentResponse != null) {
                         errorMessage = paymentResponse.ReasonPhrase;
                         showDialog(SUBMITPAYMENTFAILED_DIALOG);
@@ -105,6 +109,39 @@ private LocationListener locationListener;
                     }
                     break;
 
+                case ADDACCOUNT_DIALOG:
+                    alertDialog.setTitle("No ACH Account Setup");
+                    alertDialog.setMessage("This user account has no bank account attached, " +
+                        "in order to send a payment, you must add a bank account. " +
+                        "After adding a bank account, you will return to this screen " +
+                        "with all the information filled in.");
+                    alertDialog.setButton("Cancel", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            // TODO Auto-generated method stub
+                            dialog.dismiss();
+                        }
+
+                    });
+                    alertDialog.setButton2("OK", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            // TODO Auto-generated method stub
+                            Intent intent = new Intent(SendPaymentActivity.this, ACHAccountSetupActivity.class);
+                            intent.putExtra("tab", 1);
+                            addingACHAccount = true;
+                            dialog.dismiss();
+                            startActivity(intent);
+                        }
+
+                    });
+
+                    alertDialog.show();
+                    break;
             }
 
         }
@@ -159,9 +196,17 @@ private LocationListener locationListener;
         tracker.trackPageView("Send Money");
         locationManager.requestLocationUpdates(
             LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-// locationManager.requestLocationUpdates(
-// LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
+
+        if (prefs.getBoolean("addingACHAccount", false))
+        {
+            addingContact(prefs.getString("friend", ""), prefs.getString("paypoint", ""));
+            String prefsAmount = prefs.getString("amount", "0");
+            txtAmount.setText("$" + prefsAmount);
+            txtComments.setText(prefs.getString("comments", ""));
+            Editor edit = prefs.edit();
+            edit.remove("paypoint").remove("amount").remove("friend").remove("comments").remove("addingACHAccount");
+        }
 
     }
 
@@ -170,15 +215,25 @@ private LocationListener locationListener;
         super.onPause();
 
         locationManager.removeUpdates(locationListener);
+
+        Editor edit = prefs.edit();
+
+        if (addingACHAccount)
+        {
+            edit.putBoolean("addingACHAccount", addingACHAccount);
+            edit.putString("paypoint", recipientUri);
+            edit.putString("amount", String.valueOf(amount));
+            edit.putString("friend", friend.getId());
+            edit.putString("comments", comments);
+            edit.commit();
+        }
     }
 
     protected android.app.Dialog onCreateDialog(int id) {
-        AlertDialog alertDialog = null;
-        ProgressDialog progressDialog = null;
         Thread thread = null;
         switch (id) {
             case SUBMITPAYMENT_DIALOG:
-             tracker.trackPageView("Send Money: Confirm");
+                tracker.trackPageView("Send Money: Confirm");
                 progressDialog = new ProgressDialog(this);
 
                 progressDialog.setMessage("Submitting Request...");
@@ -217,7 +272,7 @@ private LocationListener locationListener;
 
                 return alertDialog;
             case SUBMITPAYMENTSUCCESS_DIALOG:
-             tracker.trackPageView("Send Money: Completed");
+                tracker.trackPageView("Send Money: Completed");
                 alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("Payment Sumitted");
                 NumberFormat nf = NumberFormat.getCurrencyInstance();
@@ -341,8 +396,14 @@ private LocationListener locationListener;
                 // TODO Auto-generated method stub
                 boolean isValid = true;
 
-                amount = Double.parseDouble(txtAmount.getText().toString().trim()
-                    .replaceAll("[$,]*", ""));
+                try {
+                    amount = Double.parseDouble(txtAmount.getText().toString()
+                        .replaceAll("[$,]*", ""));
+                }
+                catch (NumberFormatException e)
+                {
+                    amount = 0;
+                }
                 comments = txtComments.getText().toString();
 
                 if (isValid && recipientUri.length() == 0) {
@@ -366,11 +427,19 @@ private LocationListener locationListener;
                     }
 
 
-                    if(prefs.getString("userId", "").length() == 0) {
-                        startActivityForResult(new Intent(SendPaymentActivity.this, SignInActivity.class), 1);
+                    if(prefs.getString("userId", "").length() == 0)	{
+                        startActivity(new Intent(SendPaymentActivity.this, SignInUIActivity.class));
                     } else {
-                        showSecurityPinDialog();
+                        if (prefs.getBoolean("hasACHAccount", false) || !prefs.getString("paymentAccountId", "").equals(""))
+                        {
+                            showSecurityPinDialog();
+                        }
+                        else
+                        {
+                            dialogHandler.sendEmptyMessage(ADDACCOUNT_DIALOG);
+                        }
                     }
+
                 }
             }
         });
@@ -384,32 +453,7 @@ private LocationListener locationListener;
         if (resultCode == RESULT_OK) {
             if (requestCode == ADDING_FRIEND) {
                 Bundle bundle = data.getExtras();
-                Friend chosenContact = new Friend();
-                if (bundle.getString("id") != null)
-                {
-                    chosenContact.setId(bundle.getString("id"));
-                    friend = friendsList.get(friendsList.indexOf(chosenContact));
-
-                    if (friend.isFBContact()) {
-                        recipientUri = "fb_" + friend.getId();
-                        btnAddContacts.setText(friend.getName() + ": " + friend.getId());
-                    }
-                    else {
-                        recipientUri = "" + friend.getPaypoint();
-                        btnAddContacts.setText(friend.toString());
-                    }
-                }
-                else
-                {
-                    String paypoint = bundle.getString("paypoint");
-                    chosenContact.setName("New Contact");
-                    chosenContact.setPaypoint(paypoint);
-                    friend = chosenContact;
-                    recipientUri = "" + paypoint;
-                    btnAddContacts.setText("New contact: " + paypoint);
-                }
-
-
+                addingContact(bundle.getString("id"), bundle.getString("paypoint"));
             }
             else if(requestCode == ADD_MONEY){
                 Bundle bundle = data.getExtras();
@@ -421,34 +465,29 @@ private LocationListener locationListener;
             }
         }
         else {
-            if (requestCode != ADDING_FRIEND && requestCode != ADD_MONEY) {
+            if (requestCode != ADDING_FRIEND && requestCode != ADD_MONEY && requestCode != ADD_ACCOUNT) {
                 finish();
             }
         }
     }
 
     protected void showSecurityPinDialog() {
-        final Dialog d = new Dialog(SendPaymentActivity.this, R.style.CustomDialogTheme);
-        d.setContentView(R.layout.security_dialog);
-
-        d.getWindow().setLayout(400, 600);
-        d.show();
-
-        TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
-        TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
+        setContentView(R.layout.security_dialog);
+        TextView txtConfirmHeader = (TextView) findViewById(R.id.setupSecurityHeader);
+        TextView txtConfirmBody = (TextView) findViewById(R.id.setupSecurityBody);
 
         txtConfirmHeader.setText("Confirm Your Payment");
         txtConfirmBody.setText(String.format("To confirm your payment of %s to %s, swipe you pin below.",
             txtAmount.getText(), friend.getName()));
 
-        Button btnCancel = (Button) d.findViewById(R.id.btnCancelSendMoney);
+        Button btnCancel = (Button) findViewById(R.id.btnCancelSendMoney);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                d.dismiss();
+                setContentView(R.layout.contactmanager);
             }
         });
 
-        final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
+        final CustomLockView ctrlSecurityPin = (CustomLockView) findViewById(R.id.ctrlSecurityPin);
         ctrlSecurityPin.invalidate();
         ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -461,8 +500,6 @@ private LocationListener locationListener;
                     comments = txtComments.getText().toString();
                     passcode = ctrlSecurityPin.getPasscode();
 
-                    d.dismiss();
-
                     showDialog(SUBMITPAYMENT_DIALOG);
                 } else
                     showDialog(INVALIDPASSCODELENGTH_DIALOG);
@@ -470,6 +507,32 @@ private LocationListener locationListener;
                 return false;
             }
         });
+    }
+
+    private void addingContact(String id, String paypoint) {
+        Friend chosenContact = new Friend();
+        if (!id.equals(""))
+        {
+            chosenContact.setId(id);
+            friend = friendsList.get(friendsList.indexOf(chosenContact));
+
+            if (friend.isFBContact()) {
+                recipientUri = "fb_" + friend.getId();
+                btnAddContacts.setText(friend.getName() + ": " + friend.getId());
+            }
+            else {
+                recipientUri = "" + friend.getPaypoint();
+                btnAddContacts.setText(friend.toString());
+            }
+        }
+        else
+        {
+            chosenContact.setName("New Contact");
+            chosenContact.setPaypoint(paypoint);
+            friend = chosenContact;
+            recipientUri = "" + paypoint;
+            btnAddContacts.setText("New contact: " + paypoint);
+        }
     }
 
     protected void SubmitPaymentRequest() {
@@ -493,9 +556,9 @@ private LocationListener locationListener;
     }
 
     /** Determines whether one Location reading is better than the current Location fix
-* @param location The new Location that you want to evaluate
-* @param currentBestLocation The current Location fix, to which you want to compare the new one
-*/
+     * @param location The new Location that you want to evaluate
+     * @param currentBestLocation The current Location fix, to which you want to compare the new one
+     */
     private boolean isBetterLocation(Location location, Location currentBestLocation) {
         final int TWO_MINUTES = 1000 * 60 * 2;
 
