@@ -120,6 +120,7 @@ public class PaymentServices {
 			JSONObject json = new JSONObject();
 			json.put("apiKey", APIKEY);
 			json.put("senderId", paymentRequest.UserId);
+			json.put("senderId", paymentRequest.UserId);
 			json.put("securityPin", paymentRequest.SecurityPin);
 			json.put("senderUri", paymentRequest.SenderUri);
 			json.put("recipientUri", paymentRequest.RecipientUri);
