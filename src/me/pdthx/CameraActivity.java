@@ -16,14 +16,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class CameraActivity extends BaseActivity {
 	
-	private static final int MEDIA_TYPE_IMAGE = 1;
+	/**private static final int MEDIA_TYPE_IMAGE = 1;
     private Camera mCamera;
     private CameraPreview mPreview;
     private Button capture;
-    private ImageView blah;
+    private ImageView blah;**/
+	
+	private Button btn;
+	private ImageView img;
+	private TextView field;
+	private String imagePath;
+	private boolean isTaken;
+	
+	protected static final String PHOTO_TAKEN = "photo_taken";
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +43,7 @@ public class CameraActivity extends BaseActivity {
     public void showCameraPreview()
     {
     	setContentView(R.layout.camera_preview);
-
+/**
         // Create an instance of Camera
         mCamera = getCameraInstance();
        // blah = (ImageView) findViewById(R.id.blaaah);
@@ -55,6 +65,10 @@ public class CameraActivity extends BaseActivity {
                    mCamera.takePicture(null, null, mPicture);                 
                }
            });
+           
+           **/
+    	
+    	
     }
 
     /** A safe way to get an instance of the Camera object. */

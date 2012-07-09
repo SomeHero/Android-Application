@@ -43,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
+            android:orientation="vertical"
             android:background="@drawable/panel_background"
             android:padding="2dip" >
 
@@ -78,6 +79,7 @@
                         android:src="@drawable/arrow" />
                 </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout

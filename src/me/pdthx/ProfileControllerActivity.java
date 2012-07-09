@@ -7,12 +7,20 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -60,6 +68,7 @@ public class ProfileControllerActivity extends BaseActivity {
 	private boolean hasCredit;
 
 	private Button backBtn;
+	private String selectedState;
 
 	private UserResponse userResponse;
 
@@ -188,57 +197,75 @@ public class ProfileControllerActivity extends BaseActivity {
 				}
 			});
 		}
-		
-		if(addressBtn.isClickable())
-		{
-			addressBtn.setOnClickListener(new OnClickListener(){
+
+		if (addressBtn.isClickable()) {
+			addressBtn.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-				showAddressDialog();
+					showAddressDialog();
 				}
-				
+
 			});
 		}
-		
-		if(cityBtn.isClickable()){
-			cityBtn.setOnClickListener(new OnClickListener(){
+
+		if (cityBtn.isClickable()) {
+			cityBtn.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					showCityDialog();
 				}
-				
+
 			});
 		}
-		
-		if(stateBtn.isClickable()){
-			stateBtn.setOnClickListener(new OnClickListener(){
+
+		if (stateBtn.isClickable()) {
+			stateBtn.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(getApplicationContext(), "State feature unavailible", Toast.LENGTH_SHORT);
+					showStateDialog();
 				}
-				
+
 			});
 		}
-		
-		if(zipCodeBtn.isClickable()){
-			zipCodeBtn.setOnClickListener(new OnClickListener(){
+
+		if (zipCodeBtn.isClickable()) {
+			zipCodeBtn.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					showZipcodeDialog();
 				}
-				
+
+			});
+		}
+
+		if (birthdayBtn.isClickable()) {
+			birthdayBtn.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					showBirthdayDialog();
+				}
+
 			});
 		}
 		
+		if (genderBtn.isClickable()) {
+			genderBtn.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					showGenderDialog();
+				}
+
+			});
+		}
 		// ETC
 		// photo id
 		// ssn
-		// birthday
-		// gender
 		// income
 		// credit
 	}
@@ -278,6 +305,10 @@ public class ProfileControllerActivity extends BaseActivity {
 		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
 		text.setText("Enter your first name in the textbox below.");
 
+		AutoCompleteTextView hide = (AutoCompleteTextView) dialog
+				.findViewById(R.id.profileEnterState);
+		hide.setVisibility(View.GONE);
+
 		final EditText input = (EditText) dialog
 				.findViewById(R.id.profileDialogInput);
 		input.setHint("First Name");
@@ -289,7 +320,8 @@ public class ProfileControllerActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				String userInput = input.getText().toString().trim();
-				if (userInput != null || userInput.length() > 0 || userInput.length() > 0) {
+				if (userInput != null || userInput.length() > 0
+						|| userInput.length() > 0) {
 					TextView firstName = (TextView) firstNameBtn
 							.findViewById(R.id.firstNameProfile);
 					firstName.setText(userInput);
@@ -319,6 +351,14 @@ public class ProfileControllerActivity extends BaseActivity {
 		// set the custom dialog components - text, image and button
 		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
 		text.setText("Enter your last name in the textbox below.");
+
+		AutoCompleteTextView hide = (AutoCompleteTextView) dialog
+				.findViewById(R.id.profileEnterState);
+		hide.setVisibility(View.GONE);
+
+		LinearLayout genderHide = (LinearLayout) dialog
+				.findViewById(R.id.profileEnterGender);
+		genderHide.setVisibility(View.GONE);
 
 		final EditText input = (EditText) dialog
 				.findViewById(R.id.profileDialogInput);
@@ -362,8 +402,16 @@ public class ProfileControllerActivity extends BaseActivity {
 		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
 		text.setText("Enter your email address in the textbox below.");
 
+		AutoCompleteTextView hide = (AutoCompleteTextView) dialog
+				.findViewById(R.id.profileEnterState);
+		hide.setVisibility(View.GONE);
+		LinearLayout genderHide = (LinearLayout) dialog
+				.findViewById(R.id.profileEnterGender);
+		genderHide.setVisibility(View.GONE);
+
 		final EditText input = (EditText) dialog
 				.findViewById(R.id.profileDialogInput);
+		input.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
 		input.setHint("Email Address");
 
 		Button dialogButton = (Button) dialog
@@ -404,9 +452,18 @@ public class ProfileControllerActivity extends BaseActivity {
 		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
 		text.setText("Enter your phone number in the textbox below.");
 
+		AutoCompleteTextView hide = (AutoCompleteTextView) dialog
+				.findViewById(R.id.profileEnterState);
+		hide.setVisibility(View.GONE);
+
+		LinearLayout genderHide = (LinearLayout) dialog
+				.findViewById(R.id.profileEnterGender);
+		genderHide.setVisibility(View.GONE);
+
 		final EditText input = (EditText) dialog
 				.findViewById(R.id.profileDialogInput);
 		input.setHint("Phone #");
+		input.setInputType(InputType.TYPE_CLASS_PHONE);
 
 		Button dialogButton = (Button) dialog
 				.findViewById(R.id.profileDialogBtn);
@@ -445,6 +502,14 @@ public class ProfileControllerActivity extends BaseActivity {
 		// set the custom dialog components - text, image and button
 		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
 		text.setText("Enter a small paragraph about yourself.");
+
+		AutoCompleteTextView hide = (AutoCompleteTextView) dialog
+				.findViewById(R.id.profileEnterState);
+		hide.setVisibility(View.GONE);
+
+		LinearLayout genderHide = (LinearLayout) dialog
+				.findViewById(R.id.profileEnterGender);
+		genderHide.setVisibility(View.GONE);
 
 		final EditText input = (EditText) dialog
 				.findViewById(R.id.profileDialogInput);
@@ -487,6 +552,13 @@ public class ProfileControllerActivity extends BaseActivity {
 		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
 		text.setText("Enter your address below.");
 
+		AutoCompleteTextView hide = (AutoCompleteTextView) dialog
+				.findViewById(R.id.profileEnterState);
+		hide.setVisibility(View.GONE);
+		LinearLayout genderHide = (LinearLayout) dialog
+				.findViewById(R.id.profileEnterGender);
+		genderHide.setVisibility(View.GONE);
+
 		final EditText input = (EditText) dialog
 				.findViewById(R.id.profileDialogInput);
 
@@ -524,6 +596,14 @@ public class ProfileControllerActivity extends BaseActivity {
 		dialog.setContentView(R.layout.profile_dialog_input);
 		dialog.setTitle("City");
 
+		AutoCompleteTextView hide = (AutoCompleteTextView) dialog
+				.findViewById(R.id.profileEnterState);
+		hide.setVisibility(View.GONE);
+
+		LinearLayout genderHide = (LinearLayout) dialog
+				.findViewById(R.id.profileEnterGender);
+		genderHide.setVisibility(View.GONE);
+
 		// set the custom dialog components - text, image and button
 		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
 		text.setText("Enter the city corresponding to your address below.");
@@ -560,20 +640,90 @@ public class ProfileControllerActivity extends BaseActivity {
 		dialog.show();
 	}
 
-	// public void showStateDialog() <-- different layout, use a list of states
-	
+	public void showStateDialog() {
+		final Dialog dialog = new Dialog(this);
+		dialog.setContentView(R.layout.profile_dialog_input);
+		dialog.setTitle("State");
+
+		// set the custom dialog components - text, image and button
+		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
+		text.setText("Enter the state address below.");
+
+		final EditText input = (EditText) dialog
+				.findViewById(R.id.profileDialogInput);
+		input.setVisibility(View.GONE);
+
+		LinearLayout genderHide = (LinearLayout) dialog
+				.findViewById(R.id.profileEnterGender);
+		genderHide.setVisibility(View.GONE);
+
+		final AutoCompleteTextView listofStates = (AutoCompleteTextView) dialog
+				.findViewById(R.id.profileEnterState);
+		final String[] STATES = new String[] { "Alabama", "Alaska", "Arizona",
+				"Arkansas", "California", "Colorado", "Connecticut",
+				"Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
+				"Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
+				"Louisana", "Maine", "Maryland", "Massachusetts", "Michigan",
+				"Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska",
+				"Nevada", "New Hampshire", "New Jersey", "New Mexico",
+				"New York", "North Carolina", "North Dakota", "Ohio",
+				"Oklahoma", "Oregon", "Pennyslvania", "Rhode Island",
+				"South Carolina", "South Dakota", "Tennessee", "Texas", "Utah",
+				"Vermont", "Virginia", "Washington", "West Virginia",
+				"Wisconsin", "Wyoming" };
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_dropdown_item_1line, STATES);
+		listofStates.setAdapter(adapter);
+
+		Button dialogButton = (Button) dialog
+				.findViewById(R.id.profileDialogBtn);
+		// if button is clicked, close the custom dialog
+		dialogButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (listofStates.getText().toString().trim() != null
+						|| listofStates.getText().toString().trim().length() > 0) {
+					TextView email = (TextView) stateBtn
+							.findViewById(R.id.stateProfile);
+					email.setText(listofStates.getText().toString().trim());
+					email.setTextColor(Color.parseColor("#9C9C9C"));
+					email.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
+					TextView pts = (TextView) stateBtn
+							.findViewById(R.id.stateProfile_Pts);
+					pts.setVisibility(View.GONE);
+					stateBtn.setClickable(false);
+					runOnUiThread(new Runnable() {
+						public void run() {
+							stateBtn.invalidate();
+						}
+					});
+				}
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
+	}
+
 	public void showZipcodeDialog() {
 		final Dialog dialog = new Dialog(this);
 		dialog.setContentView(R.layout.profile_dialog_input);
 		dialog.setTitle("Zipcode");
+		AutoCompleteTextView hide = (AutoCompleteTextView) dialog
+				.findViewById(R.id.profileEnterState);
+		hide.setVisibility(View.GONE);
+
+		LinearLayout genderHide = (LinearLayout) dialog
+				.findViewById(R.id.profileEnterGender);
+		genderHide.setVisibility(View.GONE);
 
 		// set the custom dialog components - text, image and button
 		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
-		text.setInputType(InputType.TYPE_CLASS_NUMBER);
 		text.setText("Enter your zipcode below.");
 
 		final EditText input = (EditText) dialog
 				.findViewById(R.id.profileDialogInput);
+		input.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL|InputType.TYPE_CLASS_NUMBER);
 
 		Button dialogButton = (Button) dialog
 				.findViewById(R.id.profileDialogBtn);
@@ -605,18 +755,129 @@ public class ProfileControllerActivity extends BaseActivity {
 	}
 
 	// photo id?
-	
+
 	// social security number
-	
-	// birthday <-- set up auto-format
-	
-	// gender <-- diff. layout with two buttons: male or female
-	
+
+	public void showBirthdayDialog() {
+		final Dialog dialog = new Dialog(this);
+		dialog.setContentView(R.layout.profile_dialog_input);
+		dialog.setTitle("Birthday");
+		AutoCompleteTextView hide = (AutoCompleteTextView) dialog
+				.findViewById(R.id.profileEnterState);
+		hide.setVisibility(View.GONE);
+
+		LinearLayout genderHide = (LinearLayout) dialog
+				.findViewById(R.id.profileEnterGender);
+		genderHide.setVisibility(View.GONE);
+		// set the custom dialog components - text, image and button
+		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
+		text.setText("Enter your birthday below.");
+
+		final EditText input = (EditText) dialog
+				.findViewById(R.id.profileDialogInput);
+		input.setInputType(InputType.TYPE_DATETIME_VARIATION_DATE);
+
+		Button dialogButton = (Button) dialog
+				.findViewById(R.id.profileDialogBtn);
+		// if button is clicked, close the custom dialog
+		dialogButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String userInput = input.getText().toString().trim();
+				if (userInput != null || userInput.length() > 0) {
+					TextView birthday = (TextView) birthdayBtn
+							.findViewById(R.id.birthdayProfile);
+					birthday.setText(userInput);
+					birthday.setTextColor(Color.parseColor("#9C9C9C"));
+					birthday.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
+					TextView pts = (TextView) birthdayBtn
+							.findViewById(R.id.birthdayProfile_Pts);
+					pts.setVisibility(View.GONE);
+					birthdayBtn.setClickable(false);
+					runOnUiThread(new Runnable() {
+						public void run() {
+							birthdayBtn.invalidate();
+						}
+					});
+				}
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
+	}
+
+	public void showGenderDialog() {
+		final Dialog dialog = new Dialog(this);
+		dialog.setContentView(R.layout.profile_dialog_input);
+		dialog.setTitle("Birthday");
+		AutoCompleteTextView hide = (AutoCompleteTextView) dialog
+				.findViewById(R.id.profileEnterState);
+		hide.setVisibility(View.GONE);
+
+		EditText hide2 = (EditText) dialog
+				.findViewById(R.id.profileDialogInput);
+		hide2.setVisibility(View.GONE);
+		// set the custom dialog components - text, image and button
+		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
+		text.setText("Enter your birthday below.");
+
+		Button dialogButton = (Button) dialog
+				.findViewById(R.id.profileDialogBtn);
+		dialogButton.setVisibility(View.GONE);
+
+		LinearLayout maleBtn = (LinearLayout) dialog.findViewById(R.id.profileDialogMale);
+		maleBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				TextView gender = (TextView) genderBtn
+						.findViewById(R.id.genderProfile);
+				gender.setText("Male");
+				gender.setTextColor(Color.parseColor("#9C9C9C"));
+				gender.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
+				TextView pts = (TextView)genderBtn
+						.findViewById(R.id.genderProfile_Pts);
+				pts.setVisibility(View.GONE);
+				genderBtn.setClickable(false);
+				runOnUiThread(new Runnable() {
+					public void run() {
+						genderBtn.invalidate();
+					}
+				});
+				dialog.dismiss();
+			}
+		});
+
+		LinearLayout femaleBtn = (LinearLayout) dialog.findViewById(R.id.profileDialogFemale);
+		femaleBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				TextView gender = (TextView) genderBtn
+						.findViewById(R.id.genderProfile);
+				gender.setText("Female");
+				gender.setTextColor(Color.parseColor("#9C9C9C"));
+				gender.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
+				TextView pts = (TextView)genderBtn
+						.findViewById(R.id.genderProfile_Pts);
+				pts.setVisibility(View.GONE);
+				genderBtn.setClickable(false);
+				runOnUiThread(new Runnable() {
+					public void run() {
+						genderBtn.invalidate();
+					}
+				});
+				dialog.dismiss();
+			}
+		});
+		
+		dialog.show();
+	}
+
 	// income <-- diff. layout, have list of options
-	
+
 	// credit ?
-	
-	
+
 	// pre-enter all user data that user has already inserted into the
 	// profile fields.
 	public void enterUserData() {

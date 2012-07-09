@@ -1,64 +1,38 @@
 package me.pdthx.Accounts;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import me.pdthx.ACHAccountSetupActivity;
 import me.pdthx.BaseActivity;
-import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
-import me.pdthx.SendPaymentActivity;
 import me.pdthx.CustomViews.CustomLockView;
 import me.pdthx.Requests.ACHAccountDeleteRequest;
 import me.pdthx.Requests.ACHAccountDetailRequest;
-import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Requests.ACHAccountUpdateRequest;
-import me.pdthx.Requests.PaymentRequest;
-import me.pdthx.Requests.SecurityPinSetupRequest;
-import me.pdthx.Requests.UserRequest;
 import me.pdthx.Responses.ACHAccountResponse;
-import me.pdthx.Responses.ACHAccountSetupResponse;
 import me.pdthx.Responses.Response;
-import me.pdthx.Responses.SecurityQuestionResponse;
 import me.pdthx.Responses.UserSignInResponse;
 import me.pdthx.Services.PaymentAcctService;
-import me.pdthx.Services.PaymentServices;
-import me.pdthx.Services.UserService;
-import me.pdthx.Setup.ConfirmPinActivity;
-import me.pdthx.Setup.CreatePinActivity;
-import me.pdthx.Setup.CreateQuestionActivity;
-import me.pdthx.Widget.OnWheelChangedListener;
-import me.pdthx.Widget.WheelView;
-import me.pdthx.Widget.Adapters.ArrayWheelAdapter;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class AccountManagerActivity extends BaseActivity implements
@@ -71,22 +45,10 @@ public class AccountManagerActivity extends BaseActivity implements
 	Spinner spinnerReceiveAcct;
 	Spinner spinnerSendAcct;
 
-	private String nameOnAccount;
-	private String routingNumber;
-	private String accountNumber;
-	private String accountType;
-	private String questions[];
-	private String passcodeCreation;
-	private String nickname;
-
 	private String preferredSend;
 	private String preferredReceive;
 
-	private int currentId;
-
 	private boolean isCheckingAcct;
-	private ACHAccountSetupRequest request;
-	private ACHAccountSetupResponse setupResponse;
 	private Response response;
 	private ACHAccountResponse updateResponse;
 	private Response sendResponse;
@@ -502,81 +464,6 @@ public class AccountManagerActivity extends BaseActivity implements
 		bottom.setVisibility(View.GONE);
 	}
 
-	public void showAddAccounts() {
-		setContentView(R.layout.achaccountsetup_controller);
-		TextView title = (TextView) findViewById(R.id.txtACHTitle);
-		title.setText("Add Account");
-
-		btnAcctType = (RadioGroup) findViewById(R.id.achBankCategories);
-		btnAcctType.setOnCheckedChangeListener(this);
-
-		Button remindLater = (Button) findViewById(R.id.btnRemindMeLater);
-		remindLater.setVisibility(View.GONE);
-		Button removeButton = (Button) findViewById(R.id.btnremoveACHAcct);
-		removeButton.setVisibility(View.GONE);
-		LinearLayout bottom = (LinearLayout) findViewById(R.id.stepsToCompleteLayout);
-		bottom.setVisibility(View.GONE);
-
-		Button addAccount = (Button) findViewById(R.id.btnSubmitACHAccount);
-		addAccount.setOnClickListener(new OnClickListener() {
-			public void onClick(View argO) {
-				EditText txtNameOnAccount = (EditText) findViewById(R.id.txtNameOnAccount);
-				EditText txtRoutingNumber = (EditText) findViewById(R.id.txtRoutingNumber);
-				EditText txtAccountNumber = (EditText) findViewById(R.id.txtAccountNumber);
-				EditText txtNickname = (EditText) findViewById(R.id.txtNicknameonAcct);
-
-				if (txtAccountNumber
-						.getText()
-						.toString()
-						.trim()
-						.equals(((EditText) findViewById(R.id.txtConfirmAccountNumber))
-								.getText().toString().trim())
-						&& (txtAccountNumber.getText().toString().length() != 0)) {
-
-					nameOnAccount = txtNameOnAccount.getText().toString()
-							.trim();
-					routingNumber = txtRoutingNumber.getText().toString()
-							.trim();
-					accountNumber = txtAccountNumber.getText().toString()
-							.trim();
-					nickname = txtNickname.getText().toString().trim();
-					if (isCheckingAcct) {
-						accountType = "Checking";
-					} else {
-						accountType = "Savings";
-					}
-
-					if (userInfo.PaymentAccountId.length() != 0
-							|| (listofBanks != null && listofBanks.size() > 0)) {
-						// user has security pin
-						// 1.) confirm pin
-						// 2.) confirm question
-						confirmPin();
-					} else {
-						// user does not have security pin
-						// 1.) show setup pin creation screen
-						// 2.) show create question screen
-						confirmCreation();
-					}
-				} else {
-					achSetupHandler
-							.sendEmptyMessage(USERREGISTRATION_ACHNUMBERMISMATCH);
-				}
-			}
-		});
-
-		Button back = (Button) findViewById(R.id.btnACHBack);
-		back.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				showAccountScreen();
-			}
-
-		});
-
-	}
-
 	public void showAccountScreen() {
 		setContentView(R.layout.account_controller);
 
@@ -656,7 +543,8 @@ public class AccountManagerActivity extends BaseActivity implements
 			@Override
 			public void onClick(View arg0) {
 
-				showAddAccounts();
+				startActivity(new Intent(getApplicationContext(), AddLinkAccountActivity.class));
+				finish();
 
 			}
 
@@ -733,124 +621,6 @@ public class AccountManagerActivity extends BaseActivity implements
 		});
 	}
 
-	public void confirmCreation() {
-		setContentView(R.layout.setup_security_controller);
-
-		Button btnSetupSecurityPin = (Button) findViewById(R.id.btnSetupSecurityPin);
-		btnSetupSecurityPin.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				createSecurityPin();
-			}
-
-		});
-	}
-
-	public void createSecurityPin() {
-		setContentView(R.layout.setup_security_dialog);
-
-		final CustomLockView ctrlSecurityPin = (CustomLockView) findViewById(R.id.ctrlSecurityPin);
-		ctrlSecurityPin.invalidate();
-		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-
-				passcode = ctrlSecurityPin.getPasscode();
-
-				if (passcode.length() > 3) {
-					confirmPin();
-				} else
-					achSetupHandler
-							.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
-
-				return false;
-
-			}
-		});
-	}
-
-	public void confirmPin() {
-		setContentView(R.layout.setup_security_dialog);
-
-		TextView header = (TextView) findViewById(R.id.setupSecurityHeader);
-		header.setText("Confirm Your Pin");
-		TextView body = (TextView) findViewById(R.id.setupSecurityBody);
-		body.setText("Re-enter your security pin in order to continue account creation.");
-
-		final CustomLockView ctrlSecurityPin = (CustomLockView) findViewById(R.id.ctrlSecurityPin);
-		ctrlSecurityPin.invalidate();
-		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-
-				String confirmPasscode = ctrlSecurityPin.getPasscode();
-
-				if (confirmPasscode.length() > 3) {
-					if (userInfo.PaymentAccountId.length() != 0
-							|| (listofBanks != null && listofBanks.size() > 0)) {
-						passcode = confirmPasscode;
-						createQuestion();
-					} else {
-
-						if (confirmPasscode.equals(passcode)) {
-							final SecurityPinSetupRequest setupSecurityPin = new SecurityPinSetupRequest();
-							setupSecurityPin.SecurityPin = passcode;
-							setupSecurityPin.UserId = prefs.getString("userId",
-									"");
-
-							// send pincode to server
-							progressDialog.setMessage("Sending Info...");
-							progressDialog
-									.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-							progressDialog.show();
-
-							Thread thread = new Thread(new Runnable() {
-
-								@Override
-								public void run() {
-									// TODO Auto-generated method stub
-									try {
-										response = UserService
-												.setupSecurityPin(setupSecurityPin);
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-									progressDialog.dismiss();
-
-									if (response.Success) {
-										runOnUiThread(new Runnable() {
-											public void run() {
-
-												createQuestion();
-
-											}
-										});
-									} else {
-										achSetupHandler
-												.sendEmptyMessage(USERDATA_FAILED);
-									}
-								}
-
-							});
-							thread.start();
-
-						} else {
-							achSetupHandler
-									.sendEmptyMessage(USERSECURITYPIN_CONFIRMMISMATCH);
-						}
-					}
-				} else
-					achSetupHandler
-							.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
-
-				return false;
-
-			}
-		});
-
-	}
-
 	public void confirmPinUpdateAccts() {
 		setContentView(R.layout.setup_security_dialog);
 
@@ -921,106 +691,6 @@ public class AccountManagerActivity extends BaseActivity implements
 			}
 		});
 
-	}
-
-	public void createQuestion() {
-		setContentView(R.layout.create_security_question);
-
-		if (userInfo.PaymentAccountId.length() != 0
-				|| (listofBanks != null && listofBanks.size() > 0)) {
-			TextView body = (TextView) findViewById(R.id.securityQuestionBody);
-			body.setText("Choose your previously created security question and answer it in order to confirm your new account creation.");
-		}
-
-		final TextView txtAnswer = (TextView) findViewById(R.id.security_question_selected);
-
-		final WheelView list = (WheelView) findViewById(R.id.security_question_list);
-
-		int curr = 1;
-		final ArrayList<SecurityQuestionResponse> securityQuestions = UserService
-				.getSecurityQuestions();
-		questions = new String[securityQuestions.size()];
-		for (int i = 0; i < securityQuestions.size(); i++) {
-			questions[i] = securityQuestions.get(i).Question;
-		}
-		ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this,
-				questions);
-		adapter.setTextSize(14);
-		list.setViewAdapter(adapter);
-		list.setCurrentItem(curr);
-
-		list.addChangingListener(new OnWheelChangedListener() {
-
-			@Override
-			public void onChanged(WheelView wheel, int oldValue, int newValue) {
-				txtAnswer.setText(questions[newValue]);
-				currentId = newValue;
-			}
-
-		});
-
-		Button confirmBtn = (Button) findViewById(R.id.securityquestion_confirmbtn);
-		confirmBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				EditText userAnswer = (EditText) findViewById(R.id.setupSecurityTxtAnswer);
-				String answer = userAnswer.getText().toString().trim();
-
-				request = new ACHAccountSetupRequest();
-				request.AccountNumber = accountNumber;
-				request.AccountType = accountType;
-				request.NameOnAccount = nameOnAccount;
-				request.RoutingNumber = routingNumber;
-				request.SecurityPin = passcode;
-				request.SecurityAnswer = answer;
-				request.SecurityQuestionId = currentId;
-				request.Nickname = nickname;
-				request.UserId = prefs.getString("userId", "");
-
-				progressDialog.setMessage("Sending Info...");
-				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				progressDialog.show();
-
-				Thread thread = new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						try {
-							setupResponse = UserService
-									.setupACHAccount(request);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						progressDialog.dismiss();
-
-						if (setupResponse.Success) {
-							if (userInfo.PaymentAccountId.length() != 0
-									|| (listofBanks != null && listofBanks
-											.size() > 0)) {
-								runOnUiThread(new Runnable() {
-									public void run() {
-										Editor editor = prefs.edit();
-										editor.remove("paymentAccountId");
-										editor.putString("paymentAccountId",
-												setupResponse.PaymentAccountId);
-										editor.commit();
-									}
-								});
-							}
-							achSetupHandler
-									.sendEmptyMessage(ACCOUNT_REG_SUCCESS);
-						} else {
-							achSetupHandler.sendEmptyMessage(USERDATA_FAILED);
-						}
-					}
-
-				});
-				thread.start();
-			}
-
-		});
 	}
 
 	@Override

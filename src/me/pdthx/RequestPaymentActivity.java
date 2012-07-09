@@ -30,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,7 +49,7 @@ public class RequestPaymentActivity extends BaseActivity {
 
 	private Friend friend;
 	
-	private Button btnCamera;
+	private ImageButton btnCamera;
 	private Button btnAddContacts;
 	private Button txtAmount;
 	private EditText txtComments;
@@ -301,12 +302,11 @@ public class RequestPaymentActivity extends BaseActivity {
 			}
 		});
 		
-		btnCamera = (Button) findViewById(R.id.camera);
+		btnCamera = (ImageButton) findViewById(R.id.camera);
 		btnCamera.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v) {
-				
 				startActivityForResult(new Intent(RequestPaymentActivity.this, CameraActivity.class), CAMERA);
 			}	
 		});
