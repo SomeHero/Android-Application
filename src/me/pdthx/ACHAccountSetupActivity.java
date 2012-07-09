@@ -1,14 +1,19 @@
 package me.pdthx;
 
+import java.io.FileInputStream;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,8 +21,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import me.pdthx.Models.Friend;
 import me.pdthx.Requests.ACHAccountSetupRequest;
+import me.pdthx.Requests.UserCheckImageRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
+import me.pdthx.Responses.UserCheckImageResponse;
 import me.pdthx.Services.UserService;
 import me.pdthx.Setup.CreatePinActivity;
 
@@ -26,16 +34,20 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 
 	final private int SETUPACHACCOUNT_FAILED = 3;
 	final private int USERREGISTRATION_ACHNUMBERMISMATCH = 8;
+	final private int CAMERA = 20;
 	private Button btnAddAccount;
 	private Button btnRemoveAccount;
 	private Button btnUpdateAccount;
 	private Button btnBack;
+	private Button btnCheckImage;
 	private RadioGroup btnAcctType;
 	private boolean isCheckingAcct;
 	private int tab;
 
 	private ACHAccountSetupRequest request;
 	private ACHAccountSetupResponse response;
+
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +56,7 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 
 		progressDialog.dismiss();
 		setContentView(R.layout.achaccountsetup_controller);
-
+		btnCheckImage = (Button) findViewById(R.id.checkButton);
 		tab = getIntent().getExtras().getInt("tab");
 
 		btnAddAccount = (Button) findViewById(R.id.btnSubmitACHAccount);
@@ -123,7 +135,18 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 	};
 
 	private void showSetupACHController() {
+		
+		
+		btnCheckImage.setOnClickListener(new OnClickListener(){
 
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(new Intent(ACHAccountSetupActivity.this, CameraActivity.class), CAMERA);
+				
+			}
+			
+		});
+		
 		btnBack.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -182,4 +205,35 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 			isCheckingAcct = false;
 		}
 	}
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			if(requestCode == CAMERA)
+			{
+				try{
+					String path = (String) data.getExtras().get("index");
+					FileInputStream in = new FileInputStream(path);
+					
+					Bitmap thumbnail = null;
+					
+//					cameraImage.setImageResource(R.drawable.bg_pop3);
+//					thumbnail = BitmapFactory.decodeStream(in);
+//					cameraImage.setImageBitmap(thumbnail);
+					in.close();
+				}
+				catch (Exception e)
+				{
+					Log.d("Error", e.getMessage());
+				}
+			}
+		}
+		else {
+			if (requestCode != CAMERA) {
+				finish();
+			}
+		}
+	}
+	
+	
+	
 }
