@@ -1,7 +1,11 @@
 package me.pdthx;
 
 import java.io.FileInputStream;
+import java.io.FilterInputStream;
+import java.io.IOException;
 import java.text.NumberFormat;
+
+import com.zubhium.utils.ZubhiumBase.InputStream;
 
 import me.pdthx.CustomViews.CustomLockView;
 import me.pdthx.Models.Friend;
@@ -24,6 +28,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,6 +58,7 @@ public class RequestPaymentActivity extends BaseActivity {
 	private Button txtAmount;
 	private EditText txtComments;
 	private Button btnRequestMoney;
+	private ImageView cameraImage;
 	private String passcode = "";
 
 	final private int ADDING_FRIEND = 6;
@@ -291,6 +297,7 @@ public class RequestPaymentActivity extends BaseActivity {
 		Typeface type = Typeface.createFromAsset(getAssets(),"HelveticaWorld-Bold.ttf");
 		btnRequestMoney.setTypeface(type);
 		btnRequestMoney.setTextColor(Color.WHITE);
+		cameraImage = (ImageView) findViewById(R.id.cameraImage);
 
 		txtAmount = (Button) findViewById(R.id.txtRequestMoneyAmount);
 		txtAmount.setOnClickListener(new OnClickListener(){
@@ -361,7 +368,7 @@ public class RequestPaymentActivity extends BaseActivity {
 			}
 		});
 
-		btnRequestMoney.setVisibility(View.VISIBLE);
+
 	}
 
 	@Override
@@ -399,16 +406,17 @@ public class RequestPaymentActivity extends BaseActivity {
 			else if(requestCode == CAMERA)
 			{
 				try{
-
 					String path = (String) data.getExtras().get("index");
 					FileInputStream in = new FileInputStream(path);
-					Bitmap thumbnail = BitmapFactory.decodeStream(in); 
-					ImageView cameraImage = (ImageView) findViewById(R.id.cameraImage);
+					Bitmap thumbnail = null;
+					cameraImage.setImageResource(R.drawable.bg_pop3);
+					thumbnail = BitmapFactory.decodeStream(in);
 					cameraImage.setImageBitmap(thumbnail);
+					in.close();
 				}
 				catch (Exception e)
 				{
-					
+					Log.d("Error", e.getMessage());
 				}
 			}
 			else {
@@ -420,7 +428,6 @@ public class RequestPaymentActivity extends BaseActivity {
 				finish();
 			}
 		}
-
 	}
 
 	protected void showSecurityPinDialog() {
@@ -546,8 +553,4 @@ public class RequestPaymentActivity extends BaseActivity {
 		}
 		return provider1.equals(provider2);
 	}
-
-
-
-
 }

@@ -164,11 +164,18 @@ public final class HomeActivity extends BaseActivity {
 			if (imgUserName != null) {
 				URL url;
 				try {
-					if (!userResponse.ImageUrl.equals("null")) {
-						url = new URL(userResponse.ImageUrl);
-						Bitmap mIcon = BitmapFactory.decodeStream(url
-								.openConnection().getInputStream());
-						imgUserName.setImageBitmap(mIcon);
+					if (!userResponse.ImageUrl.equals("null") && !userResponse.ImageUrl.equals("")) {
+						try {
+							url = new URL(userResponse.ImageUrl);
+							Bitmap mIcon = BitmapFactory.decodeStream(url
+									.openConnection().getInputStream());
+							imgUserName.setImageBitmap(mIcon);
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							imgUserName.setImageResource(R.drawable.avatar_unknown);
+						}
+						
 					} else {
 						imgUserName.setImageResource(R.drawable.avatar_unknown);
 					}
