@@ -490,7 +490,7 @@ public final class PaystreamActivity extends BaseActivity implements
 		} else {
 			currentDate.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 			Date firstDayofWk = currentDate.getTime();
-			currentDate.add(Calendar.DATE, 7);
+			currentDate.add(Calendar.DAY_OF_YEAR, 7);
 			Date lastDayofWk = currentDate.getTime();
 			if (comp.after(firstDayofWk) && comp.before(lastDayofWk)) {
 				currentHeader = "This week";

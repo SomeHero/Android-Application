@@ -3,8 +3,8 @@
     android:id="@+id/scrollView1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fadingEdge="none"
     android:background="#FAFAFA"
+    android:fadingEdge="none"
     android:scrollbars="none" >
 
     <LinearLayout
@@ -58,10 +58,11 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:orientation="vertical" >
-
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:gravity="center" >
 
                 <TextView
@@ -72,23 +73,38 @@
                     android:layout_marginTop="10dp"
                     android:text="Enter info below or" />
 
-                <Button
-                    android:id="@+id/checkButton"
-                    style="?android:attr/buttonStyleSmall"
+                <LinearLayout
+                    android:id="@+id/takePhotoBtn"
+                    android:clickable="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:background="@null"
-                    android:text="Snap a photo of a check"
-                    android:textColor="#4CB7CF" />
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/btn_take_pic_selector" />
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:text="Take photo of a check"
+                        android:textColor="#41A0BF"
+                        android:textSize="12dp" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <EditText
                 android:id="@+id/txtNicknameonAcct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp" 
-                android:hint="Nickname For Account i.e. 'My Bank'">
+                android:layout_marginBottom="10dp"
+                android:hint="Nickname For Account i.e. &apos;My Bank&apos;" >
             </EditText>
 
             <EditText
@@ -185,7 +201,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-"
+"
 
             <LinearLayout
                 android:layout_width="match_parent"
