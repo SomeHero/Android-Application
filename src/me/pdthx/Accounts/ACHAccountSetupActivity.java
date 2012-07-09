@@ -60,7 +60,6 @@ OnCheckedChangeListener{
 	private String preferredReceive;
 
 	private int currentId;
-
 	private boolean isCheckingAcct;
 	private ACHAccountSetupRequest request;
 	private ACHAccountSetupResponse setupResponse;

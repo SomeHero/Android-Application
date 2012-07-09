@@ -2,6 +2,8 @@ package me.pdthx.Models;
 
 import java.util.Date;
 
+import me.pdthx.helpers.NameSeparator;
+
 import android.graphics.Bitmap;
 
 public class PaystreamTransaction {
@@ -27,46 +29,56 @@ public class PaystreamTransaction {
 	private String _comments = "";
 	private Bitmap _cameraPic = null;
 
-	public boolean search(String queary)
-	{	
-		if(queary.startsWith(" "))
-		{
-			queary.replaceAll(" ", "");
-		}
-		if(_direction.equalsIgnoreCase("Out"))
-		{
-			if(_recipientUri.toLowerCase().startsWith(queary))
-			{
-				return true;
-			}
-			else if(_comments.toLowerCase().startsWith(queary))
-			{
-				return true;
-			}
-			else if(_amount.toString().startsWith(queary))
-			{
-				return true;
-			}
-		}
-		else if(_direction.equalsIgnoreCase("In"))
-		{
-			if(_senderUri.toLowerCase().startsWith(queary))
-			{
-				return true;
-			}
-			else if(_comments.toLowerCase().startsWith(queary))
-			{
-				return true;
-			}
-			else if(_amount.toString().startsWith(queary))
-			{
-				return true;
-			}
-		}
+	public boolean search(String queary) {
+		
+		String search = queary.trim().toLowerCase();
+		String[] names = NameSeparator.separateName(_recipientUri);
+		String firstName = names[0].toLowerCase();
+		String lastName = names[1].toLowerCase();
+		String[] senderNames = NameSeparator.separateName(_senderUri);
+		String senderFirstName = senderNames[0].toLowerCase();
+		String senderLastName = senderNames[1].toLowerCase();
+		
 
+        if (search.contains(" "))
+        {
+            String[] searchNames = NameSeparator.separateName(search);
+            String searchFirst = searchNames[0].toLowerCase();
+            String searchLast = searchNames[1].toLowerCase();
 
-		return false;
+            return firstName.startsWith(searchFirst) && lastName.startsWith(searchLast)
+                || firstName.startsWith(searchLast) && lastName.startsWith(searchFirst);
+        }
+
+        if(_direction.equalsIgnoreCase("Out"))
+        {
+	        if (_recipientUri.startsWith(search))
+	        {
+	            return true;
+	        }
+	        if(firstName.startsWith(search)) {
+	            return true;
+	        }
+	        if (lastName.startsWith(search)) {
+	            return true;
+	        }
+        }
+        else if(_direction.equalsIgnoreCase("In"))
+        {
+        	 if (_senderUri.startsWith(search))
+ 	        {
+ 	            return true;
+ 	        }
+ 	        if (senderFirstName.startsWith(search)) {
+ 	            return true;
+ 	        }
+ 	        if (senderLastName.startsWith(search)) {
+ 	            return true;
+ 	        }
+        }
+        return false;
 	}
+
 	public void setCameraPic(Bitmap cameraPic) {
 		_cameraPic = cameraPic;
 	}

@@ -105,5 +105,4 @@
         android:text="OK"
         android:textColor="#FFFFFF"
         android:textStyle="bold" />
-
 </LinearLayout>

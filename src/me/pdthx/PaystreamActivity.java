@@ -1,6 +1,5 @@
 package me.pdthx;
 
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,6 +13,7 @@ import me.pdthx.Dialogs.IncomingPaymentDialog;
 import me.pdthx.Dialogs.IncomingRequestDialog;
 import me.pdthx.Dialogs.OutgoingPaymentDialog;
 import me.pdthx.Dialogs.OutgoingRequestDialog;
+import me.pdthx.Models.Friend;
 import me.pdthx.Models.PaystreamTransaction;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Responses.PaystreamResponse;
@@ -22,7 +22,6 @@ import me.pdthx.Services.PaystreamService;
 import me.pdthx.Services.UserService;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -34,7 +33,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -60,9 +58,6 @@ public final class PaystreamActivity extends BaseActivity implements
 	public static final String TAG = "PaystreamActivity";
 	private PullAndRefreshListView mListView = null;
 	private TextView mEmptyTextView = null;
-	private static final int CLEARSEARCH = 11;
-	private int currentCategory;
-
 	private RadioGroup group;
 
 	@Override
@@ -94,15 +89,6 @@ public final class PaystreamActivity extends BaseActivity implements
 
 	}
 
-	private Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case CLEARSEARCH:
-				searchBar.setText("");
-			}
-		}
-	};
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -147,24 +133,23 @@ public final class PaystreamActivity extends BaseActivity implements
 				current = s.toString().toLowerCase();
 				int checked = group.getCheckedRadioButtonId();
 
-				if (checked == 2131165310) {
+				if (checked == R.id.paystreamAll) {
 					searched.clear();
 					for (int x = 0; x < m_transactions.size(); x++)
 					{
 
-						if(m_transactions.get(x).search(current))
-						{
+						if(m_transactions.get(x).search(current.toLowerCase())){
 							searched.add(m_transactions.get(x));
 						}
 					}
-					if (searched.size() == 0) {
+					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, m_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}
-				} 
-				else if (checked == 2131165311) {
+				}
+				else if (checked == R.id.paystreamSent) {
 					searched.clear();
 					for (int x = 0; x < send_transactions.size(); x++)
 					{
@@ -175,15 +160,15 @@ public final class PaystreamActivity extends BaseActivity implements
 						}
 					}
 
-					
+
 					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, send_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}
 				}
-				else if (checked == 2131165312) {
+				else if (checked == R.id.paystreamReceived) {
 					searched.clear();
 					for (int x = 0; x < recieve_transactions.size(); x++)
 					{
@@ -194,14 +179,14 @@ public final class PaystreamActivity extends BaseActivity implements
 						}
 					}
 
-					
+
 					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, recieve_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}
-				} else if (checked == 2131165313) {
+				} else if (checked == R.id.paystreamOther) {
 					searched.clear();
 					for (int x = 0; x < other_transactions.size(); x++)
 					{
@@ -212,10 +197,10 @@ public final class PaystreamActivity extends BaseActivity implements
 						}
 					}
 
-					
+
 					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this,R.layout.transaction_item, other_transactions);
-					} 
+					}
 					else {
 						m_adapter = new PaystreamAdapter(PaystreamActivity.this, R.layout.transaction_item, searched);
 					}
@@ -315,7 +300,7 @@ public final class PaystreamActivity extends BaseActivity implements
 			recieve_transactions = new ArrayList<PaystreamTransaction>();
 			other_transactions = new ArrayList<PaystreamTransaction>();
 
-			DateFormat df = DateFormat.getDateInstance();
+
 			String previousHeader = "";
 			String currentHeader = "";
 			for (Iterator<PaystreamResponse> i = messages.iterator(); i
@@ -491,7 +476,7 @@ public final class PaystreamActivity extends BaseActivity implements
 
 	public String createHeader(PaystreamResponse currentTransaction) {
 		String currentHeader = "";
-		DateFormat df = DateFormat.getDateInstance();
+		DateFormat.getDateInstance();
 		/*
 		 * Change header style: today, this week, 2 weeks ago... 1 month ago, 2
 		 * month ago... 1 year... etc.
@@ -576,7 +561,7 @@ public final class PaystreamActivity extends BaseActivity implements
 		String userId = prefs.getString("userId", "");
 
 		messageRequest.UserId = userId;
-		ArrayList<PaystreamResponse> messages = PaystreamService
+		PaystreamService
 				.getMessages(messageRequest);
 		UserResponse userInfo = UserService.getUser(messageRequest);
 

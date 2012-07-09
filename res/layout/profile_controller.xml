@@ -45,7 +45,6 @@
         android:layout_height="wrap_content"
         android:fadingEdge="none"
         android:scrollbars="none" >
-"
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -366,7 +365,7 @@
                             android:id="@+id/profile_facebookBtn"
                             android:layout_width="match_parent"
                             android:layout_height="20dp"
-                           android:layout_margin="10dp"
+                            android:layout_margin="10dp"
                             android:clickable="true"
                             android:gravity="center"
                             android:paddingBottom="2px" >
@@ -405,7 +404,7 @@
                             android:id="@+id/profile_twitterBtn"
                             android:layout_width="match_parent"
                             android:layout_height="20dp"
-                          android:layout_margin="10dp"
+                            android:layout_margin="10dp"
                             android:clickable="true"
                             android:gravity="center"
                             android:paddingBottom="2px" >

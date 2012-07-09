@@ -263,11 +263,7 @@ public class ProfileControllerActivity extends BaseActivity {
 
 			});
 		}
-		// ETC
-		// photo id
-		// ssn
-		// income
-		// credit
+	
 	}
 
 	public void showDialog() {
@@ -315,13 +311,13 @@ public class ProfileControllerActivity extends BaseActivity {
 
 		Button dialogButton = (Button) dialog
 				.findViewById(R.id.profileDialogBtn);
+
 		// if button is clicked, close the custom dialog
 		dialogButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				String userInput = input.getText().toString().trim();
-				if (userInput != null || userInput.length() > 0
-						|| userInput.length() > 0) {
+				if (userInput != null || userInput.length() > 0 || userInput.length() > 0) {
 					TextView firstName = (TextView) firstNameBtn
 							.findViewById(R.id.firstNameProfile);
 					firstName.setText(userInput);
@@ -351,14 +347,6 @@ public class ProfileControllerActivity extends BaseActivity {
 		// set the custom dialog components - text, image and button
 		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
 		text.setText("Enter your last name in the textbox below.");
-
-		AutoCompleteTextView hide = (AutoCompleteTextView) dialog
-				.findViewById(R.id.profileEnterState);
-		hide.setVisibility(View.GONE);
-
-		LinearLayout genderHide = (LinearLayout) dialog
-				.findViewById(R.id.profileEnterGender);
-		genderHide.setVisibility(View.GONE);
 
 		final EditText input = (EditText) dialog
 				.findViewById(R.id.profileDialogInput);
@@ -603,7 +591,6 @@ public class ProfileControllerActivity extends BaseActivity {
 		LinearLayout genderHide = (LinearLayout) dialog
 				.findViewById(R.id.profileEnterGender);
 		genderHide.setVisibility(View.GONE);
-
 		// set the custom dialog components - text, image and button
 		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
 		text.setText("Enter the city corresponding to your address below.");
@@ -719,12 +706,12 @@ public class ProfileControllerActivity extends BaseActivity {
 
 		// set the custom dialog components - text, image and button
 		TextView text = (TextView) dialog.findViewById(R.id.profileDialogBody);
+
+		text.setInputType(InputType.TYPE_CLASS_NUMBER);
 		text.setText("Enter your zipcode below.");
 
 		final EditText input = (EditText) dialog
 				.findViewById(R.id.profileDialogInput);
-		input.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL|InputType.TYPE_CLASS_NUMBER);
-
 		Button dialogButton = (Button) dialog
 				.findViewById(R.id.profileDialogBtn);
 		// if button is clicked, close the custom dialog
@@ -753,8 +740,6 @@ public class ProfileControllerActivity extends BaseActivity {
 		});
 		dialog.show();
 	}
-
-	// photo id?
 
 	// social security number
 

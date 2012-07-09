@@ -79,7 +79,6 @@
                         android:src="@drawable/arrow" />
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout

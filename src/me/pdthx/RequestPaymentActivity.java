@@ -1,5 +1,7 @@
 package me.pdthx;
 
+import android.content.SharedPreferences.Editor;
+import me.pdthx.Login.SignInUIActivity;
 import java.io.FileInputStream;
 import java.text.NumberFormat;
 
@@ -364,190 +366,192 @@ public class RequestPaymentActivity extends BaseActivity {
 		btnRequestMoney.setVisibility(View.VISIBLE);
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			if (requestCode == ADDING_FRIEND) {
-				Bundle bundle = data.getExtras();
-				if (bundle.getString("id") != null)
-                {
-                    Friend chosenContact = new Friend();
-                    chosenContact.setId(bundle.getString("id"));
-                    friend = friendsList.get(friendsList.indexOf(chosenContact));
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == ADDING_FRIEND) {
+                Bundle bundle = data.getExtras();
+                addingContact(bundle.getString("id"), bundle.getString("paypoint"));
+            }
+            else if(requestCode == ADD_MONEY){
+                Bundle bundle = data.getExtras();
+                String amount = bundle.getString("index");
+                txtAmount.setText(amount);
+            }
+            else if(requestCode == CAMERA)
+            {
+                try{
 
-                    if (friend.isFBContact()) {
-                        recipientUri = "fb_" + friend.getId();
-                        btnAddContacts.setText(friend.getName() + ": " + friend.getId());
-                    }
-                    else {
-                        recipientUri = "" + friend.getPaypoint();
-                        btnAddContacts.setText(friend.toString());
-                    }
+                    String path = (String) data.getExtras().get("index");
+                    FileInputStream in = new FileInputStream(path);
+                    Bitmap thumbnail = BitmapFactory.decodeStream(in);
+                    ImageView cameraImage = (ImageView) findViewById(R.id.cameraImage);
+                    cameraImage.setImageBitmap(thumbnail);
                 }
-                else
+                catch (Exception e)
                 {
-                    recipientUri = "" + friend.getPaypoint();
-                    btnAddContacts.setText(friend.toString());
+                    e.printStackTrace();
                 }
+            }
+            else {
+                launchRequestMoneyView();
+            }
+        }
+        else {
+            if (requestCode != ADDING_FRIEND && requestCode != ADD_MONEY && requestCode != CAMERA) {
+                finish();
+            }
+        }
 
-			}
-			else if(requestCode == ADD_MONEY){
-				Bundle bundle = data.getExtras();
-				String amount = bundle.getString("index");
-				txtAmount.setText(amount);
-			}
-			else if(requestCode == CAMERA)
-			{
-				try{
+    }
 
-					String path = (String) data.getExtras().get("index");
-					FileInputStream in = new FileInputStream(path);
-					Bitmap thumbnail = BitmapFactory.decodeStream(in); 
-					ImageView cameraImage = (ImageView) findViewById(R.id.cameraImage);
-					cameraImage.setImageBitmap(thumbnail);
-				}
-				catch (Exception e)
-				{
-					
-				}
-			}
-			else {
-				launchRequestMoneyView();
-			}
-		}
-		else {
-			if (requestCode != ADDING_FRIEND && requestCode != ADD_MONEY && requestCode != CAMERA) {
-				finish();
-			}
-		}
+    protected void showSecurityPinDialog() {
+        final Dialog d = new Dialog(RequestPaymentActivity.this, R.style.CustomDialogTheme);
+        d.setContentView(R.layout.security_dialog);
 
-	}
+        d.getWindow().setLayout(400, 600);
+        d.show();
 
-	protected void showSecurityPinDialog() {
-		final Dialog d = new Dialog(RequestPaymentActivity.this, R.style.CustomDialogTheme);
-		d.setContentView(R.layout.security_dialog);
+        TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
+        TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
 
-	 	d.getWindow().setLayout(400, 600);
-		d.show();
+        txtConfirmHeader.setText("Confirm Your Request");
+        txtConfirmBody.setText(
+            String.format("To confirm your request for %s from %s, swipe you pin below.",
+                txtAmount.getText(), friend.getName()));
 
-		TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
-		TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
+        Button btnCancel = (Button) d.findViewById(R.id.btnCancelSendMoney);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                d.dismiss();
+            }
+        });
 
-		txtConfirmHeader.setText("Confirm Your Request");
-		txtConfirmBody.setText(
-				String.format("To confirm your request for %s from %s, swipe you pin below.",
-						txtAmount.getText(), friend.getName()));
+        final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
+        ctrlSecurityPin.invalidate();
+        ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                passcode = ctrlSecurityPin.getPasscode();
 
-		Button btnCancel = (Button) d.findViewById(R.id.btnCancelSendMoney);
-		btnCancel.setOnClickListener(new View.OnClickListener() {
-		    public void onClick(View v) {
-		        d.dismiss();
-		    }
-		});
+                if (passcode.length() > 3) {
 
-		final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
-		ctrlSecurityPin.invalidate();
-		ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				passcode = ctrlSecurityPin.getPasscode();
+                    amount = Double.parseDouble(txtAmount.getText().toString()
+                        .replaceAll("[$,]*", ""));
+                    comments = txtComments.getText().toString();
+                    passcode = ctrlSecurityPin.getPasscode();
 
-				if (passcode.length() > 3) {
+                    d.dismiss();
 
-					amount = Double.parseDouble(txtAmount.getText().toString()
-							.replaceAll("[$,]*", ""));
-					comments = txtComments.getText().toString();
-					passcode = ctrlSecurityPin.getPasscode();
+                    showDialog(SUBMITREQUEST_DIALOG);
+                } else
+                    showDialog(INVALIDPASSCODELENGTH_DIALOG);
 
-					d.dismiss();
+                return false;
+            }
+        });
+    }
 
-					showDialog(SUBMITREQUEST_DIALOG);
-				} else
-					showDialog(INVALIDPASSCODELENGTH_DIALOG);
+    private void addingContact(String id, String paypoint) {
+        Friend chosenContact = new Friend();
+        if (id != null)
+        {
+            chosenContact.setId(id);
+            friend = friendsList.get(friendsList.indexOf(chosenContact));
 
-				return false;
-			}
-		});
-	}
+            if (friend.isFBContact()) {
+                recipientUri = "fb_" + friend.getId();
+                btnAddContacts.setText(friend.getName() + ": " + friend.getId());
+            }
+            else {
+                recipientUri = "" + friend.getPaypoint();
+                btnAddContacts.setText(friend.toString());
+            }
+        }
+        else
+        {
+            chosenContact.setName("New Contact");
+            chosenContact.setPaypoint(paypoint);
+            friend = chosenContact;
+            recipientUri = "" + paypoint;
+            btnAddContacts.setText("New contact: " + paypoint);
+        }
+    }
 
-	protected void SubmitRequest() {
+    protected void SubmitRequest() {
 
-		PaymentRequest paymentRequest = new PaymentRequest();
-		paymentRequest.SenderAccountId = prefs.getString("paymentAccountId", "");
-		paymentRequest.SenderUri = prefs.getString("login", "");
-		paymentRequest.RecipientUri = recipientUri;
-		paymentRequest.Amount = amount;
-		paymentRequest.Comments = comments;
-		paymentRequest.SecurityPin = passcode;
+        PaymentRequest paymentRequest = new PaymentRequest();
+        paymentRequest.SenderAccountId = prefs.getString("paymentAccountId", "");
+        paymentRequest.SenderUri = prefs.getString("login", "");
+        paymentRequest.RecipientUri = recipientUri;
+        paymentRequest.Amount = amount;
+        paymentRequest.Comments = comments;
+        paymentRequest.SecurityPin = passcode;
 
-		if (location != null) {
-			paymentRequest.Latitude = location.getLatitude();
-			paymentRequest.Longitude = location.getLongitude();
-		}
+        if (location != null) {
+            paymentRequest.Latitude = location.getLatitude();
+            paymentRequest.Longitude = location.getLongitude();
+        }
 
-		paymentResponse = PaymentServices.requestMoney(paymentRequest);
-	}
+        paymentResponse = PaymentServices.requestMoney(paymentRequest);
+    }
 
-	/** Determines whether one Location reading is better than the current Location fix
-	 * @param location  The new Location that you want to evaluate
-	 * @param currentBestLocation  The current Location fix, to which you want to compare the new one
-	 */
-	private boolean isBetterLocation(Location location, Location currentBestLocation) {
-		final int TWO_MINUTES = 1000 * 60 * 2;
+    /** Determines whether one Location reading is better than the current Location fix
+     * @param location  The new Location that you want to evaluate
+     * @param currentBestLocation  The current Location fix, to which you want to compare the new one
+     */
+    private boolean isBetterLocation(Location location, Location currentBestLocation) {
+        final int TWO_MINUTES = 1000 * 60 * 2;
 
-		if (location != null) {
+        if (location != null) {
 
-			if (currentBestLocation == null) {
-				// A new location is always better than no location
-				return true;
-			}
+            if (currentBestLocation == null) {
+                // A new location is always better than no location
+                return true;
+            }
 
-			// Check whether the new location fix is newer or older
-			long timeDelta = location.getTime() - currentBestLocation.getTime();
-			boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-			boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
-			boolean isNewer = timeDelta > 0;
+            // Check whether the new location fix is newer or older
+            long timeDelta = location.getTime() - currentBestLocation.getTime();
+            boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
+            boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+            boolean isNewer = timeDelta > 0;
 
-			// If it's been more than two minutes since the current location, use the new location
-			// because the user has likely moved
-			if (isSignificantlyNewer) {
-				return true;
-				// If the new location is more than two minutes older, it must be worse
-			} else if (isSignificantlyOlder) {
-				return false;
-			}
+            // If it's been more than two minutes since the current location, use the new location
+            // because the user has likely moved
+            if (isSignificantlyNewer) {
+                return true;
+                // If the new location is more than two minutes older, it must be worse
+            } else if (isSignificantlyOlder) {
+                return false;
+            }
 
-			// Check whether the new location fix is more or less accurate
-			int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-			boolean isLessAccurate = accuracyDelta > 0;
-			boolean isMoreAccurate = accuracyDelta < 0;
-			boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+            // Check whether the new location fix is more or less accurate
+            int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+            boolean isLessAccurate = accuracyDelta > 0;
+            boolean isMoreAccurate = accuracyDelta < 0;
+            boolean isSignificantlyLessAccurate = accuracyDelta > 200;
 
-			// Check if the old and new location are from the same provider
-			boolean isFromSameProvider = isSameProvider(location.getProvider(),
-					currentBestLocation.getProvider());
+            // Check if the old and new location are from the same provider
+            boolean isFromSameProvider = isSameProvider(location.getProvider(),
+                currentBestLocation.getProvider());
 
-			// Determine location quality using a combination of timeliness and accuracy
-			if (isMoreAccurate) {
-				return true;
-			} else if (isNewer && !isLessAccurate) {
-				return true;
-			} else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
-				return true;
-			}
-		}
-		return false;
-	}
+            // Determine location quality using a combination of timeliness and accuracy
+            if (isMoreAccurate) {
+                return true;
+            } else if (isNewer && !isLessAccurate) {
+                return true;
+            } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	/** Checks whether two providers are the same */
-	private boolean isSameProvider(String provider1, String provider2) {
-		if (provider1 == null) {
-			return provider2 == null;
-		}
-		return provider1.equals(provider2);
-	}
-
-
-
-
+    /** Checks whether two providers are the same */
+    private boolean isSameProvider(String provider1, String provider2) {
+        if (provider1 == null) {
+            return provider2 == null;
+        }
+        return provider1.equals(provider2);
+    }
 }

@@ -20,11 +20,11 @@ import android.widget.TextView;
 
 public class CameraActivity extends BaseActivity {
 	
-	/**private static final int MEDIA_TYPE_IMAGE = 1;
+	private static final int MEDIA_TYPE_IMAGE = 1;
     private Camera mCamera;
     private CameraPreview mPreview;
     private Button capture;
-    private ImageView blah;**/
+    private ImageView blah;
 	
 	private Button btn;
 	private ImageView img;
@@ -43,7 +43,7 @@ public class CameraActivity extends BaseActivity {
     public void showCameraPreview()
     {
     	setContentView(R.layout.camera_preview);
-/**
+    	
         // Create an instance of Camera
         mCamera = getCameraInstance();
        // blah = (ImageView) findViewById(R.id.blaaah);
@@ -64,10 +64,7 @@ public class CameraActivity extends BaseActivity {
                    // get an image from the camera
                    mCamera.takePicture(null, null, mPicture);                 
                }
-           });
-           
-           **/
-    	
+           });  	
     	
     }
 
