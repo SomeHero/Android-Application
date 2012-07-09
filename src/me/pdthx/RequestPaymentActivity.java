@@ -176,15 +176,15 @@ public class RequestPaymentActivity extends BaseActivity {
         locationManager.requestLocationUpdates(
             LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
-        if (prefs.getBoolean("addingACHAccount", false))
-        {
-            addingContact(prefs.getString("friend", ""), prefs.getString("paypoint", ""));
-            String prefsAmount = prefs.getString("amount", "0.00");
-            txtAmount.setText("$" + prefsAmount);
-            txtComments.setText(prefs.getString("comments", ""));
-            Editor edit = prefs.edit();
-            edit.remove("paypoint").remove("amount").remove("friend").remove("comments").remove("addingACHAccount");
-        }
+//        if (prefs.getBoolean("addingACHAccount", false))
+//        {
+//            addingContact(prefs.getString("friend", ""), prefs.getString("paypoint", ""));
+//            String prefsAmount = prefs.getString("amount", "0.00");
+//            txtAmount.setText("$" + prefsAmount);
+//            txtComments.setText(prefs.getString("comments", ""));
+//            Editor edit = prefs.edit();
+//            edit.remove("paypoint").remove("amount").remove("friend").remove("comments").remove("addingACHAccount");
+//        }
 
 
     }
@@ -195,16 +195,16 @@ public class RequestPaymentActivity extends BaseActivity {
 
         locationManager.removeUpdates(locationListener);
 
-        if (addingACHAccount)
-        {
-            Editor edit = prefs.edit();
-            edit.putBoolean("addingACHAccount", addingACHAccount);
-            edit.putString("paypoint", recipientUri);
-            edit.putString("amount", String.valueOf(amount));
-            edit.putString("friend", friend.getId());
-            edit.putString("comments", comments);
-            edit.commit();
-        }
+//        if (addingACHAccount)
+//        {
+//            Editor edit = prefs.edit();
+//            edit.putBoolean("addingACHAccount", addingACHAccount);
+//            edit.putString("paypoint", recipientUri);
+//            edit.putString("amount", String.valueOf(amount));
+//            edit.putString("friend", friend.getId());
+//            edit.putString("comments", comments);
+//            edit.commit();
+//        }
     }
 
     protected android.app.Dialog onCreateDialog(int id) {
@@ -478,8 +478,8 @@ public class RequestPaymentActivity extends BaseActivity {
         d.getWindow().setLayout(400, 600);
         d.show();
 
-        TextView txtConfirmHeader = (TextView)d.findViewById(R.id.txtConfirmHeader);
-        TextView txtConfirmBody = (TextView)d.findViewById(R.id.txtConfirmBody);
+        TextView txtConfirmHeader = (TextView)d.findViewById(R.id.setupSecurityHeader);
+        TextView txtConfirmBody = (TextView)d.findViewById(R.id.setupSecurityBody);
 
         txtConfirmHeader.setText("Confirm Your Request");
         txtConfirmBody.setText(
@@ -547,6 +547,7 @@ public class RequestPaymentActivity extends BaseActivity {
     protected void SubmitRequest() {
 
         PaymentRequest paymentRequest = new PaymentRequest();
+        paymentRequest.UserId = prefs.getString("userId", "");
         paymentRequest.SenderAccountId = prefs.getString("paymentAccountId", "");
         paymentRequest.SenderUri = prefs.getString("login", "");
         paymentRequest.RecipientUri = recipientUri;

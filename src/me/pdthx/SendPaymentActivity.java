@@ -198,15 +198,15 @@ public final class SendPaymentActivity extends BaseActivity {
             LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
 
-        if (prefs.getBoolean("addingACHAccount", false))
-        {
-            addingContact(prefs.getString("friend", ""), prefs.getString("paypoint", ""));
-            String prefsAmount = prefs.getString("amount", "0");
-            txtAmount.setText("$" + prefsAmount);
-            txtComments.setText(prefs.getString("comments", ""));
-            Editor edit = prefs.edit();
-            edit.remove("paypoint").remove("amount").remove("friend").remove("comments").remove("addingACHAccount");
-        }
+//        if (prefs.getBoolean("addingACHAccount", false))
+//        {
+//            addingContact(prefs.getString("friend", ""), prefs.getString("paypoint", ""));
+//            String prefsAmount = prefs.getString("amount", "0");
+//            txtAmount.setText("$" + prefsAmount);
+//            txtComments.setText(prefs.getString("comments", ""));
+//            Editor edit = prefs.edit();
+//            edit.remove("paypoint").remove("amount").remove("friend").remove("comments").remove("addingACHAccount");
+//        }
 
     }
 
@@ -218,15 +218,15 @@ public final class SendPaymentActivity extends BaseActivity {
 
         Editor edit = prefs.edit();
 
-        if (addingACHAccount)
-        {
-            edit.putBoolean("addingACHAccount", addingACHAccount);
-            edit.putString("paypoint", recipientUri);
-            edit.putString("amount", String.valueOf(amount));
-            edit.putString("friend", friend.getId());
-            edit.putString("comments", comments);
-            edit.commit();
-        }
+//        if (addingACHAccount)
+//        {
+//            edit.putBoolean("addingACHAccount", addingACHAccount);
+//            edit.putString("paypoint", recipientUri);
+//            edit.putString("amount", String.valueOf(amount));
+//            edit.putString("friend", friend.getId());
+//            edit.putString("comments", comments);
+//            edit.commit();
+//        }
     }
 
     protected android.app.Dialog onCreateDialog(int id) {

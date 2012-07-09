@@ -66,8 +66,6 @@ public final class PaystreamActivity extends BaseActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		tracker.trackPageView("Paystream");
-		System.out.println(prefs.getString("userId", ""));
-		System.out.println(prefs.getString("mobileNumber", ""));
 
 		if (prefs.getString("userId", "").length() == 0) {
 			logout();
