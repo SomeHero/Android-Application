@@ -83,6 +83,7 @@
                 android:layout_marginTop="15dp"
                 android:text="I&apos;m new to PaidThx"
                 android:textColor="#FFFFFF"
+                android:background="@drawable/button_selector"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
@@ -92,6 +93,7 @@
                 android:layout_height="60dp"
                 android:text="I already use PaidThx"
                 android:textColor="#FFFFFF"
+                android:background="@drawable/blue_button_selector"
                 android:textSize="16dp"
                 android:textStyle="bold" />
         </LinearLayout>
