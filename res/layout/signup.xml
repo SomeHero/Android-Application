@@ -170,8 +170,8 @@
                 android:layout_height="60dp"
                 android:layout_marginLeft="6dp"
                 android:text="Create my account"
-                android:textColor="#FFFFFF"
                 android:background="@drawable/button_selector"
+                android:textColor="#FFFFFF"
                 android:textSize="18dp"
                 android:textStyle="bold" />
         </LinearLayout>

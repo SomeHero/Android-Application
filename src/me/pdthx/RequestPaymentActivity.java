@@ -1,6 +1,5 @@
 package me.pdthx;
 
-import android.content.SharedPreferences.Editor;
 import me.pdthx.Login.SignInUIActivity;
 import java.io.FileInputStream;
 import java.text.NumberFormat;
@@ -32,7 +31,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 

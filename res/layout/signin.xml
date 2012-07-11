@@ -136,8 +136,8 @@
                 android:layout_width="275dp"
                 android:layout_height="60dp"
                 android:text="Sign in with E-mail"
-                android:textColor="#FFFFFF"
                 android:background="@drawable/button_selector"
+                android:textColor="#FFFFFF"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
