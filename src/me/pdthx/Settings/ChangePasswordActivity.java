@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.os.Message;
 import android.app.ProgressDialog;
 import me.pdthx.Services.UserService;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,8 +25,8 @@ public class ChangePasswordActivity
     private static final int PASSWORDCHANGE_FAILED = 1;
     private static final int PASSWORDCHANGE_SUCCESS = 2;
 
-    private TextView txtOldPassword;
-    private TextView txtNewPassword;
+    private EditText txtOldPassword;
+    private EditText txtNewPassword;
 
     private Handler changePasswordHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -73,8 +73,8 @@ public class ChangePasswordActivity
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.change_password);
 
-        txtOldPassword = (TextView) findViewById(R.id.txtOldPassword);
-        txtNewPassword = (TextView) findViewById(R.id.txtNewPassword);
+        txtOldPassword = (EditText) findViewById(R.id.txtOldPassword);
+        txtNewPassword = (EditText) findViewById(R.id.txtNewPassword);
 
         Button btnChangePassword = (Button) findViewById(R.id.btnChangePassword);
 
@@ -83,6 +83,8 @@ public class ChangePasswordActivity
             @Override
             public void onClick(View arg0)
             {
+            	request = new UserChangePasswordRequest();
+            	request.UserId = prefs.getString("userId", "");
                 request.CurrentPassword = txtOldPassword.getText().toString();
                 request.NewPassword = txtNewPassword.getText().toString();
                 progressDialog.setMessage("Changing Password..");

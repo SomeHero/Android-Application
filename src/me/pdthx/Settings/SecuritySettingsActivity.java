@@ -110,7 +110,7 @@ public class SecuritySettingsActivity extends BaseActivity {
             changePassword.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                	startActivity(new Intent(SecuritySettingsActivity.this, ChangePasswordActivity.class));
                 }
             });
         }
