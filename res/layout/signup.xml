@@ -172,7 +172,6 @@
                 android:text="Create my account"
                 android:background="@drawable/button_selector"
                 android:textColor="#FFFFFF"
-                android:background="@drawable/button_selector"
                 android:textSize="18dp"
                 android:textStyle="bold" />
         </LinearLayout>

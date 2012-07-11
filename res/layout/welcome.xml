@@ -84,7 +84,6 @@
                 android:text="I&apos;m new to PaidThx"
                 android:background="@drawable/button_selector"
                 android:textColor="#FFFFFF"
-                android:background="@drawable/button_selector"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
@@ -95,7 +94,6 @@
                 android:text="I already use PaidThx"
                 android:background="@drawable/blue_button_selector"
                 android:textColor="#FFFFFF"
-                android:background="@drawable/blue_button_selector"
                 android:textSize="16dp"
                 android:textStyle="bold" />
         </LinearLayout>
