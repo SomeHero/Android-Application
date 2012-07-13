@@ -1,4 +1,4 @@
-package me.pdthx.helpers;
+package me.pdthx.Helpers;
 
 public class NameSeparator {
 	public static String[] separateName(String name) {

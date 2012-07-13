@@ -1,5 +1,6 @@
 package me.pdthx.Login;
 
+import android.widget.TextView;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -56,6 +57,7 @@ public class SignInUIActivity extends BaseActivity {
 
     private Button facebookButton;
     private Button emailacctButton;
+    private TextView forgotInfo;
 
     /** Called when the activity is first created. */
     @Override
@@ -73,8 +75,6 @@ public class SignInUIActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch(msg.what) {
                 case(USERSIGNIN_INVALID):
-                    alertDialog = new AlertDialog.Builder(SignInUIActivity.this)
-                .create();
                 alertDialog.setTitle("Invalid Account Credentials.");
                 alertDialog
                 .setMessage("The username and password you entered were invalid. Please try again.");
@@ -88,11 +88,9 @@ public class SignInUIActivity extends BaseActivity {
                 break;
 
                 case(USERSIGNIN_FAILED):
-                    alertDialog = new AlertDialog.Builder(SignInUIActivity.this)
-                .create();
                 alertDialog.setTitle("Sign In Failed.");
                 alertDialog
-                .setMessage("Sign In failed. Please try again.");
+                .setMessage("Sign In failed. "+ userSignInResponse.ReasonPhrase + "Please try again.");
                 alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -157,6 +155,13 @@ public class SignInUIActivity extends BaseActivity {
 
                 signInRunner();
             }
+        });
+
+        forgotInfo = (TextView) findViewById(R.id.forgotInfo);
+        forgotInfo.setOnClickListener(new OnClickListener() {
+           public void onClick(View arg0) {
+               startActivity(new Intent(SignInUIActivity.this, ForgotPasswordActivity.class));
+           }
         });
     }
 

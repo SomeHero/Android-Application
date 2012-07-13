@@ -1,6 +1,6 @@
 package me.pdthx;
 
-import me.pdthx.helpers.PhoneNumberFormatter;
+import me.pdthx.Helpers.PhoneNumberFormatter;
 import android.app.ProgressDialog;
 import android.provider.ContactsContract;
 import android.net.Uri;

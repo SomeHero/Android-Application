@@ -10,16 +10,6 @@
         android:layout_height="50dp"
         android:background="@drawable/txtbox" >
 
-        <Button
-            android:id="@+id/settings_BackButton"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/button_back" />
-
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"

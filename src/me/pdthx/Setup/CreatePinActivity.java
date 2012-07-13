@@ -4,7 +4,6 @@ import me.pdthx.BaseActivity;
 import me.pdthx.R;
 import me.pdthx.CustomViews.CustomLockView;
 import me.pdthx.Requests.ACHAccountSetupRequest;
-import me.pdthx.Responses.ACHAccountSetupResponse;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -22,19 +21,9 @@ public class CreatePinActivity extends BaseActivity {
 
 	final private int USERSECURITYPIN_FAILED = 2;
 	final private int USERSECURITYPIN_INVALIDLENGTH = 5;
-	protected ACHAccountSetupRequest achAccountSetupRequest;
-	protected ACHAccountSetupResponse achAccountSetupResponse;
-
-	private String nameOnAccount;
-	private String routingNumber;
-	private String accountNumber;
-	private String accountType;
-	private String nickname;
-	private int tab;
+	protected ACHAccountSetupRequest request;
 
 	private Activity parent = null;
-
-	// private EditText txtMobileNumber;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,13 +45,7 @@ public class CreatePinActivity extends BaseActivity {
 		setContentView(R.layout.setup_security_dialog);
 		parent = this;
 
-		Bundle extras = getIntent().getExtras();
-		nameOnAccount = extras.getString("nameOnAccount");
-		routingNumber = extras.getString("routingNumber");
-		accountNumber = extras.getString("accountNumber");
-		accountType = extras.getString("accountType");
-		nickname = extras.getString("nickname");
-		tab = extras.getInt("tab");
+		request = getIntent().getExtras().getParcelable("achAccountObject");
 
 		final CustomLockView ctrlSecurityPin = (CustomLockView)findViewById(R.id.ctrlSecurityPin);
 		ctrlSecurityPin.invalidate();
@@ -74,13 +57,10 @@ public class CreatePinActivity extends BaseActivity {
 
 				if (passcode.length() > 3) {
 					Intent confirmAcct = new Intent(getApplicationContext(), ConfirmPinActivity.class);
-					confirmAcct.putExtra("nameOnAccount", nameOnAccount);
-					confirmAcct.putExtra("routingNumber", routingNumber);
-					confirmAcct.putExtra("accountNumber", accountNumber);
-					confirmAcct.putExtra("accountType", accountType);
-					confirmAcct.putExtra("securityPin", passcode);
-					confirmAcct.putExtra("nickname", nickname);
-					confirmAcct.putExtra("tab", tab);
+
+					request.SecurityPin = passcode;
+
+					confirmAcct.putExtra("achAccountObject", request);
 
 					finish();
 					startActivity(confirmAcct);
@@ -104,9 +84,7 @@ public class CreatePinActivity extends BaseActivity {
 				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("Setup Failed");
 				alertDialog
-						.setMessage("There was an error setting up your security pin: "
-								+ achAccountSetupResponse.ReasonPhrase
-								+ " Please try again.");
+						.setMessage("There was an error setting up your security pin. Please try again.");
 				alertDialog.setButton("OK",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,

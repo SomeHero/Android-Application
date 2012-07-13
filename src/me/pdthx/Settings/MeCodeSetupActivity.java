@@ -1,36 +1,30 @@
-package me.pdthx;
+package me.pdthx.Settings;
 
+import me.pdthx.BaseActivity;
+import me.pdthx.R;
 import android.text.Editable;
 import android.text.TextWatcher;
-import me.pdthx.Accounts.AccountManagerActivity;
-import me.pdthx.CustomViews.CustomLockView;
-import me.pdthx.Requests.UserChangeSecurityPinRequest;
 import me.pdthx.Requests.UserMeCodeRequest;
 import me.pdthx.Responses.Response;
 import me.pdthx.Services.UserService;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-public class ProfileSetupActivity extends BaseActivity {
+public class MeCodeSetupActivity extends BaseActivity {
 
 	final private int INVALID_DOLLAR = 0;
 	final private int INVALID_MECODE = 3;
 	final private int SUCCESS_MECODE = 4;
 
-	private UserChangeSecurityPinRequest request;
+	private UserMeCodeRequest request;
 	private Response response;
 
 	@Override
@@ -97,7 +91,7 @@ public class ProfileSetupActivity extends BaseActivity {
 	};
 
 	public void showProfileSetup() {
-		View view = View.inflate(ProfileSetupActivity.this,
+		View view = View.inflate(MeCodeSetupActivity.this,
 				R.layout.setup_profile, null);
 		setContentView(view);
 
@@ -148,11 +142,11 @@ public class ProfileSetupActivity extends BaseActivity {
 					progressDialog.setMessage("Adding Me Code..");
 					progressDialog
 							.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-					UserMeCodeRequest userMeCodeRequest = new UserMeCodeRequest(
+					request = new UserMeCodeRequest(
 							prefs.getString("userId", ""), txtMeCode.getText()
 									.toString().trim());
 					progressDialog.show();
-					response = UserService.createMeCode(userMeCodeRequest);
+					response = UserService.createMeCode(request);
 
 					if (response.Success) {
 						txtMeCode.setText("");

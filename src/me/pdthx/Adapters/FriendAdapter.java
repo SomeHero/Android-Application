@@ -25,7 +25,6 @@ public final class FriendAdapter extends ArrayAdapter<Friend> implements Section
     private HashMap<String, Integer> alphaIndexer;
     private String[] sections;
 
-
     public FriendAdapter(Context context, int textViewResourceId,
         ArrayList<Friend> items) {
         super(context, textViewResourceId, items);
