@@ -1,13 +1,12 @@
 package me.pdthx.Setup;
 
+import me.pdthx.Requests.UserSetupSecurityPinRequest;
 import me.pdthx.BaseActivity;
 import me.pdthx.R;
 import me.pdthx.CustomViews.CustomLockView;
-import me.pdthx.Requests.SecurityPinSetupRequest;
+import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Responses.Response;
 import me.pdthx.Services.UserService;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,23 +28,14 @@ public class ConfirmPinActivity extends BaseActivity {
 	final private int USERREGISTRATION_ACHNUMBERMISMATCH = 8;
 	// final private int USERREGISTRATION_PHONENUMBERFORMATERROR = 9;
 
-	protected SecurityPinSetupRequest setupSecurityPin;
-	protected Response response;
+	private UserSetupSecurityPinRequest request;
+	private ACHAccountSetupRequest achAccountSetupRequest;
 
-	private String nameOnAccount;
-	private String routingNumber;
-	private String accountNumber;
-	private String accountType;
-	private String nickname;
-	private String passcode;
-	private int tab;
-	private Activity parent = null;
-
+	private Response response;
 	// private EditText txtMobileNumber;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		parent = this;
 		setContentView(R.layout.setup_security_dialog);
 
 		TextView header = (TextView) findViewById(R.id.setupSecurityHeader);
@@ -53,15 +43,7 @@ public class ConfirmPinActivity extends BaseActivity {
 		TextView body = (TextView) findViewById(R.id.setupSecurityBody);
 		body.setText("Re-enter your security pin to confirm your new pin code.");
 
-		Bundle extras = getIntent().getExtras();
-		nameOnAccount = extras.getString("nameOnAccount");
-		routingNumber = extras.getString("routingNumber");
-		accountNumber = extras.getString("accountNumber");
-		accountType = extras.getString("accountType");
-		passcode = extras.getString("securityPin");
-		nickname = extras.getString("nickname");
-		tab = extras.getInt("tab");
-
+		achAccountSetupRequest = getIntent().getExtras().getParcelable("achAccountObject");
 
 		final CustomLockView ctrlSecurityPin = (CustomLockView) findViewById(R.id.ctrlSecurityPin);
 		ctrlSecurityPin.invalidate();
@@ -72,10 +54,10 @@ public class ConfirmPinActivity extends BaseActivity {
 				String confirmPasscode = ctrlSecurityPin.getPasscode();
 
 				if (confirmPasscode.length() > 3) {
-					if (confirmPasscode.equals(passcode)) {
-						setupSecurityPin = new SecurityPinSetupRequest();
-						setupSecurityPin.SecurityPin = passcode;
-						setupSecurityPin.UserId = prefs.getString("userId", "");
+					if (confirmPasscode.equals(achAccountSetupRequest.SecurityPin)) {
+						request = new UserSetupSecurityPinRequest();
+						request.SecurityPin = achAccountSetupRequest.SecurityPin;
+						request.UserId = prefs.getString("userId", "");
 
 						// send pincode to server
 						progressDialog.setMessage("Sending Info...");
@@ -90,7 +72,7 @@ public class ConfirmPinActivity extends BaseActivity {
 								// TODO Auto-generated method stub
 								try {
 									response = UserService
-											.setupSecurityPin(setupSecurityPin);
+											.setupSecurityPin(request);
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -98,13 +80,9 @@ public class ConfirmPinActivity extends BaseActivity {
 
 								if (response.Success) {
 									Intent createQuestion = new Intent(getApplicationContext(), CreateQuestionActivity.class);
-									createQuestion.putExtra("nameOnAccount", nameOnAccount);
-									createQuestion.putExtra("routingNumber", routingNumber);
-									createQuestion.putExtra("accountNumber", accountNumber);
-									createQuestion.putExtra("accountType", accountType);
-									createQuestion.putExtra("securityPin", passcode);
-									createQuestion.putExtra("nickname", nickname);
-									createQuestion.putExtra("tab", tab);
+
+									createQuestion.putExtra("achAccountObject", achAccountSetupRequest);
+
 
 									setResult(RESULT_OK);
 									finish();
@@ -139,7 +117,6 @@ public class ConfirmPinActivity extends BaseActivity {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case (USERDATA_FAILED):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("Setup Failed");
 				alertDialog
 						.setMessage("There was an error sending the data.");
@@ -154,7 +131,6 @@ public class ConfirmPinActivity extends BaseActivity {
 				alertDialog.show();
 				break;
 			case (SETUPACHACCOUNT_FAILED):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("Setup Failed");
 				alertDialog
 						.setMessage("There was an error setting up your ACH account: "
@@ -170,7 +146,6 @@ public class ConfirmPinActivity extends BaseActivity {
 				alertDialog.show();
 				break;
 			case (USERREGISTRATION_FAILED):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("User Registration Failed.");
 				alertDialog
 						.setMessage("There was an error completing your registration. Please try again.");
@@ -185,7 +160,6 @@ public class ConfirmPinActivity extends BaseActivity {
 				alertDialog.show();
 				break;
 			case (USERSECURITYPIN_CONFIRMMISMATCH):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("Security Pins Mismatch.");
 				alertDialog
 						.setMessage("The two security pins you just swiped don't match. Please try again.");
@@ -201,7 +175,6 @@ public class ConfirmPinActivity extends BaseActivity {
 				break;
 
 			case (USERREGISTRATION_PASSWORDMISMATCH):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("Passwords don't Match.");
 				alertDialog
 						.setMessage("The password you entered do not match. Please try again.");
@@ -217,7 +190,6 @@ public class ConfirmPinActivity extends BaseActivity {
 				break;
 
 			case (USERREGISTRATION_ACHNUMBERMISMATCH):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("ACH Account Number Mismatch.");
 				alertDialog
 						.setMessage("The ACH account numbers you entered do not match. Please try again.");

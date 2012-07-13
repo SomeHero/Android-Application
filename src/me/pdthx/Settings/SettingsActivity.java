@@ -4,9 +4,6 @@ import me.pdthx.BaseActivity;
 import me.pdthx.ProfileControllerActivity;
 import me.pdthx.R;
 import me.pdthx.Accounts.AccountManagerActivity;
-import me.pdthx.R.drawable;
-import me.pdthx.R.id;
-import me.pdthx.R.layout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -50,8 +47,6 @@ public class SettingsActivity extends BaseActivity {
 	private LinearLayout userAgreementBtn;
 	private LinearLayout aboutBtn;
 
-	private Button backBtn;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,16 +58,6 @@ public class SettingsActivity extends BaseActivity {
 
 		setupViews();
 		setupSelectorListeners();
-
-		backBtn = (Button) findViewById(R.id.settings_BackButton);
-
-		backBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-
-		});
 
 		profileBtn.setOnClickListener(new OnClickListener() {
 			@Override

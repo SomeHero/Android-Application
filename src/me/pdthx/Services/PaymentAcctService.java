@@ -29,9 +29,9 @@ import me.pdthx.Responses.UserSignInResponse;
 public class PaymentAcctService {
 	private static final String ROOTURL = "http://23.21.203.171/api/internal/api";
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
-	private static final String RETRIEVEORADD_ACCTS = "/paymentaccounts"; // /api/users/{userId}
-	private static final String VERIFYACCT = "/paymentaccounts/%s/verify_account"; // /api/users/{userId}
-	private static final String UPDATEORDELETEACCT = "/paymentaccounts/%s"; // /api/users/{userId}
+	private static final String RETRIEVEORADD_ACCTS = "/paymentaccounts";
+	//private static final String VERIFYACCT = "/paymentaccounts/%s/verify_account";
+	private static final String UPDATEORDELETEACCT = "/paymentaccounts/%s";
 	private static final String USER_URL = "/Users/";
 	private static final String PREFERREDSEND_URL = "/Users/%s/paymentaccounts/set_preferred_send_account";
 	private static final String PREFERREDRECEIVE_URL = "/Users/%s/paymentaccounts/set_preferred_receive_account";
@@ -268,10 +268,8 @@ public class PaymentAcctService {
 		if (entity != null) {
 
 			InputStream instream = null;
-			String result = "";
 			try {
 				instream = entity.getContent();
-				result = RestClient.convertStreamToString(instream);
 				// Log.i(TAG, "Result of converstion: [" + result + "]");
 			} catch (IllegalStateException e) {
 				// TODO Auto-generated catch block

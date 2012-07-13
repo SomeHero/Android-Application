@@ -1,9 +1,9 @@
 package me.pdthx;
 
+import me.pdthx.Helpers.PhoneNumberFormatter;
 import android.util.Log;
 import java.util.Random;
 import java.util.UUID;
-import me.pdthx.helpers.PhoneNumberFormatter;
 import android.provider.ContactsContract.Contacts;
 import android.content.ContentUris;
 import android.net.Uri;

@@ -24,9 +24,11 @@ public class ChangePasswordActivity
 
     private static final int PASSWORDCHANGE_FAILED = 1;
     private static final int PASSWORDCHANGE_SUCCESS = 2;
+    private static final int PASSWORDCONFIRM_MISMATCH = 3;
 
     private EditText txtOldPassword;
     private EditText txtNewPassword;
+    private EditText txtConfirmPassword;
 
     private Handler changePasswordHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -37,6 +39,21 @@ public class ChangePasswordActivity
                 alertDialog
                         .setMessage("There was a problem setting up your MeCode: "
                                 + response.ReasonPhrase + ". Please try again.");
+                alertDialog.setButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                alertDialog.show();
+                break;
+
+            case (PASSWORDCONFIRM_MISMATCH):
+                alertDialog.setTitle("Password Change Failure");
+                alertDialog
+                        .setMessage("New Password and Confirm New Password fields didn't match.");
                 alertDialog.setButton("OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
@@ -75,6 +92,7 @@ public class ChangePasswordActivity
 
         txtOldPassword = (EditText) findViewById(R.id.txtOldPassword);
         txtNewPassword = (EditText) findViewById(R.id.txtNewPassword);
+        txtConfirmPassword = (EditText) findViewById(R.id.txtConfirmPassword);
 
         Button btnChangePassword = (Button) findViewById(R.id.btnChangePassword);
 
@@ -83,6 +101,8 @@ public class ChangePasswordActivity
             @Override
             public void onClick(View arg0)
             {
+
+
             	request = new UserChangePasswordRequest();
             	request.UserId = prefs.getString("userId", "");
                 request.CurrentPassword = txtOldPassword.getText().toString();
@@ -96,6 +116,7 @@ public class ChangePasswordActivity
                 if (response.Success) {
                     txtOldPassword.setText("");
                     txtNewPassword.setText("");
+                    txtConfirmPassword.setText("");
                     progressDialog.dismiss();
                     changePasswordHandler.sendEmptyMessage(PASSWORDCHANGE_SUCCESS);
                 } else {

@@ -16,11 +16,8 @@
 
 package me.pdthx;
 
-import android.content.SharedPreferences.Editor;
-import me.pdthx.Login.SignInUIActivity;
 import java.text.NumberFormat;
 
-import me.pdthx.CustomViews.CustomLockView;
 import me.pdthx.Models.Friend;
 import me.pdthx.Requests.PaymentRequest;
 import me.pdthx.Responses.Response;
@@ -39,13 +36,10 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public final class SendPaymentActivity extends BaseActivity {
 
@@ -68,7 +62,6 @@ public final class SendPaymentActivity extends BaseActivity {
     private EditText txtComments;
     private Button btnSendMoney;
     private String passcode = "";
-    private boolean addingACHAccount = false;
 
     final private int ADDING_FRIEND = 6;
     final private int SUBMITPAYMENT_DIALOG = 0;
@@ -79,12 +72,11 @@ public final class SendPaymentActivity extends BaseActivity {
     final private int SUBMITPAYMENTSUCCESS_DIALOG = 4;
     final private int ADDACCOUNT_DIALOG = 10;
     final private int ADD_MONEY = 8;
-    final private int ADD_ACCOUNT = 9;
     final private int INVALIDPASSCODELENGTH_DIALOG = 12;
+    final private int SECURITYPIN = 13;
 
     final private int SUBMITPAYMENT_ACTION = 0;
 
-    private View sendMoneyView = null;
     private Response paymentResponse;
 
     private Dialog dialog = null;
@@ -98,9 +90,9 @@ public final class SendPaymentActivity extends BaseActivity {
                     removeDialog(SUBMITPAYMENT_DIALOG);
 
                     if (paymentResponse != null
-                        && paymentResponse.Success) {
+                        && paymentResponse.Success)
+                    {
                         showDialog(SUBMITPAYMENTSUCCESS_DIALOG);
-                        setContentView(R.layout.contactmanager);
                     } else if (paymentResponse != null) {
                         errorMessage = paymentResponse.ReasonPhrase;
                         showDialog(SUBMITPAYMENTFAILED_DIALOG);
@@ -133,7 +125,6 @@ public final class SendPaymentActivity extends BaseActivity {
                             // TODO Auto-generated method stub
                             Intent intent = new Intent(SendPaymentActivity.this, ACHAccountSetupActivity.class);
                             intent.putExtra("tab", 1);
-                            addingACHAccount = true;
                             dialog.dismiss();
                             startActivity(intent);
                         }
@@ -197,17 +188,6 @@ public final class SendPaymentActivity extends BaseActivity {
         locationManager.requestLocationUpdates(
             LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
-
-//        if (prefs.getBoolean("addingACHAccount", false))
-//        {
-//            addingContact(prefs.getString("friend", ""), prefs.getString("paypoint", ""));
-//            String prefsAmount = prefs.getString("amount", "0");
-//            txtAmount.setText("$" + prefsAmount);
-//            txtComments.setText(prefs.getString("comments", ""));
-//            Editor edit = prefs.edit();
-//            edit.remove("paypoint").remove("amount").remove("friend").remove("comments").remove("addingACHAccount");
-//        }
-
     }
 
     @Override
@@ -216,17 +196,6 @@ public final class SendPaymentActivity extends BaseActivity {
 
         locationManager.removeUpdates(locationListener);
 
-        Editor edit = prefs.edit();
-
-//        if (addingACHAccount)
-//        {
-//            edit.putBoolean("addingACHAccount", addingACHAccount);
-//            edit.putString("paypoint", recipientUri);
-//            edit.putString("amount", String.valueOf(amount));
-//            edit.putString("friend", friend.getId());
-//            edit.putString("comments", comments);
-//            edit.commit();
-//        }
     }
 
     protected android.app.Dialog onCreateDialog(int id) {
@@ -245,7 +214,7 @@ public final class SendPaymentActivity extends BaseActivity {
                     public void run() {
                         // TODO Auto-generated method stub
                         try {
-                            SubmitPaymentRequest();
+                            submitPaymentRequest();
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -359,8 +328,7 @@ public final class SendPaymentActivity extends BaseActivity {
     }
 
     protected void launchSendMoneyView() {
-        sendMoneyView = View.inflate(this, R.layout.contactmanager, null);
-        setContentView(sendMoneyView);
+        setContentView(R.layout.sendmoney_controller);
 
 
         btnAddContacts = (Button) findViewById(R.id.addRecipient);
@@ -428,11 +396,17 @@ public final class SendPaymentActivity extends BaseActivity {
 
 
                     if(prefs.getString("userId", "").length() == 0)	{
-                        startActivity(new Intent(SendPaymentActivity.this, SignInUIActivity.class));
+                        logout();
                     } else {
                         if (prefs.getBoolean("hasACHAccount", false) || !prefs.getString("paymentAccountId", "").equals(""))
                         {
-                            showSecurityPinDialog();
+                            Intent intent = new Intent(SendPaymentActivity.this, SecurityPinActivity.class);
+                            intent.putExtra("headerText", "Confirm");
+                            intent.putExtra("bodyText",
+                                String.format("To confirm your payment of %s to %s, swipe you pin below.",
+                                txtAmount.getText(), friend.getName()));
+
+                            startActivityForResult(intent, SECURITYPIN);
                         }
                         else
                         {
@@ -450,64 +424,69 @@ public final class SendPaymentActivity extends BaseActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == ADDING_FRIEND) {
-                Bundle bundle = data.getExtras();
-                addingContact(bundle.getString("id"), bundle.getString("paypoint"));
-            }
-            else if(requestCode == ADD_MONEY){
-                Bundle bundle = data.getExtras();
-                String amount = bundle.getString("index");
-                txtAmount.setText("$"+ amount);
-            }
-            else {
-                launchSendMoneyView();
-            }
-        }
-        else {
-            if (requestCode != ADDING_FRIEND && requestCode != ADD_MONEY && requestCode != ADD_ACCOUNT) {
+        Bundle bundle = data.getExtras();
+
+        switch (resultCode)
+        {
+            case RESULT_OK:
+                switch (requestCode)
+                {
+                    case ADDING_FRIEND:
+                        addingContact(bundle.getString("id"), bundle.getString("paypoint"));
+                        break;
+                    case ADD_MONEY:
+                        String amount = bundle.getString("index");
+                        txtAmount.setText("$"+ amount);
+                        break;
+                    case SECURITYPIN:
+                        passcode = bundle.getString("passcode");
+                        showDialog(SUBMITPAYMENT_DIALOG);
+                        break;
+                }
+                break;
+            case RESULT_CANCELED:
                 finish();
-            }
+                break;
         }
     }
 
-    protected void showSecurityPinDialog() {
-        setContentView(R.layout.security_dialog);
-        TextView txtConfirmHeader = (TextView) findViewById(R.id.setupSecurityHeader);
-        TextView txtConfirmBody = (TextView) findViewById(R.id.setupSecurityBody);
-
-        txtConfirmHeader.setText("Confirm Your Payment");
-        txtConfirmBody.setText(String.format("To confirm your payment of %s to %s, swipe you pin below.",
-            txtAmount.getText(), friend.getName()));
-
-        Button btnCancel = (Button) findViewById(R.id.btnCancelSendMoney);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setContentView(R.layout.contactmanager);
-            }
-        });
-
-        final CustomLockView ctrlSecurityPin = (CustomLockView) findViewById(R.id.ctrlSecurityPin);
-        ctrlSecurityPin.invalidate();
-        ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                passcode = ctrlSecurityPin.getPasscode();
-
-                if (passcode.length() > 3) {
-                    amount = Double.parseDouble(txtAmount.getText().toString()
-                        .replace("$", ""));
-                    comments = txtComments.getText().toString();
-                    passcode = ctrlSecurityPin.getPasscode();
-
-                    showDialog(SUBMITPAYMENT_DIALOG);
-                } else
-                    showDialog(INVALIDPASSCODELENGTH_DIALOG);
-
-                return false;
-            }
-        });
-    }
+//    protected void showSecurityPinDialog() {
+//        setContentView(R.layout.security_dialog);
+//        TextView txtConfirmHeader = (TextView) findViewById(R.id.setupSecurityHeader);
+//        TextView txtConfirmBody = (TextView) findViewById(R.id.setupSecurityBody);
+//
+//        txtConfirmHeader.setText("Confirm Your Payment");
+//        txtConfirmBody.setText(String.format("To confirm your payment of %s to %s, swipe you pin below.",
+//            txtAmount.getText(), friend.getName()));
+//
+//        Button btnCancel = (Button) findViewById(R.id.btnCancelSendMoney);
+//        btnCancel.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                setContentView(R.layout.sendmoney_controller);
+//            }
+//        });
+//
+//        final CustomLockView ctrlSecurityPin = (CustomLockView) findViewById(R.id.ctrlSecurityPin);
+//        ctrlSecurityPin.invalidate();
+//        ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                passcode = ctrlSecurityPin.getPasscode();
+//
+//                if (passcode.length() > 3) {
+//                    amount = Double.parseDouble(txtAmount.getText().toString()
+//                        .replace("$", ""));
+//                    comments = txtComments.getText().toString();
+//                    passcode = ctrlSecurityPin.getPasscode();
+//
+//                    showDialog(SUBMITPAYMENT_DIALOG);
+//                } else
+//                    showDialog(INVALIDPASSCODELENGTH_DIALOG);
+//
+//                return false;
+//            }
+//        });
+//    }
 
     private void addingContact(String id, String paypoint) {
         Friend chosenContact = new Friend();
@@ -535,7 +514,7 @@ public final class SendPaymentActivity extends BaseActivity {
         }
     }
 
-    protected void SubmitPaymentRequest() {
+    protected void submitPaymentRequest() {
 
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.UserId = prefs.getString("userId", "");

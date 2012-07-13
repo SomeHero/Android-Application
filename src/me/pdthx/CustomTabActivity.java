@@ -7,125 +7,116 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 @SuppressWarnings("deprecation")
 public class CustomTabActivity extends TabActivity {
 
-	private TabHost mTabHost;
-	private ZubhiumSDK sdk;
+    private TabHost mTabHost;
+    private ZubhiumSDK sdk;
 
-	// private void setupTabHost() {
-	// mTabHost = (TabHost) findViewById(android.R.id.tabhost);
-	// mTabHost.setup();
-	// }
+    // private void setupTabHost() {
+    // mTabHost = (TabHost) findViewById(android.R.id.tabhost);
+    // mTabHost.setup();
+    // }
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
 
-		Resources res = getResources();
+        Resources res = getResources();
 
-		mTabHost = getTabHost(); // The activity TabHost
-		mTabHost.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
+        mTabHost = getTabHost(); // The activity TabHost
+        mTabHost.getTabWidget().setDividerDrawable(R.drawable.tab_divider);
 
-		Intent intent; // Reusable Intent for each tab
+        Intent intent; // Reusable Intent for each tab
 
-		sdk = ZubhiumSDK.getZubhiumSDKInstance(CustomTabActivity.this,
-				getString(R.string.secret_key));
+        sdk = ZubhiumSDK.getZubhiumSDKInstance(CustomTabActivity.this,
+            getString(R.string.secret_key));
 
-		if (sdk != null) {
-			sdk.setCrashReportingMode(CrashReportingMode.SILENT);
-		}
+        if (sdk != null) {
+            sdk.setCrashReportingMode(CrashReportingMode.SILENT);
+        }
 
-		intent = new Intent(mTabHost.getContext(), HomeActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		setupTab(res.getDrawable(R.drawable.tab_home_selector), "Home", intent);
+        intent = new Intent(mTabHost.getContext(), HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        setupTab(res.getDrawable(R.drawable.tab_home_selector), "Home", intent);
 
-		intent = new Intent(mTabHost.getContext(), SendPaymentActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		setupTab(res.getDrawable(R.drawable.tab_send_selector), "Send $", intent);
+        intent = new Intent(mTabHost.getContext(), SendPaymentActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        setupTab(res.getDrawable(R.drawable.tab_send_selector), "Send $", intent);
 
-		intent = new Intent(mTabHost.getContext(), RequestPaymentActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		setupTab(res.getDrawable(R.drawable.tab_request_selector), "Req $", intent);
+        intent = new Intent(mTabHost.getContext(), RequestPaymentActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        setupTab(res.getDrawable(R.drawable.tab_request_selector), "Req $", intent);
 
-		intent = new Intent(mTabHost.getContext(), PaystreamActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		setupTab(res.getDrawable(R.drawable.tab_stream_selector), "Stream", intent);
+        intent = new Intent(mTabHost.getContext(), PaystreamActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        setupTab(res.getDrawable(R.drawable.tab_stream_selector), "Stream", intent);
 
-		if (getIntent().getExtras() == null)
-		{
-		    mTabHost.setCurrentTab(0);
-		}
-		else
-		{
-		    mTabHost.setCurrentTab(getIntent().getExtras().getInt("tab"));
-		}
+        mTabHost.setCurrentTab(getIntent().getIntExtra("tab", 0));
 
-		// intent = new Intent(CustomTabActivity.this,
-		// VerifyMobileNumberActivity.class);
-		// startActivityForResult(intent, 0);
+        // intent = new Intent(CustomTabActivity.this,
+        // VerifyMobileNumberActivity.class);
+        // startActivityForResult(intent, 0);
 
-	}
+    }
 
-	public void switchTab(int tab) {
-		mTabHost.setCurrentTab(tab);
-	}
+    public void switchTab(int tab) {
+        mTabHost.setCurrentTab(tab);
+    }
 
-	private void setupTab(Drawable icon, final String tag, final Intent intent) {
-		View tabview = createTabView(mTabHost.getContext(), icon, tag);
+    private void setupTab(Drawable icon, final String tag, final Intent intent) {
+        View tabview = createTabView(mTabHost.getContext(), icon, tag);
 
-		// tabview.setBackgroundColor(Color.rgb(93, 182, 204));
-		// tabview.getLayoutParams().width= 50;
+        // tabview.setBackgroundColor(Color.rgb(93, 182, 204));
+        // tabview.getLayoutParams().width= 50;
 
-		TabSpec setContent = mTabHost.newTabSpec(tag).setIndicator(tabview)
-				.setContent(intent);
+        TabSpec setContent = mTabHost.newTabSpec(tag).setIndicator(tabview)
+            .setContent(intent);
 
-		mTabHost.addTab(setContent);
+        mTabHost.addTab(setContent);
 
-	}
+    }
 
-	private static View createTabView(final Context context,
-			final Drawable icon, final String text) {
-		View view = LayoutInflater.from(context)
-				.inflate(R.layout.tabs_bg, null);
-		ImageView iv = (ImageView) view.findViewById(R.id.tabsIcon);
-		iv.setImageDrawable(icon);
+    private static View createTabView(final Context context,
+        final Drawable icon, final String text) {
+        View view = LayoutInflater.from(context)
+            .inflate(R.layout.tabs_bg, null);
+        ImageView iv = (ImageView) view.findViewById(R.id.tabsIcon);
+        iv.setImageDrawable(icon);
 
-		TextView tv = (TextView) view.findViewById(R.id.tabsText);
-		tv.setText(text);
-		return view;
-	}
+        TextView tv = (TextView) view.findViewById(R.id.tabsText);
+        tv.setText(text);
+        return view;
+    }
 
-	private OnTabChangeListener myOnTabChangeListener = new OnTabChangeListener() {
-
-		@Override
-		public void onTabChanged(String tabId) {
-			for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
-				TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i)
-						.findViewById(android.R.id.title); // Unselected Tabs
-				tv.setTextColor(Color.parseColor("#424242"));
-				mTabHost.getTabWidget().getChildAt(i)
-						.setBackgroundResource(R.drawable.tab_bg_unselected);
-			}
-			mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab())
-					.setBackgroundResource(R.drawable.tab_bg_selected);
-			TextView tv = (TextView) mTabHost.getTabWidget()
-					.getChildAt(mTabHost.getCurrentTab())
-					.findViewById(android.R.id.title);
-			tv.setTextColor(Color.parseColor("#A3A2A2"));
-		}
-	};
+//	private OnTabChangeListener myOnTabChangeListener = new OnTabChangeListener() {
+//
+//		@Override
+//		public void onTabChanged(String tabId) {
+//			for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+//				TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i)
+//						.findViewById(android.R.id.title); // Unselected Tabs
+//				tv.setTextColor(Color.parseColor("#424242"));
+//				mTabHost.getTabWidget().getChildAt(i)
+//						.setBackgroundResource(R.drawable.tab_bg_unselected);
+//			}
+//			mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab())
+//					.setBackgroundResource(R.drawable.tab_bg_selected);
+//			TextView tv = (TextView) mTabHost.getTabWidget()
+//					.getChildAt(mTabHost.getCurrentTab())
+//					.findViewById(android.R.id.title);
+//			tv.setTextColor(Color.parseColor("#A3A2A2"));
+//		}
+//	};
 }

@@ -1,15 +1,12 @@
 package me.pdthx.Accounts;
 
 import me.pdthx.BaseActivity;
-import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
 import me.pdthx.CustomViews.CustomLockView;
 import me.pdthx.Requests.ACHAccountSetupRequest;
-import me.pdthx.Services.UserService;
 import me.pdthx.Setup.CreateQuestionActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +20,8 @@ import android.widget.TextView;
 public class EnterPinActivity extends BaseActivity {
 	final private int USERDATA_FAILED = 2;
 	final private int INVALID_LENGTH = 14;
+	
+	private ACHAccountSetupRequest request;
 	// final private int USERREGISTRATION_PHONENUMBERFORMATERROR = 9;
 
 	private Activity parent = null;
@@ -34,16 +33,12 @@ public class EnterPinActivity extends BaseActivity {
 		parent = this;
 		setContentView(R.layout.setup_security_dialog);
 
+		request = getIntent().getExtras().getParcelable("achAccountObject");
+		
 		TextView header = (TextView) findViewById(R.id.setupSecurityHeader);
 		header.setText("Enter your pin");
 		TextView body = (TextView) findViewById(R.id.setupSecurityBody);
 		body.setText("Enter your security pin to continue your new bank account creation.");
-		
-		Bundle extras = getIntent().getExtras();
-		final String nameOnAccount = extras.getString("nameOnAccount");
-		final String routingNumber = extras.getString("routingNumber");
-		final String accountNumber = extras.getString("accountNumber");
-		final String accountType = extras.getString("accountType");
 		
 		final CustomLockView ctrlSecurityPin = (CustomLockView) findViewById(R.id.ctrlSecurityPin);
 		ctrlSecurityPin.invalidate();
@@ -55,11 +50,9 @@ public class EnterPinActivity extends BaseActivity {
 
 				if (confirmPasscode.length() > 3) {
 					Intent createQuestion = new Intent(getApplicationContext(), CreateQuestionActivity.class);
-					createQuestion.putExtra("nameOnAccount", nameOnAccount);
-					createQuestion.putExtra("routingNumber", routingNumber);
-					createQuestion.putExtra("accountNumber", accountNumber);
-					createQuestion.putExtra("accountType", accountType);
-					createQuestion.putExtra("securityPin", confirmPasscode);
+					request.SecurityPin = confirmPasscode;
+					
+					createQuestion.putExtra("achAccountObject", request);
 					
 					startActivity(createQuestion);
 					finish();

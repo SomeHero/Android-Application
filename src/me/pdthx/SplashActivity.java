@@ -1,14 +1,11 @@
 package me.pdthx;
 
-import android.widget.ImageView;
 import android.view.MotionEvent;
-import android.graphics.drawable.AnimationDrawable;
-import android.os.AsyncTask;
+import android.view.Window;
 import me.pdthx.Login.TabUIActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
 
 /**
  * This is the Splash activity which is loaded when the application is invoked
@@ -17,83 +14,74 @@ public class SplashActivity extends Activity {
     // Set the display time, in milliseconds (or extract it out as a
     // configurable parameter)
 
-//	private boolean isActive = true;
-//	private final int SPLASH_DISPLAY_LENGTH = 4000;
-//	private AnimationDrawable frameAnimation;
+	private boolean isActive = true;
+	private final int SPLASH_DISPLAY_LENGTH = 4000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        setContentView(R.layout.splash);
-//
-//        new AsyncLoadXMLFeed().execute();
-//
-//		ImageView img = (ImageView) findViewById(R.id.SplashImageView);
-//		img.setVisibility(ImageView.VISIBLE);
-//		img.setBackgroundResource(R.anim.strtan);
-//		frameAnimation = (AnimationDrawable) img.getBackground();
-//		img.post(new Runnable() {
-//			@Override
-//			public void run(){
-//				frameAnimation.start();
-//			}
-//		});
-//
-//		Thread splashThread = new Thread() {
-//			@Override
-//			public void run(){
-//				try{
-//
-//					int waited = 0;
-//					while(isActive && waited < SPLASH_DISPLAY_LENGTH){
-//						sleep(100);
-//						if(isActive){
-//							waited+=100;
-//						}
-//					}
-//				} catch(InterruptedException e){
-//
-//				} finally{
-//					finish();
-//					overridePendingTransition(R.anim.mainfadein, R.anim.splashfadeout);
-//					startActivity(new Intent(getApplicationContext(), TabUIActivity.class));
-//				}
-//			}
-//		};
-//		splashThread.start();
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.splash);
+
+        //new AsyncLoadXMLFeed().execute();
+
+		Thread splashThread = new Thread() {
+			@Override
+			public void run(){
+				try{
+
+					int waited = 0;
+					while(isActive && waited < SPLASH_DISPLAY_LENGTH){
+						sleep(100);
+						if(isActive){
+							waited+=100;
+						}
+					}
+				} catch(InterruptedException e){
+
+				} finally{
+					finish();
+					overridePendingTransition(R.anim.mainfadein, R.anim.splashfadeout);
+					startActivity(new Intent(getApplicationContext(), TabUIActivity.class));
+				}
+			}
+		};
+		splashThread.start();
     }
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event){
+		if(event.getAction() == MotionEvent.ACTION_DOWN){
+			isActive = false;
+		}
+		return true;
+	}
+
+//	private class AsyncLoadXMLFeed extends AsyncTask<Void, Void, Void> {
+//	    @Override
+//	      protected void onPreExecute(){
+//	            // show your progress dialog
 //
-//	@Override
-//	public boolean onTouchEvent(MotionEvent event){
-//		if(event.getAction() == MotionEvent.ACTION_DOWN){
-//			isActive = false;
-//		}
-//		return true;
+//	      }
+//
+//	      @Override
+//	      protected Void doInBackground(Void... voids){
+//            return null;
+//	            // load your xml feed asynchronously
+//	      }
+//
+//	      @Override
+//	      protected void onPostExecute(Void params){
+//	            // dismiss your dialog
+//	            // launch your News activity
+//	            Intent intent = new Intent(SplashActivity.this, TabUIActivity.class);
+//	            startActivity(intent);
+//
+//	            // close this activity
+//	            finish();
+//	      }
 //	}
 
-    private class AsyncLoadXMLFeed extends AsyncTask<Void, Void, Void>{
-
-        @Override
-        protected void onPostExecute(Void params){
-            // dismiss your dialog
-            // launch your News activity
-            Intent intent = new Intent(SplashActivity.this, TabUIActivity.class);
-            startActivity(intent);
-
-            // close this activity
-            finish();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params)
-        {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-    }
-
-    /**@Override
+    /*@Override
 	protected void onResume() {
 		super.onResume();
 		SharedPreferences sp = PreferenceManager

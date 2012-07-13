@@ -14,8 +14,6 @@ import me.pdthx.Widget.OnWheelChangedListener;
 import me.pdthx.Widget.WheelView;
 import me.pdthx.Widget.Adapters.ArrayWheelAdapter;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,20 +27,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class CreateQuestionActivity extends BaseActivity {
-
-	private String nameOnAccount;
-	private String routingNumber;
-	private String accountNumber;
-	private String nickname;
-	private String accountType;
-	private String questions[];
-	private String passcode;
+	
+	private String[] questions;
 	private int currentId = 1;
-	private String errorMessage;
-	private int tab;
-
-	private Activity parent = null;
-
+	
 	final private int USERDATA_FAILED = 2;
 	final private int SETUPACHACCOUNT_FAILED = 3;
 	final private int USERREGISTRATION_FAILED = 4;
@@ -50,15 +38,13 @@ public class CreateQuestionActivity extends BaseActivity {
 	final private int USERREGISTRATION_PASSWORDMISMATCH = 7;
 	final private int USERREGISTRATION_ACHNUMBERMISMATCH = 8;
 
-	protected ACHAccountSetupRequest achAccountSetupRequest;
-	protected ACHAccountSetupResponse achAccountSetupResponse;
+	protected ACHAccountSetupRequest request;
+	protected ACHAccountSetupResponse response;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_security_question);
-
-		parent = this;
 
 		final TextView txtAnswer = (TextView) findViewById(R.id.security_question_selected);
 
@@ -96,25 +82,10 @@ public class CreateQuestionActivity extends BaseActivity {
 				EditText userAnswer = (EditText)findViewById(R.id.setupSecurityTxtAnswer);
 				String answer = userAnswer.getText().toString().trim();
 
-				Bundle extras = getIntent().getExtras();
-				nameOnAccount = extras.getString("nameOnAccount");
-				routingNumber = extras.getString("routingNumber");
-				accountNumber = extras.getString("accountNumber");
-				accountType = extras.getString("accountType");
-				passcode = extras.getString("securityPin");
-				nickname = extras.getString("nickname");
-				tab = extras.getInt("tab");
+				request = getIntent().getExtras().getParcelable("achAccountObject");
 
-				achAccountSetupRequest = new ACHAccountSetupRequest();
-				achAccountSetupRequest.AccountNumber = accountNumber;
-				achAccountSetupRequest.AccountType = accountType;
-				achAccountSetupRequest.NameOnAccount = nameOnAccount;
-				achAccountSetupRequest.RoutingNumber = routingNumber;
-				achAccountSetupRequest.SecurityPin = passcode;
-				achAccountSetupRequest.SecurityAnswer = answer;
-				achAccountSetupRequest.Nickname = nickname;
-				achAccountSetupRequest.SecurityQuestionId = currentId;
-				achAccountSetupRequest.UserId = prefs.getString("userId", "");
+				request.SecurityAnswer = answer;
+				request.SecurityQuestionId = currentId;
 
 				progressDialog.setMessage("Sending Info...");
 				progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -126,18 +97,18 @@ public class CreateQuestionActivity extends BaseActivity {
 					public void run() {
 						// TODO Auto-generated method stub
 						try {
-							achAccountSetupResponse = UserService
-									.setupACHAccount(achAccountSetupRequest);
+							response = UserService
+									.setupACHAccount(request);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 						progressDialog.dismiss();
 
-						if (achAccountSetupResponse.Success) {
+						if (response.Success) {
 
 						    Editor edit = prefs.edit();
 						    edit.putBoolean("hasACHAccount", true);
-						    edit.putString("paymentAccountId", achAccountSetupResponse.PaymentAccountId);
+						    edit.putString("paymentAccountId", response.PaymentAccountId);
 						    edit.commit();
 
 							setResult(RESULT_OK);
@@ -145,10 +116,9 @@ public class CreateQuestionActivity extends BaseActivity {
 
 							Intent intent = new Intent(getApplicationContext(),
                                 CustomTabActivity.class);
-							intent.putExtra("tab", tab);
+							intent.putExtra("tab", request.tab);
 							startActivity(intent);
 						} else {
-						    errorMessage = achAccountSetupResponse.ReasonPhrase;
 							signUpHandler.sendEmptyMessage(USERDATA_FAILED);
 						}
 					}
@@ -160,15 +130,14 @@ public class CreateQuestionActivity extends BaseActivity {
 		});
 	}
 
-	Handler signUpHandler = new Handler() {
+	private Handler signUpHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case (USERDATA_FAILED):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("Setup Failed");
-				alertDialog.setMessage(errorMessage);
+				alertDialog.setMessage(response.ReasonPhrase);
 				alertDialog.setButton("OK",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
@@ -180,11 +149,10 @@ public class CreateQuestionActivity extends BaseActivity {
 				alertDialog.show();
 				break;
 			case (SETUPACHACCOUNT_FAILED):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("Setup Failed");
 				alertDialog
 						.setMessage("There was an error setting up your ACH account: "
-								+ achAccountSetupResponse.ReasonPhrase + " Please try again.");
+								+ response.ReasonPhrase + " Please try again.");
 				alertDialog.setButton("OK",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
@@ -196,7 +164,6 @@ public class CreateQuestionActivity extends BaseActivity {
 				alertDialog.show();
 				break;
 			case (USERREGISTRATION_FAILED):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("User Registration Failed.");
 				alertDialog
 						.setMessage("There was an error completing your registration. Please try again.");
@@ -211,7 +178,6 @@ public class CreateQuestionActivity extends BaseActivity {
 				alertDialog.show();
 				break;
 			case (USERSECURITYPIN_CONFIRMMISMATCH):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("Security Pins Mismatch.");
 				alertDialog
 						.setMessage("The two security pins you just swiped don't match. Please try again.");
@@ -227,7 +193,6 @@ public class CreateQuestionActivity extends BaseActivity {
 				break;
 
 			case (USERREGISTRATION_PASSWORDMISMATCH):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("Passwords don't Match.");
 				alertDialog
 						.setMessage("The password you entered do not match. Please try again.");
@@ -243,7 +208,6 @@ public class CreateQuestionActivity extends BaseActivity {
 				break;
 
 			case (USERREGISTRATION_ACHNUMBERMISMATCH):
-				alertDialog = new AlertDialog.Builder(parent).create();
 				alertDialog.setTitle("ACH Account Number Mismatch.");
 				alertDialog
 						.setMessage("The ACH account numbers you entered do not match. Please try again.");
