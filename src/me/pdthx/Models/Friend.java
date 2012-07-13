@@ -1,7 +1,7 @@
 package me.pdthx.Models;
 
+import me.pdthx.Helpers.NameSeparator;
 import android.net.Uri;
-import me.pdthx.helpers.NameSeparator;
 import android.graphics.Bitmap;
 
 public class Friend implements Comparable<Friend> {
@@ -83,20 +83,20 @@ public class Friend implements Comparable<Friend> {
             String searchFirst = searchNames[0].toLowerCase();
             String searchLast = searchNames[1].toLowerCase();
 
-            return firstName.startsWith(searchFirst) && lastName.startsWith(searchLast)
-                || firstName.startsWith(searchLast) && lastName.startsWith(searchFirst);
+            return firstName.toLowerCase().startsWith(searchFirst) && lastName.toLowerCase().startsWith(searchLast)
+                || firstName.toLowerCase().startsWith(searchLast) && lastName.toLowerCase().startsWith(searchFirst);
         }
 
-        if (name.startsWith(search))
+        if (name.toLowerCase().startsWith(search))
         {
             return true;
         }
 
-        if (firstName.startsWith(search)) {
+        if (firstName.toLowerCase().startsWith(search)) {
             return true;
         }
 
-        if (lastName.startsWith(search)) {
+        if (lastName.toLowerCase().startsWith(search)) {
             return true;
         }
 

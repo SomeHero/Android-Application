@@ -13,16 +13,20 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-    
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-	<uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <permission
         android:name="me.pdthx.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="me.pdthx.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <permission
         android:name="com.example.myapp.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -33,8 +37,8 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <uses-sdk
-        android:minSdkVersion="3"
-        android:targetSdkVersion="4" />
+        android:minSdkVersion="5"
+        android:targetSdkVersion="5" />
 
     <application
         android:debuggable="true"
@@ -60,14 +64,16 @@
 
         <activity
             android:name=".SplashActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".AddMoneyActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".Accounts.ACHAccountSetupActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
@@ -75,18 +81,24 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name=".CameraActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
             android:name=".CustomTabActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
             android:name=".FriendsListActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
             android:name=".PaystreamActivity"
@@ -94,27 +106,24 @@
             android:noHistory="true" >
         </activity>
         <activity
-            android:name=".ProfileSetupActivity"
+            android:name=".ProfileControllerActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity android:name=".RequestPaymentActivity" >
+        <activity
+            android:name=".RequestPaymentActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".SecurityPinSetupActivity"
+            android:name=".SecurityPinActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".SendPaymentActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity
-            android:name=".SignInActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".SignUpActivity"
-            android:label="@string/app_name" >
-        </activity>
+
+        <!-- Paystream Dialogs -->
+
         <activity
             android:name=".Dialogs.IncomingPaymentDialog"
             android:theme="@style/PaystreamDialog" >
@@ -135,14 +144,13 @@
             android:name=".Dialogs.PaymentAlertDialog"
             android:theme="@style/PaystreamAlertDialog" >
         </activity>
+
+        <!-- Logged out Screens -->
+
         <activity
             android:name=".Login.TabUIActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Login.WelcomeActivity"
@@ -152,8 +160,11 @@
         <activity
             android:name=".Login.SignInUIActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateUnchanged" >
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name=".Login.ForgotPasswordActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".Login.SignUpUIActivity"
@@ -165,31 +176,40 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
+
+        <!-- Payment Account Management -->
+
+        <activity
+            android:name=".Accounts.ACHAccountSetupActivity"
+            android:label="@string/app_name" >
+        </activity>
         <activity
             android:name=".Accounts.AccountManagerActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name=".Accounts.AccountTabActivity"
+            android:name=".Accounts.EnterPinActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".Accounts.LinkAccountActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
+
+        <!-- Setup ACH Account Screens -->
+
         <activity
-            android:name=".CameraActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape" >
-        </activity>
-	<activity
             android:name=".Setup.ActivateActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Setup.EnableActivity"
+            android:name=".Setup.PersonalizeActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Setup.PersonalizeActivity"
+            android:name=".Setup.EnableActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
@@ -204,44 +224,41 @@
             android:name=".Setup.CreateQuestionActivity"
             android:label="@string/app_name" >
         </activity>
-        
-        <activity
-            android:name=".Accounts.EnterPinActivity"
-            android:label="@string/app_name" >
-        </activity>
-        
-        <activity
-            android:name=".Accounts.EnterAnswerActivity"
-            android:label="@string/app_name" >
-        </activity>
-        
-        <activity
-            android:name=".ProfileControllerActivity"
-            android:label="@string/app_name" >
-        </activity>
-        
+
+        <!-- Settings Screens -->
+
         <activity
             android:name=".Settings.SettingsActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         
+        <!-- Security and Privacy Screens -->
+        
         <activity
             android:name=".Settings.SecuritySettingsActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
+        <activity
+            android:name=".Settings.ChangePasswordActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".Settings.AnswerQuestionActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <!-- MeCode Settings Screens -->
         
         <activity
             android:name=".Settings.MeCodeSettingsActivity"
             android:label="@string/app_name" >
         </activity>
-        
         <activity
-            android:name=".Settings.ChangePasswordActivity"
+            android:name=".Settings.MeCodeSetupActivity"
             android:label="@string/app_name" >
         </activity>
-        
     </application>
-    
+
 </manifest>

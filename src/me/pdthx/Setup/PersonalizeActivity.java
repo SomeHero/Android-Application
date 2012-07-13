@@ -2,8 +2,6 @@ package me.pdthx.Setup;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-
 import me.pdthx.BaseActivity;
 import me.pdthx.R;
 import me.pdthx.Requests.UserPersonalRequest;
@@ -20,15 +18,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,7 +45,7 @@ public class PersonalizeActivity extends BaseActivity {
 	private ImageView addPhotoImg;
 	private RelativeLayout addContactsBtn;
 	private Button continueBtn;
-	
+
 	private String SENT = "SMS_SENT";
     private String DELIVERED = "SMS_DELIVERED";
     private String phoneNumber = "12892100266";
@@ -66,7 +61,7 @@ public class PersonalizeActivity extends BaseActivity {
 	private String imageUri;
 	private Bitmap imageResult;
 	private String userId = "";
-	
+
 	private UserPersonalRequest userPersonalRequest;
 	private Response response;
 
@@ -74,31 +69,31 @@ public class PersonalizeActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.personalize);
-		
+
 		userId = prefs.getString("userId", "");
 
 		UserRequest userRequest = new UserRequest();
 		userRequest.UserId = userId;
 
 		UserResponse userResponse = UserService.getUser(userRequest);
-		
-		if (userResponse.MobileNumber != null && 
+
+		if (userResponse.MobileNumber != null &&
 				userResponse.MobileNumber.equals("null")) {
-			
+
 			setupSMS();
-			
+
 			sentPI = PendingIntent.getBroadcast(this, 0,
 		            new Intent(SENT), 0);
 
 		    deliveredPI = PendingIntent.getBroadcast(this, 0,
 		            new Intent(DELIVERED), 0);
-		    
+
 			String message = userResponse.UserId;
 
 			SmsManager sms = SmsManager.getDefault();
 
 	        try {
-	        	sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);  
+	        	sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
 	        }
 	        catch(Exception e)
 	        {
@@ -109,13 +104,13 @@ public class PersonalizeActivity extends BaseActivity {
 	    unregisterReceiver(deliveryBroadcastReciever);
 		setupPersonalize();
 	}
-	
+
 	public void onPause() {
 		progressDialog.dismiss();
-		
+
 		super.onPause();
 	}
-	
+
 	public void setupSMS() {
 	    //---when the SMS has been sent---
 	    sendBroadcastReceiver = new BroadcastReceiver()
@@ -143,7 +138,7 @@ public class PersonalizeActivity extends BaseActivity {
 	            }
 	        }
 	    };
- 
+
 	    deliveryBroadcastReciever = new BroadcastReceiver()
 	    {
 	        public void onReceive(Context arg0, Intent arg1)
@@ -162,7 +157,7 @@ public class PersonalizeActivity extends BaseActivity {
 	    registerReceiver(deliveryBroadcastReciever, new IntentFilter(DELIVERED));
 	    registerReceiver(sendBroadcastReceiver , new IntentFilter(SENT));
 	}
-	
+
 	Handler personalSetupHandler = new Handler() {
 
 		@Override
@@ -185,7 +180,7 @@ public class PersonalizeActivity extends BaseActivity {
 
 				alertDialog.show();
 				break;
-				
+
 			case (DISMISS_DIALOG):
 				progressDialog.dismiss();
 				break;
@@ -254,8 +249,8 @@ public class PersonalizeActivity extends BaseActivity {
 						EnableActivity.class);
 				if (selectedImage != null) {
 					imageUri = selectedImage.toString();
-				} 
-				
+				}
+
 				progressDialog.setMessage("Sending Info...");
 				progressDialog
 						.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -276,9 +271,9 @@ public class PersonalizeActivity extends BaseActivity {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-						
+
 						//personalSetupHandler.sendEmptyMessage(DISMISS_DIALOG);
-						
+
 						if (response.Success) {
 							setResult(RESULT_OK);
 							finish();

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.pdthx.R;
-import com.zubhium.ZubhiumSDK;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,10 +31,6 @@ public class CustomLockView extends View {
 
 	private Bitmap selected = BitmapFactory.decodeResource(this.getResources(),
 			R.drawable.btn_pinswipe_selected);
-	
-	private Bitmap pressed = BitmapFactory.decodeResource(this.getResources(),
-			R.drawable.btn_pinswipe_pressed);
-	ZubhiumSDK sdk;
 
 	public CustomLockView(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);

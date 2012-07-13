@@ -1,8 +1,8 @@
 package me.pdthx.Models;
 
+import me.pdthx.Helpers.NameSeparator;
 import java.util.Date;
 
-import me.pdthx.helpers.NameSeparator;
 
 import android.graphics.Bitmap;
 

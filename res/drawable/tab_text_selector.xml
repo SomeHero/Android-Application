@@ -2,12 +2,12 @@
 <!-- Copyright (c) 2010 Josh Clemm -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:state_selected="true" android:color="@android:color/white"/>
-    <item android:state_focused="true" android:color="@android:color/white"/>
-    <item android:state_pressed="true" android:color="@android:color/white"/>
-    <item android:state_selected="false" android:color="#424242"/>
-    <item android:state_focused="false" android:color="#424242"/>
-    <item android:state_pressed="false" android:color="#424242"/>
+    <item android:state_selected="true" android:color="#27733d"/>
+    <item android:state_focused="true" android:color="#27733d"/>
+    <item android:state_pressed="true" android:color="#27733d"/>
+    <item android:state_selected="false" android:color="#5c5c5c"/>
+    <item android:state_focused="false" android:color="#5c5c5c"/>
+    <item android:state_pressed="false" android:color="#5c5c5c"/>
     <item android:color="#424242"/>
 
 </selector>

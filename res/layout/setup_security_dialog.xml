@@ -37,7 +37,8 @@
         android:layout_width="match_parent"
         android:layout_height="346dp"
         android:orientation="vertical" >
-        <me.pdthx.CustomViews.CustomLockView
+
+        <me.pdthx.CustomViews.CustomLockView
             android:id="@+id/ctrlSecurityPin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

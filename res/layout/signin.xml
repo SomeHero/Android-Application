@@ -140,15 +140,18 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"
                 android:textStyle="bold" />
-
+
             <TextView
                 android:id="@+id/forgotInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
+                android:clickable="true"
+                android:textColor="#50A5B9"
                 android:text="Forgot email or password? Click here."
                 android:textSize="12dp" />
+
         </LinearLayout>
     </RelativeLayout>
 

@@ -88,7 +88,7 @@ public class PullAndRefreshListView extends ListView implements
 
 		mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
+
 		mRefreshView = (RelativeLayout) mInflater.inflate(
 				R.layout.pull_to_refresh_header, this, false);
 		mRefreshViewText = (TextView) mRefreshView
@@ -100,7 +100,7 @@ public class PullAndRefreshListView extends ListView implements
 		mRefreshViewLastUpdated = (TextView) mRefreshView
 				.findViewById(R.id.pull_to_refresh_updated_at);
 
-		mRefreshViewImage.setMinimumHeight(50);
+		mRefreshViewImage.setMinimumHeight(90);
 		mRefreshView.setOnClickListener(new OnClickRefreshListener());
 		mRefreshOriginalTopPadding = mRefreshView.getPaddingTop();
 
@@ -127,7 +127,7 @@ public class PullAndRefreshListView extends ListView implements
 	/**
 	 * Set the listener that will receive notifications every time the list
 	 * scrolls.
-	 * 
+	 *
 	 * @param l
 	 *            The scroll listener.
 	 */
@@ -138,7 +138,7 @@ public class PullAndRefreshListView extends ListView implements
 
 	/**
 	 * Register a callback to be invoked when this list should be refreshed.
-	 * 
+	 *
 	 * @param onRefreshListener
 	 *            The callback to run.
 	 */
@@ -148,7 +148,7 @@ public class PullAndRefreshListView extends ListView implements
 
 	/**
 	 * Set a text to represent when the list was last updated.
-	 * 
+	 *
 	 * @param lastUpdated
 	 *            Last updated at.
 	 */
@@ -351,7 +351,7 @@ public class PullAndRefreshListView extends ListView implements
 
 	/**
 	 * Resets the list to a normal state after a refresh.
-	 * 
+	 *
 	 * @param lastUpdated
 	 *            Last updated at.
 	 */

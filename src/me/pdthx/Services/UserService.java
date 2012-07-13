@@ -1,5 +1,7 @@
 package me.pdthx.Services;
 
+import me.pdthx.Requests.UserAnswerQuestionRequest;
+import me.pdthx.Requests.UserSetupSecurityPinRequest;
 import me.pdthx.Requests.UserChangePasswordRequest;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +16,6 @@ import me.pdthx.Requests.UserPersonalRequest;
 import me.pdthx.Requests.UserPushNotificationRequest;
 import me.pdthx.Requests.UserRegistrationRequest;
 import me.pdthx.Requests.UserRequest;
-import me.pdthx.Requests.SecurityPinSetupRequest;
 import me.pdthx.Requests.UserSignInRequest;
 import me.pdthx.Responses.ACHAccountSetupResponse;
 import me.pdthx.Responses.Response;
@@ -30,7 +31,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -58,6 +58,7 @@ public class UserService {
 	private static final String SETUPACHACCOUNT_URL = "/Users/%s/PaymentAccounts?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String PERSONALIZE_URL = "/Users/%s/personalize_user?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String SECURITYQUESTIONS_URL = "/securityquestions?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String VALIDATESECURITYQUESTION_URL = "/Users/%s/validate_security_question";
 	private static final String CHECKIMAGE_URL = "/Users/%s/paymentaccounts/upload_check_image";
 
 	public UserService() {
@@ -521,7 +522,7 @@ public class UserService {
 	}
 
 	public static Response setupSecurityPin(
-			SecurityPinSetupRequest userSecurityPinRequest) {
+			UserSetupSecurityPinRequest userSecurityPinRequest) {
 		Response setupPinResponse = new Response();
 		HttpResponse response = null;
 		try {
@@ -853,6 +854,44 @@ public class UserService {
 		return messageResponses;
 	}
 
+	public static Response validateSecurityQuestion(UserAnswerQuestionRequest answerQuestionRequest)
+	{
+	    HttpResponse response = null;
+	    Response serverResponse = new Response();
+	    try {
+	        HttpClient httpClient = new DefaultHttpClient();
+	        HttpPost request = new HttpPost(ROOTURL +
+	            String.format(VALIDATESECURITYQUESTION_URL, answerQuestionRequest.UserId));
+
+	        JSONObject json = new JSONObject();
+	        json.put("questionAnswer", answerQuestionRequest.Answer);
+	        StringEntity entity = new StringEntity(json.toString());
+            request.setEntity(entity);
+            request.setHeader("content-type", "application/json");
+
+            response = httpClient.execute(request);
+        } catch (ClientProtocolException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+	    if (response.getStatusLine().getStatusCode() == 200) {
+            serverResponse.Success = true;
+        } else {
+            serverResponse.Success = false;
+            serverResponse.ReasonPhrase = response.getStatusLine()
+                    .getReasonPhrase();
+        }
+
+        return serverResponse;
+	}
+
 	public static Response registerForPush(
 			UserPushNotificationRequest userRequest) {
 		HttpResponse response = null;
@@ -948,7 +987,7 @@ public class UserService {
 			requestEntity.addPart("returnformat", new StringBody("json"));
 
 			requestEntity.addPart("uploaded", new ByteArrayBody(userRequest.image,"myImage.jpg"));
-			
+
 			//request.setHeader("content-type", "image/jpeg");
 			request.setEntity(requestEntity);
 

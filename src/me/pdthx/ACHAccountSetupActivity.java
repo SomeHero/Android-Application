@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,11 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import me.pdthx.Requests.ACHAccountSetupRequest;
-import me.pdthx.Responses.ACHAccountSetupResponse;
 import me.pdthx.Setup.CreatePinActivity;
 
-public class ACHAccountSetupActivity extends BaseActivity implements
-		OnCheckedChangeListener {
+public class ACHAccountSetupActivity extends BaseActivity implements OnCheckedChangeListener {
 
 	final private int SETUPACHACCOUNT_FAILED = 3;
 	final private int USERREGISTRATION_ACHNUMBERMISMATCH = 8;
@@ -30,16 +27,12 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 	private Button btnAddAccount;
 	private Button btnRemoveAccount;
 	private Button btnUpdateAccount;
-	private Button btnBack;
 	private LinearLayout btnCheckImage;
 	private RadioGroup btnAcctType;
 	private boolean isCheckingAcct;
 	private int tab;
 
 	private ACHAccountSetupRequest request;
-	private ACHAccountSetupResponse response;
-
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +42,7 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 		progressDialog.dismiss();
 		setContentView(R.layout.achaccountsetup_controller);
 		btnCheckImage = (LinearLayout) findViewById(R.id.takePhotoBtn);
-		tab = getIntent().getExtras().getInt("tab");
+		tab = getIntent().getIntExtra("tab", 0);
 
 		btnAddAccount = (Button) findViewById(R.id.btnSubmitACHAccount);
 		btnAddAccount.setText("Add Account");
@@ -57,7 +50,6 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 		btnRemoveAccount.setVisibility(View.GONE);
 		btnUpdateAccount = (Button) findViewById(R.id.btnRemindMeLater);
 		btnUpdateAccount.setVisibility(View.GONE);
-		btnBack = (Button) findViewById(R.id.btnACHBack);
 		btnAcctType = (RadioGroup) findViewById(R.id.achBankCategories);
 		btnAcctType.setOnCheckedChangeListener(this);
 		showSetupACHController();
@@ -65,7 +57,7 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 
 	}
 
-	Handler achSetupHandler = new Handler() {
+	private Handler achSetupHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -75,8 +67,7 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 						ACHAccountSetupActivity.this).create();
 				alertDialog.setTitle("Setup Failed");
 				alertDialog
-						.setMessage("There was an error setting up your ACH account: "
-								+ response.ReasonPhrase + " Please try again.");
+						.setMessage("There was an error setting up your ACH account. Please try again.");
 				alertDialog.setButton("OK",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
@@ -127,26 +118,18 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 	};
 
 	private void showSetupACHController() {
-		
-		
+
+
 		btnCheckImage.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				startActivityForResult(new Intent(ACHAccountSetupActivity.this, CameraActivity.class), CAMERA);
-				
-			}
-			
-		});
-		
-		btnBack.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				finish();
 			}
 
 		});
+
 
 		btnAddAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View argO) {
@@ -163,21 +146,27 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 						.equals(((EditText) findViewById(R.id.txtConfirmAccountNumber))
 								.getText().toString().trim())) {
 
+					request = new ACHAccountSetupRequest();
 					Intent createPin = new Intent(getApplicationContext(), CreatePinActivity.class);
-					createPin.putExtra("nameOnAccount", txtNameOnAccount.getText().toString().trim());
-					createPin.putExtra("routingNumber", txtRoutingNumber.getText().toString().trim());
-					createPin.putExtra("accountNumber", txtAccountNumber.getText().toString().trim());
-					createPin.putExtra("nickname", txtNickname.getText().toString().trim());
-					createPin.putExtra("tab", tab);
+					request.NameOnAccount = txtNameOnAccount.getText().toString().trim();
+					request.RoutingNumber = txtRoutingNumber.getText().toString().trim();
+					request.AccountNumber = txtAccountNumber.getText().toString().trim();
+					request.Nickname = txtNickname.getText().toString().trim();
+					request.tab = tab;
+					request.UserId = prefs.getString("userId", "");
+
+
 
 					if(isCheckingAcct)
 					{
-						createPin.putExtra("accountType", "Checking");
+						request.AccountType = "Checking";
 					}
 					else
 					{
-						createPin.putExtra("accountType", "Savings");
+						request.AccountType = "Savings";
 					}
+
+					createPin.putExtra("achAccountObject", request);
 					finish();
 					startActivity(createPin);
 				} else {
@@ -205,9 +194,9 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 				try{
 					String path = (String) data.getExtras().get("index");
 					FileInputStream in = new FileInputStream(path);
-					
-					Bitmap thumbnail = null;
-					
+
+//					Bitmap thumbnail = null;
+
 //					cameraImage.setImageResource(R.drawable.bg_pop3);
 //					thumbnail = BitmapFactory.decodeStream(in);
 //					cameraImage.setImageBitmap(thumbnail);
@@ -225,7 +214,7 @@ public class ACHAccountSetupActivity extends BaseActivity implements
 			}
 		}
 	}
-	
-	
-	
+
+
+
 }

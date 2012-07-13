@@ -95,7 +95,7 @@ public class AccountManagerActivity extends BaseActivity implements
 			 * alertDialog.setButton("OK", new DialogInterface.OnClickListener()
 			 * { public void onClick(DialogInterface dialog, int which) {
 			 * dialog.dismiss(); } });
-			 * 
+			 *
 			 * alertDialog.show(); break;
 			 */
 			case (USERREGISTRATION_ACHNUMBERMISMATCH):
@@ -450,15 +450,6 @@ public class AccountManagerActivity extends BaseActivity implements
 			}
 		});
 
-		Button back = (Button) findViewById(R.id.btnACHBack);
-		back.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				showAccountScreen();
-			}
-
-		});
 
 		LinearLayout bottom = (LinearLayout) findViewById(R.id.stepsToCompleteLayout);
 		bottom.setVisibility(View.GONE);
@@ -543,19 +534,9 @@ public class AccountManagerActivity extends BaseActivity implements
 			@Override
 			public void onClick(View arg0) {
 
-				startActivity(new Intent(getApplicationContext(), AddLinkAccountActivity.class));
+				startActivity(new Intent(getApplicationContext(), LinkAccountActivity.class));
 				finish();
 
-			}
-
-		});
-
-		backAcctBtn = (Button) findViewById(R.id.acct_BackButton);
-		backAcctBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				finish();
 			}
 
 		});
@@ -705,7 +686,7 @@ public class AccountManagerActivity extends BaseActivity implements
 
 	/*
 	 * protected void SubmitPaymentRequest() {
-	 * 
+	 *
 	 * PaymentRequest paymentRequest = new PaymentRequest();
 	 * paymentRequest.UserId = prefs.getString("userId", "");
 	 * paymentRequest.SecurityPin = passcode; paymentRequest.SenderUri =
@@ -713,12 +694,12 @@ public class AccountManagerActivity extends BaseActivity implements
 	 * paymentRequest.Amount = amount; paymentRequest.Comments = comments;
 	 * paymentRequest.SenderAccountId = prefs.getString("paymentAccountId",
 	 * "0");
-	 * 
+	 *
 	 * if (location != null) { paymentRequest.Latitude = location.getLatitude();
 	 * paymentRequest.Longitude = location.getLongitude(); }
-	 * 
+	 *
 	 * paymentResponse = PaymentServices.sendMoney(paymentRequest);
-	 * 
+	 *
 	 * }
 	 */
 }

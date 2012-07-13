@@ -41,7 +41,6 @@ import android.view.MenuItem;
 
 public class BaseActivity extends Activity {
 
-	public static final String TAG = "BaseActivity";
 	protected SharedPreferences prefs;
 	protected AlertDialog alertDialog;
 	protected ProgressDialog progressDialog;
