@@ -41,7 +41,6 @@ import android.view.MenuItem;
 
 public class BaseActivity extends Activity {
 
-	public static final String TAG = "BaseActivity";
 	protected SharedPreferences prefs;
 	protected AlertDialog alertDialog;
 	protected ProgressDialog progressDialog;
@@ -64,7 +63,7 @@ public class BaseActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		tracker = GoogleAnalyticsTracker.getInstance();
@@ -207,7 +206,7 @@ public class BaseActivity extends Activity {
 
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();      
+						e.printStackTrace();
 					}
 				}
 
@@ -245,6 +244,15 @@ public class BaseActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		facebook.extendAccessTokenIfNeeded(this, null);
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+	    if (!progressDialog.isShowing())
+	    {
+	        finish();
+	    }
 	}
 
 

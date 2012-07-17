@@ -6,8 +6,6 @@ import java.net.URL;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Responses.UserResponse;
 import me.pdthx.Services.UserService;
-import me.pdthx.Settings.SettingsActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
@@ -176,7 +174,7 @@ public final class HomeActivity extends BaseActivity {
 							e.printStackTrace();
 							imgUserName.setImageResource(R.drawable.avatar_unknown);
 						}
-						
+
 					} else {
 						imgUserName.setImageResource(R.drawable.avatar_unknown);
 					}
@@ -299,16 +297,7 @@ public final class HomeActivity extends BaseActivity {
 >>>>>>> 8b0d758dfc94f90184323cbdbf36649c639afdd3
 			 * switchTabInActivity(2); } });
 			 */
-			
-			Button navSettings = (Button)findViewById(R.id.homeNavBtn);
-			navSettings.setOnClickListener(new OnClickListener(){
 
-				@Override
-				public void onClick(View arg0) {
-					startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-				}
-				
-			});
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package me.pdthx.Accounts;
 
 import java.io.FileInputStream;
+import me.pdthx.Requests.UserSetupSecurityPinRequest;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
@@ -32,7 +33,6 @@ import me.pdthx.Requests.ACHAccountDeleteRequest;
 import me.pdthx.Requests.ACHAccountDetailRequest;
 import me.pdthx.Requests.ACHAccountSetupRequest;
 import me.pdthx.Requests.ACHAccountUpdateRequest;
-import me.pdthx.Requests.SecurityPinSetupRequest;
 import me.pdthx.Responses.ACHAccountResponse;
 import me.pdthx.Responses.ACHAccountSetupResponse;
 import me.pdthx.Responses.Response;
@@ -44,8 +44,7 @@ import me.pdthx.Widget.OnWheelChangedListener;
 import me.pdthx.Widget.WheelView;
 import me.pdthx.Widget.Adapters.ArrayWheelAdapter;
 
-public class ACHAccountSetupActivity extends BaseActivity implements
-OnCheckedChangeListener{
+public class ACHAccountSetupActivity extends BaseActivity implements OnCheckedChangeListener{
 	Button editAcct;
 	Button addAcct;
 	Button backAcctBtn;
@@ -61,10 +60,6 @@ OnCheckedChangeListener{
 	private String passcodeCreation;
 	private String nickname;
 
-
-	final private int CAMERA = 20;
-	private LinearLayout btnCheckImage;
-	
 	private String preferredSend;
 	private String preferredReceive;
 
@@ -78,7 +73,8 @@ OnCheckedChangeListener{
 	private Response receiveResponse;
 	private ACHAccountUpdateRequest updateRequest;
 	private ACHAccountDeleteRequest deleteRequest;
-	private UserSignInResponse userInfo;
+
+	private String paymentAccountId;
 
 	final private int USERREGISTRATION_ACHNUMBERMISMATCH = 15;
 	final private int INVALID_PINCODE_LENGTH = 13;
@@ -90,6 +86,7 @@ OnCheckedChangeListener{
 	final private int USERSECURITYPIN_CONFIRMMISMATCH = 6;
 	final private int UPDATEACCTMNG_SUCCESS = 18;
 	final private int UPDATEACCTMNG_FAILED = 4;
+	final private int CAMERA = 20;
 
 	private String passcode = "";
 	private int clickedBankId;
@@ -97,10 +94,8 @@ OnCheckedChangeListener{
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		userInfo = new UserSignInResponse();
-		userInfo.UserId = prefs.getString("userId", "");
-		userInfo.PaymentAccountId = prefs.getString("paymentAccountId", "");
+
+		paymentAccountId = prefs.getString("paymentAccountId", "");
 		showSetupACHController();
 	}
 	Handler achSetupHandler = new Handler() {
@@ -117,188 +112,188 @@ OnCheckedChangeListener{
 			 * alertDialog.setButton("OK", new DialogInterface.OnClickListener()
 			 * { public void onClick(DialogInterface dialog, int which) {
 			 * dialog.dismiss(); } });
-			 * 
+			 *
 			 * alertDialog.show(); break;
 			 */
 			case (USERREGISTRATION_ACHNUMBERMISMATCH):
 				alertDialog = new AlertDialog.Builder(
 						ACHAccountSetupActivity.this).create();
-				alertDialog.setTitle("ACH Account Number Mismatch.");
-				alertDialog
-						.setMessage("The ACH account numbers you entered must match and not be empty. Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
+			alertDialog.setTitle("ACH Account Number Mismatch.");
+			alertDialog
+			.setMessage("The ACH account numbers you entered must match and not be empty. Please try again.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+				}
+			});
 
-				alertDialog.show();
-				break;
+			alertDialog.show();
+			break;
 
 			case (INVALID_PINCODE_LENGTH):
 				alertDialog = new AlertDialog.Builder(
 						ACHAccountSetupActivity.this).create();
-				alertDialog.setTitle("Invalid pincode.");
-				alertDialog
-						.setMessage("Your pincode consists of 3 pins or greater. Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
+			alertDialog.setTitle("Invalid pincode.");
+			alertDialog
+			.setMessage("Your pincode consists of 3 pins or greater. Please try again.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+				}
+			});
 
-				alertDialog.show();
-				break;
+			alertDialog.show();
+			break;
 
 			case (UPDATEACCTMNG_SUCCESS):
 				alertDialog = new AlertDialog.Builder(
 						ACHAccountSetupActivity.this).create();
-				alertDialog.setTitle("Updated Accounts.");
-				alertDialog
-						.setMessage("Your account settings have been updated.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-								finish();
-							}
-						});
+			alertDialog.setTitle("Updated Accounts.");
+			alertDialog
+			.setMessage("Your account settings have been updated.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+					finish();
+				}
+			});
 
-				alertDialog.show();
-				break;
+			alertDialog.show();
+			break;
 
 			case (UPDATEACCTMNG_FAILED):
 				alertDialog = new AlertDialog.Builder(
 						ACHAccountSetupActivity.this).create();
-				alertDialog.setTitle("Failed to update.");
-				alertDialog
-						.setMessage("A problem occurred with updating your account settings. Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-								finish();
-							}
-						});
+			alertDialog.setTitle("Failed to update.");
+			alertDialog
+			.setMessage("A problem occurred with updating your account settings. Please try again.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+					finish();
+				}
+			});
 
-				alertDialog.show();
-				break;
+			alertDialog.show();
+			break;
 
 			case (USERSECURITYPIN_CONFIRMMISMATCH):
 				alertDialog = new AlertDialog.Builder(
 						ACHAccountSetupActivity.this).create();
-				alertDialog.setTitle("Security Pins Mismatch.");
-				alertDialog
-						.setMessage("The two security pins you just swiped don't match. Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
+			alertDialog.setTitle("Security Pins Mismatch.");
+			alertDialog
+			.setMessage("The two security pins you just swiped don't match. Please try again.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+				}
+			});
 
-				alertDialog.show();
-				break;
+			alertDialog.show();
+			break;
 
 			case (ACCT_UPDATE_SUCCESS):
 				alertDialog = new AlertDialog.Builder(
 						ACHAccountSetupActivity.this).create();
-				alertDialog.setTitle("Account updated.");
-				alertDialog.setMessage("Your account was successfully updated.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-								runOnUiThread(new Runnable() {
-									public void run() {
-										finish();
-									}
-								});
-							}
-						});
+			alertDialog.setTitle("Account updated.");
+			alertDialog.setMessage("Your account was successfully updated.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+					runOnUiThread(new Runnable() {
+						public void run() {
+							finish();
+						}
+					});
+				}
+			});
 
-				alertDialog.show();
-				break;
+			alertDialog.show();
+			break;
 
 			case (ACCOUNT_REG_SUCCESS):
 				alertDialog = new AlertDialog.Builder(
 						ACHAccountSetupActivity.this).create();
-				alertDialog.setTitle("Added new account.");
-				alertDialog.setMessage("Your new account was created.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-								finish();
-							}
-						});
+			alertDialog.setTitle("Added new account.");
+			alertDialog.setMessage("Your new account was created.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+					finish();
+				}
+			});
 
-				alertDialog.show();
-				break;
+			alertDialog.show();
+			break;
 
 			case (ACCOUNT_DEL_SUCCESS):
 				alertDialog = new AlertDialog.Builder(
 						ACHAccountSetupActivity.this).create();
-				alertDialog.setTitle("Deleted your account.");
-				alertDialog.setMessage("Your account was deleted.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-								runOnUiThread(new Runnable() {
-									public void run() {
-										finish();
-									}
-								});
-							}
-						});
+			alertDialog.setTitle("Deleted your account.");
+			alertDialog.setMessage("Your account was deleted.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+					runOnUiThread(new Runnable() {
+						public void run() {
+							finish();
+						}
+					});
+				}
+			});
 
-				alertDialog.show();
-				break;
+			alertDialog.show();
+			break;
 
 			case (USERDATA_FAILED):
 				alertDialog = new AlertDialog.Builder(
 						ACHAccountSetupActivity.this).create();
-				alertDialog.setTitle("Account data failed.");
-				alertDialog
-						.setMessage("There was an error with your data. Please try again.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
+			alertDialog.setTitle("Account data failed.");
+			alertDialog
+			.setMessage("There was an error with your data. Please try again.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+				}
+			});
 
-				alertDialog.show();
-				break;
+			alertDialog.show();
+			break;
 
 			case (USERSECURITYPIN_INVALIDLENGTH):
 				alertDialog = new AlertDialog.Builder(
 						ACHAccountSetupActivity.this).create();
-				alertDialog.setTitle("Invalid Length");
-				alertDialog
-						.setMessage("Your pincode must consist of a code of at least 3 inputs.");
-				alertDialog.setButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.dismiss();
-							}
-						});
+			alertDialog.setTitle("Invalid Length");
+			alertDialog
+			.setMessage("Your pincode must consist of a code of at least 3 inputs.");
+			alertDialog.setButton("OK",
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int which) {
+					dialog.dismiss();
+				}
+			});
 
-				alertDialog.show();
-				break;
+			alertDialog.show();
+			break;
 
 			// case(USERREGISTRATION_PHONENUMBERFORMATERROR):
 			// alertDialog = new AlertDialog.Builder(parent)
@@ -351,7 +346,7 @@ OnCheckedChangeListener{
 						.trim()
 						.equals(((EditText) findViewById(R.id.txtConfirmAccountNumber))
 								.getText().toString().trim())
-						&& (txtAccountNumber.getText().toString().length() != 0)) {
+								&& (txtAccountNumber.getText().toString().length() != 0)) {
 
 					nameOnAccount = txtNameOnAccount.getText().toString()
 							.trim();
@@ -366,7 +361,7 @@ OnCheckedChangeListener{
 						accountType = "Savings";
 					}
 
-					if (userInfo.PaymentAccountId.length() != 0
+					if (paymentAccountId.length() != 0
 							|| (listofBanks != null && listofBanks.size() > 0)) {
 						// user has security pin
 						// 1.) confirm pin
@@ -380,30 +375,22 @@ OnCheckedChangeListener{
 					}
 				} else {
 					achSetupHandler
-							.sendEmptyMessage(USERREGISTRATION_ACHNUMBERMISMATCH);
+					.sendEmptyMessage(USERREGISTRATION_ACHNUMBERMISMATCH);
 				}
 			}
 		});
+
 		LinearLayout btnCheckImage = (LinearLayout)findViewById(R.id.takePhotoBtn);
 		btnCheckImage.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				startActivityForResult(new Intent(getApplicationContext(), PhotoCaptureExample.class), CAMERA);
-				
-			}
-			
-		});
 
-		Button back = (Button) findViewById(R.id.btnACHBack);
-		back.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				finish();
 			}
 
 		});
+
 	}
 
 	public void confirmCreation() {
@@ -435,7 +422,7 @@ OnCheckedChangeListener{
 					confirmPin();
 				} else
 					achSetupHandler
-							.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
+					.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
 
 				return false;
 
@@ -460,14 +447,14 @@ OnCheckedChangeListener{
 				String confirmPasscode = ctrlSecurityPin.getPasscode();
 
 				if (confirmPasscode.length() > 3) {
-					if (userInfo.PaymentAccountId.length() != 0
+					if (paymentAccountId.length() != 0
 							|| (listofBanks != null && listofBanks.size() > 0)) {
 						passcode = confirmPasscode;
 						createQuestion();
 					} else {
 
 						if (confirmPasscode.equals(passcode)) {
-							final SecurityPinSetupRequest setupSecurityPin = new SecurityPinSetupRequest();
+							final UserSetupSecurityPinRequest setupSecurityPin = new UserSetupSecurityPinRequest();
 							setupSecurityPin.SecurityPin = passcode;
 							setupSecurityPin.UserId = prefs.getString("userId",
 									"");
@@ -475,7 +462,7 @@ OnCheckedChangeListener{
 							// send pincode to server
 							progressDialog.setMessage("Sending Info...");
 							progressDialog
-									.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+							.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 							progressDialog.show();
 
 							Thread thread = new Thread(new Runnable() {
@@ -501,7 +488,7 @@ OnCheckedChangeListener{
 										});
 									} else {
 										achSetupHandler
-												.sendEmptyMessage(USERDATA_FAILED);
+										.sendEmptyMessage(USERDATA_FAILED);
 									}
 								}
 
@@ -510,12 +497,12 @@ OnCheckedChangeListener{
 
 						} else {
 							achSetupHandler
-									.sendEmptyMessage(USERSECURITYPIN_CONFIRMMISMATCH);
+							.sendEmptyMessage(USERSECURITYPIN_CONFIRMMISMATCH);
 						}
 					}
 				} else
 					achSetupHandler
-							.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
+					.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
 
 				return false;
 
@@ -556,7 +543,7 @@ OnCheckedChangeListener{
 
 					progressDialog.setMessage("Sending Info...");
 					progressDialog
-							.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+					.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 					progressDialog.show();
 
 					Thread thread = new Thread(new Runnable() {
@@ -576,10 +563,10 @@ OnCheckedChangeListener{
 
 							if (sendResponse.Success && receiveResponse.Success) {
 								achSetupHandler
-										.sendEmptyMessage(UPDATEACCTMNG_SUCCESS);
+								.sendEmptyMessage(UPDATEACCTMNG_SUCCESS);
 							} else {
 								achSetupHandler
-										.sendEmptyMessage(UPDATEACCTMNG_FAILED);
+								.sendEmptyMessage(UPDATEACCTMNG_FAILED);
 							}
 						}
 
@@ -588,7 +575,7 @@ OnCheckedChangeListener{
 
 				} else {
 					achSetupHandler
-							.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
+					.sendEmptyMessage(USERSECURITYPIN_INVALIDLENGTH);
 				}
 				return false;
 			}
@@ -599,7 +586,7 @@ OnCheckedChangeListener{
 	public void createQuestion() {
 		setContentView(R.layout.create_security_question);
 
-		if (userInfo.PaymentAccountId.length() != 0
+		if (paymentAccountId.length() != 0
 				|| (listofBanks != null && listofBanks.size() > 0)) {
 			TextView body = (TextView) findViewById(R.id.securityQuestionBody);
 			body.setText("Choose your previously created security question and answer it in order to confirm your new account creation.");
@@ -669,9 +656,9 @@ OnCheckedChangeListener{
 						progressDialog.dismiss();
 
 						if (setupResponse.Success) {
-							if (userInfo.PaymentAccountId.length() != 0
+							if (paymentAccountId.length() != 0
 									|| (listofBanks != null && listofBanks
-											.size() > 0)) {
+									.size() > 0)) {
 								runOnUiThread(new Runnable() {
 									public void run() {
 										Editor editor = prefs.edit();
@@ -683,7 +670,7 @@ OnCheckedChangeListener{
 								});
 							}
 							achSetupHandler
-									.sendEmptyMessage(ACCOUNT_REG_SUCCESS);
+							.sendEmptyMessage(ACCOUNT_REG_SUCCESS);
 						} else {
 							achSetupHandler.sendEmptyMessage(USERDATA_FAILED);
 						}
@@ -705,7 +692,7 @@ OnCheckedChangeListener{
 			isCheckingAcct = false;
 		}
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
@@ -714,12 +701,12 @@ OnCheckedChangeListener{
 				try{
 					String path = (String) data.getExtras().get("index");
 					FileInputStream in = new FileInputStream(path);
-					
+
 					Bitmap thumbnail = null;
-					
-//					cameraImage.setImageResource(R.drawable.bg_pop3);
-//					thumbnail = BitmapFactory.decodeStream(in);
-//					cameraImage.setImageBitmap(thumbnail);
+
+					//					cameraImage.setImageResource(R.drawable.bg_pop3);
+					//					thumbnail = BitmapFactory.decodeStream(in);
+					//					cameraImage.setImageBitmap(thumbnail);
 					in.close();
 				}
 				catch (Exception e)
@@ -734,5 +721,6 @@ OnCheckedChangeListener{
 			}
 		}
 	}
+
 
 }

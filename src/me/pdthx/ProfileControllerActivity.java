@@ -111,16 +111,6 @@ public class ProfileControllerActivity extends BaseActivity {
 		incomeBtn = (LinearLayout) findViewById(R.id.profile_incomeBtn);
 		creditBtn = (LinearLayout) findViewById(R.id.profile_creditBtn);
 
-		backBtn = (Button) findViewById(R.id.profileBackBtn);
-		backBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				finish();
-			}
-
-		});
-
 		enterUserData();
 		addListeners();
 	}
@@ -252,7 +242,7 @@ public class ProfileControllerActivity extends BaseActivity {
 
 			});
 		}
-		
+
 		if (genderBtn.isClickable()) {
 			genderBtn.setOnClickListener(new OnClickListener() {
 
@@ -263,7 +253,7 @@ public class ProfileControllerActivity extends BaseActivity {
 
 			});
 		}
-	
+
 	}
 
 	public void showDialog() {
@@ -855,7 +845,7 @@ public class ProfileControllerActivity extends BaseActivity {
 				dialog.dismiss();
 			}
 		});
-		
+
 		dialog.show();
 	}
 

@@ -9,14 +9,12 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
@@ -115,23 +113,23 @@ public class CustomTabActivity extends TabActivity {
 		return view;
 	}
 
-	private OnTabChangeListener myOnTabChangeListener = new OnTabChangeListener() {
-
-		@Override
-		public void onTabChanged(String tabId) {
-			for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
-				TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i)
-						.findViewById(android.R.id.title); // Unselected Tabs
-				tv.setTextColor(Color.parseColor("#424242"));
-				mTabHost.getTabWidget().getChildAt(i)
-						.setBackgroundResource(R.drawable.tab_bg_unselected);
-			}
-			mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab())
-					.setBackgroundResource(R.drawable.tab_bg_selected);
-			TextView tv = (TextView) mTabHost.getTabWidget()
-					.getChildAt(mTabHost.getCurrentTab())
-					.findViewById(android.R.id.title);
-			tv.setTextColor(Color.parseColor("#A3A2A2"));
-		}
-	};
+//	private OnTabChangeListener myOnTabChangeListener = new OnTabChangeListener() {
+//
+//		@Override
+//		public void onTabChanged(String tabId) {
+//			for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+//				TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i)
+//						.findViewById(android.R.id.title); // Unselected Tabs
+//				tv.setTextColor(Color.parseColor("#424242"));
+//				mTabHost.getTabWidget().getChildAt(i)
+//						.setBackgroundResource(R.drawable.tab_bg_unselected);
+//			}
+//			mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab())
+//					.setBackgroundResource(R.drawable.tab_bg_selected);
+//			TextView tv = (TextView) mTabHost.getTabWidget()
+//					.getChildAt(mTabHost.getCurrentTab())
+//					.findViewById(android.R.id.title);
+//			tv.setTextColor(Color.parseColor("#A3A2A2"));
+//		}
+//	};
 }

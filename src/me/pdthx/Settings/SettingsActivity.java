@@ -64,8 +64,6 @@ public class SettingsActivity extends BaseActivity {
 	private LinearLayout userAgreementBtn;
 	private LinearLayout aboutBtn;
 
-	private Button backBtn;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,16 +84,6 @@ public class SettingsActivity extends BaseActivity {
 				logout();
 			}
 			
-		});
-
-		backBtn = (Button) findViewById(R.id.settings_BackButton);
-
-		backBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-
 		});
 
 		profileBtn.setOnClickListener(new OnClickListener() {

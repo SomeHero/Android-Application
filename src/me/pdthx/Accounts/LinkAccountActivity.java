@@ -2,7 +2,6 @@ package me.pdthx.Accounts;
 
 import me.pdthx.BaseActivity;
 import me.pdthx.R;
-import me.pdthx.Responses.UserSignInResponse;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-public class AddLinkAccountActivity extends BaseActivity {
+public class LinkAccountActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -24,16 +23,7 @@ public class AddLinkAccountActivity extends BaseActivity {
 
 	private void showLinkScreen() {
 		setContentView(R.layout.account_bank_select);
-		
-		Button backBtn = (Button)findViewById(R.id.btnLoginAcctBack);
-		backBtn.setOnClickListener(new OnClickListener(){
 
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-			
-		});
 
 		Button btnAccountNumber = (Button) findViewById(R.id.btn_enterAcctNumber);
 		btnAccountNumber.setOnClickListener(new OnClickListener() {
@@ -112,27 +102,7 @@ public class AddLinkAccountActivity extends BaseActivity {
 	}
 
 	private void showBankofAmericaScreen() {
-		
-		Button btnLoginAcctBack = (Button) findViewById(R.id.btnLinkAcctBack);
-		btnLoginAcctBack.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				runOnUiThread(new Runnable() {
-					public void run() {
-
-						runOnUiThread(new Runnable() {
-							public void run() {
-								showLinkScreen();
-							}
-						});
-
-					}
-				});
-			}
-
-		});
-		
 		Button linkAutomatically = (Button)findViewById(R.id.btnloginLinkInstantly);
 		linkAutomatically.setOnClickListener(new OnClickListener(){
 
@@ -140,41 +110,22 @@ public class AddLinkAccountActivity extends BaseActivity {
 			public void onClick(View arg0) {
 				EditText usernameTxtBox = (EditText) findViewById(R.id.achAdd_enterID);
 				EditText passwordTxtBox = (EditText)findViewById(R.id.achAdd_enterPasscode);
-				
+
 				String username = usernameTxtBox.getText().toString().trim();
 				String password = passwordTxtBox.getText().toString().trim();
-				
+
 				// web service calls?
 			}
-			
+
 		});
 	}
 
 	private void showChaseScreen() {
-		
+
 		ImageView bankLogo = (ImageView) findViewById(R.id.achAdd_imgofBank);
 		bankLogo.setImageResource(R.drawable.chase_logo);
 
-		Button btnLoginAcctBack = (Button) findViewById(R.id.btnLinkAcctBack);
-		btnLoginAcctBack.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				runOnUiThread(new Runnable() {
-					public void run() {
-
-						runOnUiThread(new Runnable() {
-							public void run() {
-								showLinkScreen();
-							}
-						});
-
-					}
-				});
-			}
-
-		});
-		
 		Button linkAutomatically = (Button)findViewById(R.id.btnloginLinkInstantly);
 		linkAutomatically.setOnClickListener(new OnClickListener(){
 
@@ -182,41 +133,22 @@ public class AddLinkAccountActivity extends BaseActivity {
 			public void onClick(View arg0) {
 				EditText usernameTxtBox = (EditText) findViewById(R.id.achAdd_enterID);
 				EditText passwordTxtBox = (EditText)findViewById(R.id.achAdd_enterPasscode);
-				
+
 				String username = usernameTxtBox.getText().toString().trim();
 				String password = passwordTxtBox.getText().toString().trim();
-				
+
 				// web service calls?
 			}
-			
+
 		});
 	}
 
 	private void showCitibankScreen() {
-		
+
 		ImageView bankLogo = (ImageView) findViewById(R.id.achAdd_imgofBank);
 		bankLogo.setImageResource(R.drawable.citibank_logo);
 
-		Button btnLoginAcctBack = (Button) findViewById(R.id.btnLinkAcctBack);
-		btnLoginAcctBack.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				runOnUiThread(new Runnable() {
-					public void run() {
-
-						runOnUiThread(new Runnable() {
-							public void run() {
-								showLinkScreen();
-							}
-						});
-
-					}
-				});
-			}
-
-		});
-		
 		Button linkAutomatically = (Button)findViewById(R.id.btnloginLinkInstantly);
 		linkAutomatically.setOnClickListener(new OnClickListener(){
 
@@ -224,13 +156,13 @@ public class AddLinkAccountActivity extends BaseActivity {
 			public void onClick(View arg0) {
 				EditText usernameTxtBox = (EditText) findViewById(R.id.achAdd_enterID);
 				EditText passwordTxtBox = (EditText)findViewById(R.id.achAdd_enterPasscode);
-				
+
 				String username = usernameTxtBox.getText().toString().trim();
 				String password = passwordTxtBox.getText().toString().trim();
-				
+
 				// web service calls?
 			}
-			
+
 		});
 	}
 
@@ -239,26 +171,7 @@ public class AddLinkAccountActivity extends BaseActivity {
 		ImageView bankLogo = (ImageView) findViewById(R.id.achAdd_imgofBank);
 		bankLogo.setImageResource(R.drawable.capitalone_logo);
 
-		Button btnLoginAcctBack = (Button) findViewById(R.id.btnLinkAcctBack);
-		btnLoginAcctBack.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				runOnUiThread(new Runnable() {
-					public void run() {
-
-						runOnUiThread(new Runnable() {
-							public void run() {
-								showLinkScreen();
-							}
-						});
-
-					}
-				});
-			}
-
-		});
-		
 		Button linkAutomatically = (Button)findViewById(R.id.btnloginLinkInstantly);
 		linkAutomatically.setOnClickListener(new OnClickListener(){
 
@@ -266,13 +179,13 @@ public class AddLinkAccountActivity extends BaseActivity {
 			public void onClick(View arg0) {
 				EditText usernameTxtBox = (EditText) findViewById(R.id.achAdd_enterID);
 				EditText passwordTxtBox = (EditText)findViewById(R.id.achAdd_enterPasscode);
-				
+
 				String username = usernameTxtBox.getText().toString().trim();
 				String password = passwordTxtBox.getText().toString().trim();
-				
+
 				// web service calls?
 			}
-			
+
 		});
 	}
 }
