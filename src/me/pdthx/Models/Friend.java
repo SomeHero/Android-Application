@@ -1,7 +1,7 @@
 package me.pdthx.Models;
 
 import android.net.Uri;
-import me.pdthx.helpers.NameSeparator;
+import me.pdthx.Helpers.NameSeparator;
 import android.graphics.Bitmap;
 
 public class Friend implements Comparable<Friend> {

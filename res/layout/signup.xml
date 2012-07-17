@@ -163,16 +163,18 @@
                 android:textSize="12dp"
                 android:textStyle="italic" >
             </EditText>
-
+
             <Button
                 android:id="@+id/createAcct"
                 android:layout_width="275dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="6dp"
+                android:background="@drawable/button_selector"
                 android:text="Create my account"
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"
                 android:textStyle="bold" />
+
         </LinearLayout>
     </RelativeLayout>
 

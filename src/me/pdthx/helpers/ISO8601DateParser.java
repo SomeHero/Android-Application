@@ -1,4 +1,4 @@
-package me.pdthx.helpers;
+package me.pdthx.Helpers;
 
 /*
  * Copyright 1999,2004 The Apache Software Foundation.

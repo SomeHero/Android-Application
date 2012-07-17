@@ -76,15 +76,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-
+
         <me.pdthx.CustomViews.PullAndRefreshListView
-	    android:id="@+id/lvPaystream"
+            android:id="@+id/lvPaystream"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:divider="@drawable/paystream_divider"
             android:dividerHeight="1dp"
-	    android:scrollbars="none"
-            android:fadingEdge="none" />
+            android:fadingEdge="none"
+            android:scrollbars="none" />
+
         <TextView
             android:id="@+id/txtEmptyPaystream"
             android:layout_width="fill_parent"

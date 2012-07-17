@@ -1,14 +1,18 @@
 package me.pdthx.Accounts;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import me.pdthx.BaseActivity;
+import me.pdthx.PhotoCaptureExample;
 import me.pdthx.R;
 import me.pdthx.CustomViews.CustomLockView;
 import me.pdthx.Requests.ACHAccountDeleteRequest;
@@ -56,6 +61,10 @@ OnCheckedChangeListener{
 	private String passcodeCreation;
 	private String nickname;
 
+
+	final private int CAMERA = 20;
+	private LinearLayout btnCheckImage;
+	
 	private String preferredSend;
 	private String preferredReceive;
 
@@ -375,6 +384,16 @@ OnCheckedChangeListener{
 				}
 			}
 		});
+		LinearLayout btnCheckImage = (LinearLayout)findViewById(R.id.takePhotoBtn);
+		btnCheckImage.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(new Intent(getApplicationContext(), PhotoCaptureExample.class), CAMERA);
+				
+			}
+			
+		});
 
 		Button back = (Button) findViewById(R.id.btnACHBack);
 		back.setOnClickListener(new OnClickListener() {
@@ -684,6 +703,35 @@ OnCheckedChangeListener{
 		}
 		if (arg1 == R.id.achSavings) {
 			isCheckingAcct = false;
+		}
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			if(requestCode == CAMERA)
+			{
+				try{
+					String path = (String) data.getExtras().get("index");
+					FileInputStream in = new FileInputStream(path);
+					
+					Bitmap thumbnail = null;
+					
+//					cameraImage.setImageResource(R.drawable.bg_pop3);
+//					thumbnail = BitmapFactory.decodeStream(in);
+//					cameraImage.setImageBitmap(thumbnail);
+					in.close();
+				}
+				catch (Exception e)
+				{
+					Log.d("Error", e.getMessage());
+				}
+			}
+		}
+		else {
+			if (requestCode != CAMERA) {
+				finish();
+			}
 		}
 	}
 

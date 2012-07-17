@@ -1,5 +1,7 @@
 package me.pdthx;
 
+import me.pdthx.DoGood.DoGoodIntroActivity;
+
 import com.zubhium.ZubhiumSDK;
 import com.zubhium.ZubhiumSDK.CrashReportingMode;
 
@@ -64,6 +66,10 @@ public class CustomTabActivity extends TabActivity {
 		intent = new Intent(mTabHost.getContext(), PaystreamActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.tab_stream_selector), "Stream", intent);
+		
+		intent = new Intent(mTabHost.getContext(), DoGoodIntroActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		setupTab(res.getDrawable(R.drawable.tab_dogood_selector), "Do Good", intent);
 
 		if (getIntent().getExtras() == null)
 		{

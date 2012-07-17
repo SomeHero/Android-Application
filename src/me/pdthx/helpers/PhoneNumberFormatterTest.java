@@ -1,4 +1,4 @@
-package me.pdthx.helpers;
+package me.pdthx.Helpers;
 
 import junit.framework.TestCase;
 

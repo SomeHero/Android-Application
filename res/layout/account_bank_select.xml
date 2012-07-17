@@ -67,7 +67,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#FAFAFA"
-                android:ems="10"
                 android:hint="Search for your bank"
                 android:paddingLeft="10dp"
                 android:singleLine="true"

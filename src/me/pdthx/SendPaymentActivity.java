@@ -362,7 +362,6 @@ public final class SendPaymentActivity extends BaseActivity {
         sendMoneyView = View.inflate(this, R.layout.contactmanager, null);
         setContentView(sendMoneyView);
 
-
         btnAddContacts = (Button) findViewById(R.id.addRecipient);
 
         txtAmount = (Button) findViewById(R.id.btnAmount);
@@ -451,10 +450,11 @@ public final class SendPaymentActivity extends BaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == ADDING_FRIEND) {
-                Bundle bundle = data.getExtras();
-                addingContact(bundle.getString("id"), bundle.getString("paypoint"));
-            }
+			if (requestCode == ADDING_FRIEND) {
+				Bundle bundle = data.getExtras();
+				addingContact(bundle.getString("id"),
+						bundle.getString("paypoint"));
+			}
             else if(requestCode == ADD_MONEY){
                 Bundle bundle = data.getExtras();
                 String amount = bundle.getString("index");
