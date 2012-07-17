@@ -1,6 +1,5 @@
 package me.pdthx;
 
-import me.pdthx.Helpers.PhoneNumberFormatter;
 import android.app.ProgressDialog;
 import android.provider.ContactsContract;
 import android.net.Uri;
@@ -12,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import me.pdthx.Adapters.FriendAdapter;
+import me.pdthx.Helpers.PhoneNumberFormatter;
 import me.pdthx.Models.Friend;
 import android.content.Intent;
 import android.graphics.Bitmap;

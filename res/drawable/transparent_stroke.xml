@@ -9,6 +9,6 @@
         android:color="#A3A3A3" >
     </stroke>
 
-    <corners android:radius="30dp" />
+    <corners android:radius="10dp" />
 
 </shape>

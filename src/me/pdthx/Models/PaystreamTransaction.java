@@ -2,8 +2,6 @@ package me.pdthx.Models;
 
 import me.pdthx.Helpers.NameSeparator;
 import java.util.Date;
-
-
 import android.graphics.Bitmap;
 
 public class PaystreamTransaction {

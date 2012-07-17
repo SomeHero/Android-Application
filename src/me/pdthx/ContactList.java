@@ -8,6 +8,8 @@ import android.provider.ContactsContract.Contacts;
 import android.content.ContentUris;
 import android.net.Uri;
 import java.util.ArrayList;
+
+import me.pdthx.Helpers.PhoneNumberFormatter;
 import me.pdthx.Models.Friend;
 
 import android.content.Context;

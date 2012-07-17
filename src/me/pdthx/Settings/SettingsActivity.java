@@ -1,10 +1,27 @@
 package me.pdthx.Settings;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.Facebook;
+import com.facebook.android.FacebookError;
+import com.facebook.android.AsyncFacebookRunner.RequestListener;
+
 import me.pdthx.BaseActivity;
+import me.pdthx.ContactList;
 import me.pdthx.ProfileControllerActivity;
 import me.pdthx.R;
 import me.pdthx.Accounts.AccountManagerActivity;
+import me.pdthx.Login.TabUIActivity;
+import me.pdthx.Models.Friend;
+import me.pdthx.R.drawable;
+import me.pdthx.R.id;
+import me.pdthx.R.layout;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -58,6 +75,16 @@ public class SettingsActivity extends BaseActivity {
 
 		setupViews();
 		setupSelectorListeners();
+		
+		signOutBtn = (LinearLayout)findViewById(R.id.settings_SignOutBtn);
+		signOutBtn.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				logout();
+			}
+			
+		});
 
 		profileBtn.setOnClickListener(new OnClickListener() {
 			@Override
@@ -315,4 +342,5 @@ public class SettingsActivity extends BaseActivity {
 		});
 
 	}
+	
 }
