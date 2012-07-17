@@ -330,7 +330,6 @@ public final class SendPaymentActivity extends BaseActivity {
     protected void launchSendMoneyView() {
         setContentView(R.layout.sendmoney_controller);
 
-
         btnAddContacts = (Button) findViewById(R.id.addRecipient);
 
         txtAmount = (Button) findViewById(R.id.btnAmount);

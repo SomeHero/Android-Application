@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/pay_bg"
+        android:gravity="center|left"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:id="@+id/btnBackBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/button_back" />
+
+            <TextView
+                android:id="@+id/txtDoGoodTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="Donate To:"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#575455"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/donate_dropList"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/btnBackBtn"
+                android:layout_alignBottom="@+id/btnBackBtn"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/dogood_maintab"
+                android:text=" " />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E6E6E6" >
+
+        <EditText
+            android:id="@+id/donate_searchOrg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="0.2"
+            android:hint="Search for your organization" />
+
+        <Button
+            android:id="@+id/donate_submitSearch"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/go_normal"
+            android:text=" " />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#B5B5B5" >
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/donateContactsList"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/paystream_divider"
+        android:dividerHeight="1dp"
+        android:fadingEdge="none"
+        android:scrollbars="none" >
+    </ListView>
+
+</LinearLayout>

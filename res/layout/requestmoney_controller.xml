@@ -70,7 +70,7 @@
                             android:gravity="center"
                             android:paddingBottom="2dp"
                             android:paddingLeft="2dp"
-                            android:paddingRight="11dp"
+                            android:paddingRight="18dp"
                             android:paddingTop="2dp" >
 
                             <ImageView
@@ -94,8 +94,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
                             android:layout_marginBottom="10dp"
+                            android:layout_marginTop="5dp"
                             android:orientation="vertical" >
 
                             <LinearLayout
@@ -180,16 +180,17 @@
                         android:hint="Comments"
                         android:inputType="textMultiLine"
                         android:lines="3" />
-
+
                     <Button
                         android:id="@+id/btnSubmit"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
+                        android:background="@drawable/button_selector"
                         android:text="Request Money"
                         android:textColor="#FFFFFF"
-                        android:background="@drawable/button_selector"
                         android:textSize="20dip"
                         android:textStyle="bold" />
+
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
