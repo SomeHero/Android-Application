@@ -52,6 +52,7 @@ public class UserService {
 	private static final String SETUPSECURITYPIN_URL = "/Users/%s/Setup_SecurityPin?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String CHANGESECURITYPIN_URL = "/Users/%s/change_securitypin";
 	private static final String CHANGEPASSWORD_URL = "/Users/%s/change_password";
+	private static final String RESETPASSWORD_URL = "/Users/reset_password";
 	private static final String MECODE_URL = "/Users/%s/mecodes";
 	private static final String PUSHNOTIFICATION_URL = "/Users/%s/RegisterPushNotifications";
 	private static final String USER_URL = "/Users/";
@@ -644,6 +645,46 @@ public class UserService {
         }
 
         return changePasswordResponse;
+	}
+
+	public static Response resetPassword(String emailAddress)
+	{
+	    HttpResponse response = null;
+        Response resetPasswordResponse = new Response();
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost request = new HttpPost(ROOTURL
+                    + RESETPASSWORD_URL);
+
+            JSONObject json = new JSONObject();
+            json.put("emailAddress", emailAddress);
+
+            StringEntity entity = new StringEntity(json.toString());
+            request.setEntity(entity);
+            request.setHeader("content-type", "application/json");
+
+            response = httpClient.execute(request);
+        } catch (ClientProtocolException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        if (response.getStatusLine().getStatusCode() == 200) {
+
+            resetPasswordResponse.Success = true;
+        } else {
+            resetPasswordResponse.Success = false;
+            resetPasswordResponse.ReasonPhrase = response.getStatusLine()
+                    .getReasonPhrase();
+        }
+
+        return resetPasswordResponse;
 	}
 
 	public static Response createMeCode(UserMeCodeRequest userMeCodeRequest) {

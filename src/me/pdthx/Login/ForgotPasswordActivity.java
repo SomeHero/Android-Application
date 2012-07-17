@@ -1,5 +1,8 @@
 package me.pdthx.Login;
 
+import me.pdthx.Responses.Response;
+import android.content.DialogInterface;
+import me.pdthx.Services.UserService;
 import android.view.View;
 import android.view.View.OnClickListener;
 import me.pdthx.R;
@@ -22,6 +25,8 @@ public class ForgotPasswordActivity extends BaseActivity
         txtForgotPasswordEmail = (EditText) findViewById(R.id.txtForgotPasswordEmail);
         btnForgotPasswordSubmit = (Button) findViewById(R.id.btnForgotPasswordSubmit);
 
+
+
         btnForgotPasswordSubmit.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -30,6 +35,32 @@ public class ForgotPasswordActivity extends BaseActivity
                 emailAddress = txtForgotPasswordEmail.getText().toString().trim();
 
                 //TODO: Send email address to server.
+                Response response = UserService.resetPassword(emailAddress);
+
+                if (response.Success)
+                {
+                    alertDialog.setTitle("Email Sent!");
+                    alertDialog
+                    .setMessage("Email sent to reset password.");
+                    alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
+                }
+                else
+                {
+                    alertDialog.setTitle("Unable to send email.");
+                    alertDialog
+                    .setMessage(response.ReasonPhrase);
+                    alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                }
+                alertDialog.show();
             }
 
         });

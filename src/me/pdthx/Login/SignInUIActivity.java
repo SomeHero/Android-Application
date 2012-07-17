@@ -22,7 +22,6 @@ import me.pdthx.Requests.UserSignInRequest;
 import me.pdthx.Responses.UserSignInResponse;
 import me.pdthx.Services.UserService;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
