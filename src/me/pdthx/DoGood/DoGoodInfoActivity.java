@@ -81,13 +81,11 @@ public class DoGoodInfoActivity extends BaseActivity {
 
 		Button donateAmount = (Button) findViewById(R.id.info_donateDifAmtBtn);
 		donateAmount.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				startActivityForResult(new Intent(DoGoodInfoActivity.this,
 						AddMoneyActivity.class), ADDING_MONEY);
 			}
-
 		});
 	}
 
