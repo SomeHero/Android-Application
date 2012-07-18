@@ -40,7 +40,7 @@
     <LinearLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="4dp"
         android:background="@drawable/panel_background"
         android:orientation="vertical"
@@ -56,10 +56,10 @@
             <LinearLayout
                 android:id="@+id/donate_enterOrg"
                 android:layout_width="match_parent"
-                android:clickable="true"
                 android:layout_height="50dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/transparent_stroke"
+                android:clickable="true"
                 android:gravity="center"
                 android:paddingBottom="2dp"
                 android:paddingLeft="2dp"
@@ -73,18 +73,38 @@
                     android:background="@drawable/icon_roundedbg"
                     android:padding="5dp"
                     android:src="@drawable/dogood_unselected" />
-
-                <TextView
-                    android:id="@+id/donate_OrgResult"
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="0.8"
-                    android:background="#FAFAFA"
                     android:gravity="center"
-                    android:hint="Your Cause"
-                    android:paddingLeft="10dp"
-                    android:singleLine="true"
-                    android:textSize="14dp" />
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/donate_OrgResult"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FAFAFA"
+                        android:gravity="center"
+                        android:hint="Your Cause Name"
+                        android:paddingLeft="10dp"
+                        android:textColor="#525252"
+                        android:singleLine="true"
+                        android:textSize="14dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/donate_orgbottomtext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FAFAFA"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:text="Accepting a pledge on their behalf"
+                        android:textSize="10dp" />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -96,10 +116,10 @@
 
         <LinearLayout
             android:id="@+id/donate_chooseAmount"
-            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:clickable="true"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -119,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/icon_roundedbg"
                     android:src="@drawable/amt_icon" />
-
+
                 <TextView
                     android:id="@+id/donate_amountResult"
                     android:layout_width="match_parent"
@@ -130,7 +150,8 @@
                     android:hint="How much?"
                     android:paddingLeft="10dp"
                     android:singleLine="true"
-                    android:textSize="14dp" />
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -146,8 +167,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="top"
-            android:maxLength="140"
             android:hint="Dedicate to someone?"
+            android:maxLength="140"
             android:minHeight="120dp" />
 
         <Button

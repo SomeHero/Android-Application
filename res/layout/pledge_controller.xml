@@ -40,7 +40,7 @@
     <LinearLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="4dp"
         android:background="@drawable/panel_background"
         android:orientation="vertical"
@@ -60,8 +60,8 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/transparent_stroke"
                 android:gravity="center"
-                android:paddingLeft="2dp"
                 android:paddingBottom="2dp"
+                android:paddingLeft="2dp"
                 android:paddingRight="11dp"
                 android:paddingTop="2dp" >
 
@@ -72,18 +72,38 @@
                     android:background="@drawable/icon_roundedbg"
                     android:padding="5dp"
                     android:src="@drawable/dogood_unselected" />
-
-                <TextView
-                    android:id="@+id/donate_OrgResult"
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:background="#FAFAFA"
                     android:layout_weight="0.8"
                     android:gravity="center"
-                    android:hint="Your Cause Name"
-                    android:paddingLeft="10dp"
-                    android:singleLine="true"
-                    android:textSize="14dp" />
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/donate_OrgResult"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FAFAFA"
+                        android:gravity="center"
+                        android:hint="Your Cause Name"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textColor="#525252"
+                        android:textSize="14dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/donate_orgbottomtext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FAFAFA"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:text="Accepting a pledge on their behalf"
+                        android:textSize="10dp" />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -117,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/icon_roundedbg"
                     android:src="@drawable/to_icon" />
-
+
                 <TextView
                     android:id="@+id/donate_contactResult"
                     android:layout_width="182dp"
@@ -125,10 +145,11 @@
                     android:layout_weight="0.8"
                     android:background="#FAFAFA"
                     android:gravity="center"
-                    android:hint="To whom?"
+                    android:hint="Select a Donor"
                     android:paddingLeft="10dp"
                     android:singleLine="true"
-                    android:textSize="14dp" />
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -162,7 +183,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/icon_roundedbg"
                     android:src="@drawable/amt_icon" />
-
+
                 <TextView
                     android:id="@+id/donate_amountResult"
                     android:layout_width="182dp"
@@ -173,7 +194,8 @@
                     android:hint="How much?"
                     android:paddingLeft="10dp"
                     android:singleLine="true"
-                    android:textSize="14dp" />
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/imageView3"
