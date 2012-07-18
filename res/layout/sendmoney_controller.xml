@@ -28,15 +28,15 @@
                 android:textStyle="bold" />
         </RelativeLayout>
     </LinearLayout>
-
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:fadingEdge="none"
         android:padding="4dip"
         android:scrollbars="none" >
-
+
         <LinearLayout
             android:id="@+id/relativeLayout2"
             android:layout_width="match_parent"
@@ -44,25 +44,13 @@
             android:background="@drawable/panel_background"
             android:orientation="vertical"
             android:padding="10dp" >
-
+
             <LinearLayout
                 android:id="@+id/relativeLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal|bottom"
                 android:orientation="vertical" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="vertical" >
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -160,7 +148,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
-
     </ScrollView>
 
 </LinearLayout>
