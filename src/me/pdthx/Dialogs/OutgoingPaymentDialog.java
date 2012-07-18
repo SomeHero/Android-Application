@@ -3,11 +3,13 @@ package me.pdthx.Dialogs;
 import java.text.NumberFormat;
 
 import me.pdthx.R;
+import me.pdthx.Models.PaystreamTransaction;
 import me.pdthx.Services.PaystreamService;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -25,11 +27,10 @@ import android.widget.TextView;
 public class OutgoingPaymentDialog extends Activity implements OnTouchListener {
 
 	private String header = "";
-	private String senderUri = "";
 	private String recipientUri = "";
-	private Double amount = 0.0;
+	private String senderUri = "";
+	private String amount = "";
 	private String transactionStatus = "";
-	private String transactionType = "";
 	private String transactionId = "";
 	private String createDate = null;
 	private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
@@ -50,9 +51,6 @@ public class OutgoingPaymentDialog extends Activity implements OnTouchListener {
 	private Button reminderButton;
 	// private EditText sendMessage;
 
-	private static final int CANCELED = 1;
-	private static final int REFUNDED = 2;
-
 	private static final int SWIPE_MIN_DISTANCE = 120;
 	private static final int SWIPE_MAX_OFF_PATH = 250;
 	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
@@ -64,17 +62,17 @@ public class OutgoingPaymentDialog extends Activity implements OnTouchListener {
 
 		setContentView(R.layout.dialog);
 		// retrieve data
+		PaystreamTransaction ref = (PaystreamTransaction) getIntent().getParcelableExtra("obj");
 		Bundle extras = getIntent().getExtras();
-		senderUri = extras.getString("sender");
-		recipientUri = extras.getString("recipient");
-		createDate = extras.getString("time");
-		header = extras.getString("date");
-		amount = extras.getDouble("amount");
-		transactionType = extras.getString("transactionType");
-		transactionStatus = extras.getString("transactionStat");
-		transactionId = extras.getString("transactionId");
+		recipientUri = ref.getRecipientUri();
+		senderUri = ref.getSenderUri();
+		createDate = ref.getTimeString();
+		header = ref.getDateString();
+		amount = currencyFormatter.format(ref.getAmount());
+		transactionStatus = ref.getTransactionStatus();
+		transactionId = ref.getTransactionId();
 		user = extras.getString("username");
-		comments = extras.getString("comments");
+		comments = ref.getComments();
 
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		getWindow().setGravity(Gravity.BOTTOM | Gravity.RIGHT);
@@ -199,7 +197,7 @@ public class OutgoingPaymentDialog extends Activity implements OnTouchListener {
 						}
 					}
 				});
-			} else if (transactionStatus.toUpperCase().equals("PENDING")
+			} else if (transactionStatus.toUpperCase().equals("PROCESSING")
 					|| transactionStatus.toUpperCase().equals("SUBMITTED")) {
 				rejectButton.setText("Cancel Payment");
 				rejectButton.setOnClickListener(new OnClickListener() {
@@ -246,7 +244,7 @@ public class OutgoingPaymentDialog extends Activity implements OnTouchListener {
 		if (reminderButton != null) {
 
 			if (transactionStatus.toUpperCase().equals("SUBMITTED")
-					|| transactionStatus.toUpperCase().equals("PENDING")) {
+					|| transactionStatus.toUpperCase().equals("PROCESSING")) {
 				// pending
 			} else {
 				reminderButton.setVisibility(View.GONE);
