@@ -112,7 +112,7 @@ public class DoGoodIntroActivity extends BaseActivity {
 			if (requestCode == DONATE_ADD_ORG) {
 				Bundle bundle = data.getExtras();
 				String amount = bundle.getString("amount");
-				if (amount.length() > 0) {
+				if (amount != null) {
 					TextView theAmount = (TextView) findViewById(R.id.donate_amountResult);
 					theAmount.setText("$"+amount);
 					TextView orgResult = (TextView) findViewById(R.id.donate_OrgResult);
