@@ -32,7 +32,8 @@ import me.pdthx.Models.Friend;
 import me.pdthx.Models.Organization;
 
 public class OrgListActivity extends BaseActivity {
-	protected static final int CHANGE_LIST = 5;
+	protected static final int CHANGE_LIST = 6;
+	private static final int CHOSE_ORG = 5;
 	private static final int ADDING_FRIEND = 2;
 	private ListView theList;
 	private ArrayList<Organization> orgList;
@@ -264,6 +265,17 @@ public class OrgListActivity extends BaseActivity {
 					//
 
 				}
+			}
+			if(requestCode == CHOSE_ORG)
+			{
+				Bundle bundle = data.getExtras();
+				Intent sendData = new Intent();
+				sendData.putExtra("name", bundle.getString("name"));
+				sendData.putExtra("amount", bundle.getString("amount"));
+
+				setResult(RESULT_OK, sendData);
+				finish();
+
 			}
 		}
 	}

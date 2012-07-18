@@ -38,12 +38,13 @@
                 android:background="@drawable/panel_background"
                 android:orientation="vertical"
                 android:padding="5dp" >
-
+
                 <LinearLayout
                     android:id="@+id/relativeLayout2"
                     android:layout_width="280dip"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
                     android:orientation="vertical" >
 
                     <LinearLayout
@@ -76,11 +77,12 @@
                             android:layout_height="60dp"
                             android:background="@drawable/go_normal" />
                     </LinearLayout>
-
+
                     <TextView
                         android:id="@+id/editText3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:ems="10"
                         android:paddingTop="5dp"
                         android:text="QUICK SEND AMOUNTS" />

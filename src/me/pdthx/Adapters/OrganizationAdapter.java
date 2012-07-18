@@ -11,6 +11,7 @@ import me.pdthx.R;
 import me.pdthx.DoGood.DoGoodInfoActivity;
 import me.pdthx.Models.Organization;
 import me.pdthx.Models.PaystreamTransaction;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class OrganizationAdapter extends ArrayAdapter<Organization> {
+	protected static final int CHOSEN_ORG = 5;
 	private ArrayList<Organization> items;
 private Context ctx;
 	public OrganizationAdapter(Context context, int textViewResourceId,
@@ -45,7 +47,7 @@ private Context ctx;
 			// v = vi.inflate(R.layout.transaction_item, null);
 			v = vi.inflate(R.layout.dogood_org_item, null);
 		}
-		Organization o = items.get(position);
+		final Organization o = items.get(position);
 		if (o != null) {
 			// OLD:
 			// TextView txtHeader = (TextView) v
@@ -114,7 +116,14 @@ private Context ctx;
 
 						@Override
 						public void onClick(View v) {
-							ctx.startActivity(new Intent(ctx, DoGoodInfoActivity.class));
+							String name = o.getName();
+							String slogan = o.getSlogan();
+							String picUri = o.getImageUri();
+							Intent ref = new Intent(ctx, DoGoodInfoActivity.class);
+							ref.putExtra("name", name);
+							ref.putExtra("slogan", slogan);
+							ref.putExtra("pic", picUri);
+							((Activity) ctx).startActivityForResult(ref, CHOSEN_ORG);
 						}
 						
 					});
