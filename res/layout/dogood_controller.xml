@@ -73,22 +73,21 @@
                     android:background="@drawable/icon_roundedbg"
                     android:padding="5dp"
                     android:src="@drawable/dogood_unselected" />
-
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="0.8"
                     android:gravity="center"
-                    android:orientation="vertical" >
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp" >
 
                     <TextView
                         android:id="@+id/donate_OrgResult"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FAFAFA"
-                        android:gravity="center"
                         android:hint="Your Cause Name"
-                        android:paddingLeft="10dp"
                         android:textColor="#525252"
                         android:singleLine="true"
                         android:textSize="14dp"
@@ -99,8 +98,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FAFAFA"
-                        android:gravity="center"
-                        android:paddingLeft="10dp"
                         android:singleLine="true"
                         android:text="Accepting a pledge on their behalf"
                         android:textSize="10dp" />

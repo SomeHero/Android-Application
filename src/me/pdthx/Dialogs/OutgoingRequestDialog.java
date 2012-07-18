@@ -3,6 +3,7 @@ package me.pdthx.Dialogs;
 import java.text.NumberFormat;
 
 import me.pdthx.R;
+import me.pdthx.Models.PaystreamTransaction;
 import me.pdthx.Services.PaystreamService;
 import android.app.Activity;
 import android.content.Intent;
@@ -29,7 +30,7 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 	private String header = "";
 	private String senderUri = "";
 	private String recipientUri = "";
-	private Double amount = 0.0;
+	private String amount = "";
 	private String transactionStatus = "";
 	private String transactionType = "";
 	private String transactionId = "";
@@ -65,17 +66,18 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 		setContentView(R.layout.dialog);
 
 		// retrieve data
+		PaystreamTransaction ref = (PaystreamTransaction) getIntent().getParcelableExtra("obj");
 		Bundle extras = getIntent().getExtras();
-		senderUri = extras.getString("sender");
-		recipientUri = extras.getString("recipient");
-		createDate = extras.getString("time");
-		header = extras.getString("date");
-		amount = extras.getDouble("amount");
-		transactionType = extras.getString("transactionType");
-		transactionStatus = extras.getString("transactionStat");
-		transactionId = extras.getString("transactionId");
+		senderUri = ref.getSenderUri();
+		recipientUri = ref.getRecipientUri();
+		createDate = ref.getTimeString();
+		header = ref.getDateString();
+		amount = currencyFormatter.format(ref.getAmount());
+		transactionType = ref.getTransactionType();
+		transactionStatus = ref.getTransactionStatus();
+		transactionId = ref.getTransactionId();
 		user = extras.getString("username");
-		comments = extras.getString("comments");
+		comments = ref.getComments();
 
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		getWindow().setGravity(Gravity.BOTTOM | Gravity.RIGHT);
@@ -158,7 +160,7 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 		rejectButton = (Button) findViewById(R.id.pDialog_Reject);
 		if (rejectButton != null) {
 			if (transactionStatus.toUpperCase().equals("SUBMITTED")
-					|| transactionStatus.toUpperCase().equals("PENDING")) {
+					|| transactionStatus.toUpperCase().equals("PROCESSING")) {
 				rejectButton.setText("Cancel Request");
 				rejectButton.setOnClickListener(new OnClickListener() {
 					public void onClick(View argO) {
@@ -202,7 +204,7 @@ public class OutgoingRequestDialog extends Activity implements OnTouchListener {
 		if (reminderButton != null) {
 
 			if (transactionStatus.toUpperCase().equals("SUBMITTED")
-					|| transactionStatus.toUpperCase().equals("PENDING")) {
+					|| transactionStatus.toUpperCase().equals("PROCESSING")) {
 				// pending
 			} else {
 				reminderButton.setVisibility(View.GONE);

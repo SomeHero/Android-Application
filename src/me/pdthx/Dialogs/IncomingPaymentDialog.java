@@ -3,6 +3,7 @@ package me.pdthx.Dialogs;
 import java.text.NumberFormat;
 
 import me.pdthx.R;
+import me.pdthx.Models.PaystreamTransaction;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -23,12 +24,10 @@ import android.widget.TextView;
 public class IncomingPaymentDialog extends Activity implements OnTouchListener {
 
 	private String header = "";
-	private String senderUri = "";
 	private String recipientUri = "";
-	private Double amount = 0.0;
+	private String senderUri = "";
+	private String amount = "";
 	private String transactionStatus = "";
-	private String transactionType = "";
-	private String transactionId = "";
 	private String createDate = null;
 	private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 	private String user = "";
@@ -61,17 +60,16 @@ public class IncomingPaymentDialog extends Activity implements OnTouchListener {
 
 		setContentView(R.layout.dialog);
 		// retrieve data
+		PaystreamTransaction ref = (PaystreamTransaction) getIntent().getParcelableExtra("obj");
 		Bundle extras = getIntent().getExtras();
-		senderUri = extras.getString("sender");
-		recipientUri = extras.getString("recipient");
-		createDate = extras.getString("time");
-		header = extras.getString("date");
-		amount = extras.getDouble("amount");
-		transactionType = extras.getString("transactionType");
-		transactionStatus = extras.getString("transactionStat");
-		transactionId = extras.getString("transactionId");
+		recipientUri = ref.getRecipientUri();
+		senderUri = ref.getSenderUri();
+		createDate = ref.getTimeString();
+		header = ref.getDateString();
+		amount = currencyFormatter.format(ref.getAmount());
+		transactionStatus = ref.getTransactionStatus();
 		user = extras.getString("username");
-		comments = extras.getString("comments");
+		comments = ref.getComments();
 
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		getWindow().setGravity(Gravity.BOTTOM | Gravity.RIGHT);

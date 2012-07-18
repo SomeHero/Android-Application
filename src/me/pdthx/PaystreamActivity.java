@@ -34,7 +34,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public final class PaystreamActivity extends BaseActivity implements
-OnCheckedChangeListener {
+OnCheckedChangeListener{
 
     private ProgressDialog m_ProgressDialog = null;
     private ArrayList<PaystreamTransaction> m_transactions = null;
@@ -54,6 +54,8 @@ OnCheckedChangeListener {
     private PullAndRefreshListView mListView = null;
     private TextView mEmptyTextView = null;
     private RadioGroup group;
+    
+    private String username;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -280,8 +282,21 @@ OnCheckedChangeListener {
             UserRequest messageRequest = new UserRequest();
 
             String userId = prefs.getString("userId", "");
-
+            
             messageRequest.UserId = userId;
+            UserResponse userInfo = UserService.getUser(messageRequest);
+
+            username = userInfo.FirstName + " " + userInfo.LastName;
+            if (username.length() <= 0) {
+                username = userInfo.EmailAddress;
+                if (username.length() <= 0) {
+                    username = userInfo.MobileNumber;
+                    if (username.length() <= 0) {
+                        username = userInfo.UserName;
+                    }
+                }
+            }
+
             ArrayList<PaystreamResponse> messages = PaystreamService
                 .getMessages(messageRequest);
 
@@ -533,39 +548,6 @@ OnCheckedChangeListener {
     private void getTransactionDetails(int index) {
         PaystreamTransaction ref = m_transactions.get(index - 1);
 
-        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
-        String date = dateFormat.format(ref.getCreateDate());
-        DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM);
-        String theTime = timeFormat.format(ref.getCreateDate());
-        String recipient = ref.getRecipientUri();
-        String sender = ref.getSenderUri();
-
-        Double amount = ref.getAmount();
-        String transactionType = ref.getTransactionType();
-        String transactionStat = ref.getTransactionStatus();
-        String transactionId = ref.getTransactionId();
-        String transactionComment = ref.getComments();
-
-        UserRequest messageRequest = new UserRequest();
-
-        String userId = prefs.getString("userId", "");
-
-        messageRequest.UserId = userId;
-        PaystreamService
-        .getMessages(messageRequest);
-        UserResponse userInfo = UserService.getUser(messageRequest);
-
-        String username = userInfo.FirstName + " " + userInfo.LastName;
-        if (username.length() <= 0) {
-            username = userInfo.EmailAddress;
-            if (username.length() <= 0) {
-                username = userInfo.MobileNumber;
-                if (username.length() <= 0) {
-                    username = userInfo.UserName;
-                }
-            }
-        }
-
         // first create intent based on what the transaction type is
         // 1) determine outgoing or incoming
         // 2) determine payment or request
@@ -574,62 +556,29 @@ OnCheckedChangeListener {
                 // imgTransactionType.setImageResource(R.drawable.paystream_sent_icon);
                 Intent temp1 = new Intent(getApplicationContext(),
                     OutgoingPaymentDialog.class);
-                temp1.putExtra("date", date);
-                temp1.putExtra("time", theTime);
-                temp1.putExtra("recipient", recipient);
-                temp1.putExtra("sender", sender);
-                temp1.putExtra("amount", ref.getAmount());
-                temp1.putExtra("transactionType", transactionType);
-                temp1.putExtra("transactionStat", transactionStat);
-                temp1.putExtra("transactionId", transactionId);
                 temp1.putExtra("username", username);
-                temp1.putExtra("comments", transactionComment);
+                temp1.putExtra("obj", ref);
                 // picture?
                 startActivity(temp1);
             } else {
                 Intent temp2 = new Intent(getApplicationContext(),
                     OutgoingRequestDialog.class);
-
-                temp2.putExtra("date", date);
-                temp2.putExtra("time", theTime);
-                temp2.putExtra("recipient", recipient);
-                temp2.putExtra("sender", sender);
-                temp2.putExtra("amount", amount);
-                temp2.putExtra("transactionType", transactionType);
-                temp2.putExtra("transactionStat", transactionStat);
-                temp2.putExtra("transactionId", transactionId);
+                temp2.putExtra("obj", ref);
                 temp2.putExtra("username", username);
-                temp2.putExtra("comments", transactionComment);
                 startActivity(temp2);
             }
         } else {
             if (ref.getTransactionType().equalsIgnoreCase("Payment")) {
                 Intent temp3 = new Intent(getApplicationContext(),
                     IncomingPaymentDialog.class);
-                temp3.putExtra("date", date);
-                temp3.putExtra("time", theTime);
-                temp3.putExtra("recipient", recipient);
-                temp3.putExtra("sender", sender);
-                temp3.putExtra("amount", amount);
-                temp3.putExtra("transactionType", transactionType);
-                temp3.putExtra("transactionStat", transactionStat);
-                temp3.putExtra("transactionId", transactionId);
+                temp3.putExtra("obj", ref);
                 temp3.putExtra("username", username);
-                temp3.putExtra("comments", transactionComment);
                 startActivity(temp3);
             } else {
                 Intent temp4 = new Intent(getApplicationContext(),
                     IncomingRequestDialog.class);
-                temp4.putExtra("date", date);
-                temp4.putExtra("time", theTime);
-                temp4.putExtra("recipient", recipient);
-                temp4.putExtra("sender", sender);
-                temp4.putExtra("amount", amount);
-                temp4.putExtra("transactionType", transactionType);
-                temp4.putExtra("transactionStat", transactionStat);
-                temp4.putExtra("transactionId", transactionId);
+                temp4.putExtra("obj", ref);
                 temp4.putExtra("username", username);
-                temp4.putExtra("comments", transactionComment);
                 startActivity(temp4);
             }
         }
