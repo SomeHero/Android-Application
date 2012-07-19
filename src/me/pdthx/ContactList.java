@@ -9,7 +9,6 @@ import android.content.ContentUris;
 import android.net.Uri;
 import java.util.ArrayList;
 
-import me.pdthx.Helpers.PhoneNumberFormatter;
 import me.pdthx.Models.Friend;
 
 import android.content.Context;
@@ -40,7 +39,7 @@ public class ContactList {
                 Cursor phones = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ contactId, null, null);
                 while (phones.moveToNext()) {
                     String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    String fixedNumber = PhoneNumberFormatter.formatNumber(phoneNumber);
+                    String fixedNumber = PhoneNumberFormatter.stripNumber(phoneNumber);
 
                     if (fixedNumber != null && !phoneNumbers.contains(fixedNumber)) {
                         phoneFriend.setPaypoint(fixedNumber);
