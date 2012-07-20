@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -18,6 +19,9 @@ public class DoGoodDialog extends Activity {
 
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		getWindow().setGravity(Gravity.TOP | Gravity.RIGHT);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
 		showDialog();
 	}
 	
@@ -88,4 +92,14 @@ public class DoGoodDialog extends Activity {
 			
 		});
 	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event)  
+	{  
+
+	       if(event.getAction() == MotionEvent.ACTION_OUTSIDE){   
+	              finish();
+	       }  
+	       return false;  
+	}  
 }

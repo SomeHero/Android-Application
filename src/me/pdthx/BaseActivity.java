@@ -49,10 +49,14 @@ public class BaseActivity extends Activity {
 	protected AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(
 			facebook);
 	protected static boolean signedInViaFacebook = false;
-	protected static ArrayList<Friend> friendsList = new ArrayList<Friend>();
+	
 	private static boolean contactListAdded = false;
 	protected static boolean facebookFriendsAdded = false;
-	private ContactList contactList;
+	
+	private ContactList contactListRaw;
+	protected static ArrayList<Friend> contactList = new ArrayList<Friend>();
+	protected static ArrayList<Friend> friendsList = new ArrayList<Friend>();
+	
 	protected static Thread contactThread;
 
 	protected final int SECURITYPIN = 300;
@@ -103,12 +107,13 @@ public class BaseActivity extends Activity {
 			}
 		}
 
-		if (contactList == null || contactList.getContacts().size() == 0)
+		if (contactList == null || contactList.size() == 0)
 		{
 			Runnable run = new Runnable() {
 				public void run() {
-					contactList = new ContactList(getBaseContext());
-					friendsList.addAll(contactList.getContacts());
+					contactListRaw = new ContactList(getBaseContext());				
+					contactList.addAll(contactListRaw.getContacts());
+					contactListAdded = true;
 				}
 			};
 
@@ -119,11 +124,12 @@ public class BaseActivity extends Activity {
 				contactThread.start();
 			}
 		}
-		else
+		/*else
 		{
-			friendsList.addAll(contactList.getContacts());
+			contactListRaw = new ContactList(getBaseContext());
+			contactList.addAll(contactListRaw.getContacts());
 			contactListAdded = true;
-		}
+		}*/
 
 	}
 

@@ -1017,7 +1017,7 @@ public class UserService {
 
 		return userResponse;
 	}
-
+	
 	public static UserCheckImageResponse sendCheckImage(UserCheckImageRequest userRequest){
 		UserCheckImageResponse checkResponse =  new UserCheckImageResponse();
 		HttpResponse response = null;

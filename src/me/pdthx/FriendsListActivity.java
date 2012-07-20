@@ -41,6 +41,8 @@ public final class FriendsListActivity extends BaseActivity  {
     private final static int SETFRIENDIMAGE = 1;
     private static HashMap<String, Bitmap> pictureMap;
     private EditText searchBar = null;
+    
+    private ArrayList<Friend> combinedFriendsList = new ArrayList<Friend>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,13 +78,16 @@ public final class FriendsListActivity extends BaseActivity  {
         mListView = (ListView) findViewById(R.id.lvFriends);
         searchBar = (EditText) findViewById(R.id.searchBar);
         mListView.setOnScrollListener(mOnScrollListener);
+        
+        combinedFriendsList.addAll(contactList);
+        combinedFriendsList.addAll(friendsList);
 
         mEmptyTextView = (TextView)findViewById(R.id.txtEmptyFriendList);
 
         if(friendsList != null && friendsList.size() > 0) {
             Collections.sort(friendsList);
             mEmptyTextView.setVisibility(View.GONE);
-            m_adapter = new FriendAdapter(this, R.layout.friend_item, friendsList);
+            m_adapter = new FriendAdapter(this, R.layout.friend_item, combinedFriendsList);
             mListView.setAdapter(m_adapter);
             mListView.setFastScrollEnabled(true);
             m_adapter.notifyDataSetChanged();

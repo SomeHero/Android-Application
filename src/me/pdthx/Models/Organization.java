@@ -7,10 +7,32 @@ public class Organization {
 	private String _header = "";
 	private String _info = "";
 	private String _imageUri = "";
+	private String _preferredReceiveId = "";
+	private String _preferredSendId = "";
 
 	public void setImageUri(String uri)
 	{
 		_imageUri = uri;
+	}
+	
+	public void setPreferredReceive(String id)
+	{
+		_preferredReceiveId = id;
+	}
+	
+	public void setPreferredSend(String id)
+	{
+		_preferredSendId = id;
+	}
+	
+	public String getPreferredReceive()
+	{
+		return _preferredReceiveId;
+	}
+	
+	public String getPreferredSend()
+	{
+		return _preferredSendId;
 	}
 	
 	public String getImageUri()

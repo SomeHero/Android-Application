@@ -1,5 +1,7 @@
 package me.pdthx.DoGood;
 
+import java.util.ArrayList;
+
 import me.pdthx.AddMoneyActivity;
 import me.pdthx.BaseActivity;
 import me.pdthx.FriendsListActivity;
@@ -161,10 +163,14 @@ public class DoGoodIntroActivity extends BaseActivity {
 	}
 
 	private void addingContactDonate(String id, String paypoint) {
+		ArrayList<Friend> all = new ArrayList<Friend>();
+		all.addAll(friendsList);
+		all.addAll(contactList);
+		
 		Friend chosenContact = new Friend();
 		if (!id.equals("")) {
 			chosenContact.setId(id);
-			friend = friendsList.get(friendsList.indexOf(chosenContact));
+			friend = all.get(all.indexOf(chosenContact));
 
 			if (friend.isFBContact()) {
 				recipientUri = "fb_" + friend.getId();
@@ -234,10 +240,13 @@ public class DoGoodIntroActivity extends BaseActivity {
 	}
 
 	private void addingContact(String id, String paypoint) {
+		ArrayList<Friend> all = new ArrayList<Friend>();
+		all.addAll(friendsList);
+		all.addAll(contactList);
 		Friend chosenContact = new Friend();
 		if (!id.equals("")) {
 			chosenContact.setId(id);
-			friend = friendsList.get(friendsList.indexOf(chosenContact));
+			friend = all.get(all.indexOf(chosenContact));
 
 			if (friend.isFBContact()) {
 				recipientUri = "fb_" + friend.getId();
