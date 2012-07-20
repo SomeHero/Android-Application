@@ -16,13 +16,15 @@
 
 package me.pdthx;
 
+import me.pdthx.Responses.MultipleURIResponse;
+import me.pdthx.Responses.ResponseArrayList;
+import me.pdthx.Requests.MultipleURIRequest;
 import java.text.NumberFormat;
 
 import me.pdthx.Models.Friend;
 import me.pdthx.Requests.PaymentRequest;
 import me.pdthx.Responses.Response;
 import me.pdthx.Services.PaymentServices;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -73,7 +75,8 @@ public final class SendPaymentActivity extends BaseActivity {
     final private int ADDACCOUNT_DIALOG = 10;
     final private int ADD_MONEY = 8;
     final private int INVALIDPASSCODELENGTH_DIALOG = 12;
-    final private int SECURITYPIN = 13;
+    final private int SUBMITPAYMENT_MULTIPLEURIS = 15;
+    final private int SELECT_RECIPIENT = 16;
 
     final private int SUBMITPAYMENT_ACTION = 0;
 
@@ -198,12 +201,11 @@ public final class SendPaymentActivity extends BaseActivity {
 
     }
 
-    protected android.app.Dialog onCreateDialog(int id) {
+    protected Dialog onCreateDialog(int id) {
         Thread thread = null;
         switch (id) {
             case SUBMITPAYMENT_DIALOG:
                 tracker.trackPageView("Send Money: Confirm");
-                progressDialog = new ProgressDialog(this);
 
                 progressDialog.setMessage("Submitting Request...");
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -227,8 +229,82 @@ public final class SendPaymentActivity extends BaseActivity {
                 thread.start();
 
                 return dialog;
+            case SUBMITPAYMENT_MULTIPLEURIS:
+                progressDialog.setMessage("Finding recipient...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+                thread = new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        ResponseArrayList<MultipleURIResponse> response = new ResponseArrayList<MultipleURIResponse>();
+                        MultipleURIRequest request = new MultipleURIRequest();
+                        try {
+                            request.recipientUris.addAll(friend.getPaypoints());
+
+                            response = PaymentServices.determineRecipient(request);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        removeDialog(SUBMITPAYMENT_MULTIPLEURIS);
+
+                        if (response.Success)
+                        {
+                            if (response.size() != 1)
+                            {
+                                Intent intent = new Intent(SendPaymentActivity.this, SelectRecipientActivity.class);
+
+                                if (response.size() != 0)
+                                {
+
+                                    String[] recipientUris = new String[response.size()];
+                                    String[] recipientStrings = new String[response.size()];
+
+                                    for (int i = 0; i < response.size(); i++)
+                                    {
+                                        recipientUris[i] = response.get(i).UserUri;
+                                    }
+
+                                    for (int i = 0; i < response.size(); i++)
+                                    {
+                                        recipientStrings[i] = response.get(i).toString();
+                                    }
+                                    intent.putExtra("uris", recipientUris);
+                                    intent.putExtra("recipients", recipientStrings);
+                                }
+                                else {
+                                    String[] recipientUris = new String[request.recipientUris.size()];
+                                    request.recipientUris.toArray(recipientUris);
+
+                                    intent.putExtra("uris", recipientUris);
+                                    intent.putExtra("recipients", recipientUris);
+                                }
+
+                                startActivityForResult(intent, SELECT_RECIPIENT);
+                            }
+                            else
+                            {
+                                recipientUri = response.get(0).UserUri;
+                                startSecurityPinActivity("Confirm", String.format("To confirm your payment of %s to %s, swipe you pin below.",
+                                    txtAmount.getText(), friend.getName()));
+                            }
+                        }
+                        else
+                        {
+                            errorMessage = response.ReasonPhrase;
+                            showDialog(SUBMITPAYMENTFAILED_DIALOG);
+                        }
+                    }
+
+                });
+                dialog = progressDialog;
+                thread.start();
+
+                return dialog;
             case SUBMITPAYMENTFAILED_DIALOG:
-                alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("Failed");
 
                 alertDialog.setMessage(errorMessage);
@@ -242,7 +318,6 @@ public final class SendPaymentActivity extends BaseActivity {
                 return alertDialog;
             case SUBMITPAYMENTSUCCESS_DIALOG:
                 tracker.trackPageView("Send Money: Completed");
-                alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("Payment Sumitted");
                 NumberFormat nf = NumberFormat.getCurrencyInstance();
 
@@ -264,11 +339,9 @@ public final class SendPaymentActivity extends BaseActivity {
 
                 return alertDialog;
             case NORECIPIENTSPECIFIED_DIALOG:
-                alertDialog = new AlertDialog.Builder(SendPaymentActivity.this)
-                .create();
                 alertDialog.setTitle("Please Specify a Recipient");
                 alertDialog
-                .setMessage("You must specify the recipient's mobile number.");
+                .setMessage("You have not selected a valid reicpient. Please select a recipient with a valid email address or phone number.");
 
                 alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -278,8 +351,6 @@ public final class SendPaymentActivity extends BaseActivity {
 
                 return alertDialog;
             case NOAMOUNTSPECIFIED_DIALOG:
-                alertDialog = new AlertDialog.Builder(SendPaymentActivity.this)
-                .create();
                 alertDialog.setTitle("Please Specify an Amount");
                 alertDialog.setMessage("You must specify the amount to send.");
 
@@ -292,8 +363,6 @@ public final class SendPaymentActivity extends BaseActivity {
                 return alertDialog;
 
             case INVALIDPASSCODELENGTH_DIALOG:
-                alertDialog = new AlertDialog.Builder(SendPaymentActivity.this)
-                .create();
                 alertDialog.setTitle("Invalid Passcode");
                 alertDialog
                 .setMessage("Your passcode is atleast 4 buttons. Please try again.");
@@ -308,8 +377,6 @@ public final class SendPaymentActivity extends BaseActivity {
 
 
             case PAYMENTEXCEEDSLIMIT_DIALOG:
-                alertDialog = new AlertDialog.Builder(SendPaymentActivity.this)
-                .create();
                 alertDialog.setTitle("Exceeds Limit");
                 alertDialog
                 .setMessage("The payment exceeds your upper limit. Please try again.");
@@ -373,7 +440,9 @@ public final class SendPaymentActivity extends BaseActivity {
                 }
                 comments = txtComments.getText().toString();
 
-                if (isValid && recipientUri.length() == 0) {
+                int numPaypoints = friend != null ? friend.getPaypoints().size() : 0;
+
+                if (isValid && numPaypoints == 0) {
                     showDialog(NORECIPIENTSPECIFIED_DIALOG);
                     isValid = false;
                 }
@@ -399,13 +468,15 @@ public final class SendPaymentActivity extends BaseActivity {
                     } else {
                         if (prefs.getBoolean("hasACHAccount", false) || !prefs.getString("paymentAccountId", "").equals(""))
                         {
-                            Intent intent = new Intent(SendPaymentActivity.this, SecurityPinActivity.class);
-                            intent.putExtra("headerText", "Confirm");
-                            intent.putExtra("bodyText",
-                                String.format("To confirm your payment of %s to %s, swipe you pin below.",
-                                txtAmount.getText(), friend.getName()));
-
-                            startActivityForResult(intent, SECURITYPIN);
+                            if (numPaypoints == 1)
+                            {
+                                startSecurityPinActivity("Confirm", String.format("To confirm your payment of %s to %s, swipe you pin below.",
+                                    txtAmount.getText(), friend.getName()));
+                            }
+                            else if (numPaypoints > 1)
+                            {
+                                showDialog(SUBMITPAYMENT_MULTIPLEURIS);
+                            }
                         }
                         else
                         {
@@ -423,11 +494,11 @@ public final class SendPaymentActivity extends BaseActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Bundle bundle = data.getExtras();
 
         switch (resultCode)
         {
             case RESULT_OK:
+                Bundle bundle = data.getExtras();
                 switch (requestCode)
                 {
                     case ADDING_FRIEND:
@@ -441,11 +512,13 @@ public final class SendPaymentActivity extends BaseActivity {
                         passcode = bundle.getString("passcode");
                         showDialog(SUBMITPAYMENT_DIALOG);
                         break;
+                    case SELECT_RECIPIENT:
+                        recipientUri = data.getStringExtra("uri");
+                        startSecurityPinActivity("Confirm", String.format("To confirm your payment of %s to %s, swipe you pin below.",
+                            txtAmount.getText(), friend.getName()));
+                        break;
                 }
-                break;
-            case RESULT_CANCELED:
-                finish();
-                break;
+             break;
         }
     }
 
@@ -499,7 +572,7 @@ public final class SendPaymentActivity extends BaseActivity {
                 btnAddContacts.setText(friend.getName() + ": " + friend.getId());
             }
             else {
-                recipientUri = "" + friend.getPaypoint();
+                //recipientUri = "" + friend.getPaypoint();
                 btnAddContacts.setText(friend.toString());
             }
         }

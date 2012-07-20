@@ -37,7 +37,6 @@ import me.pdthx.Responses.ACHAccountResponse;
 import me.pdthx.Responses.ACHAccountSetupResponse;
 import me.pdthx.Responses.Response;
 import me.pdthx.Responses.SecurityQuestionResponse;
-import me.pdthx.Responses.UserSignInResponse;
 import me.pdthx.Services.PaymentAcctService;
 import me.pdthx.Services.UserService;
 import me.pdthx.Widget.OnWheelChangedListener;

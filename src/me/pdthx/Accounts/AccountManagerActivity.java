@@ -2,9 +2,7 @@ package me.pdthx.Accounts;
 
 import java.util.ArrayList;
 
-import me.pdthx.ACHAccountSetupActivity;
 import me.pdthx.BaseActivity;
-import me.pdthx.PhotoCaptureExample;
 import me.pdthx.R;
 import me.pdthx.CustomViews.CustomLockView;
 import me.pdthx.Requests.ACHAccountDeleteRequest;
@@ -50,7 +48,7 @@ public class AccountManagerActivity extends BaseActivity implements
 	private String preferredSend;
 	private String preferredReceive;
 
-	
+
 	private boolean isCheckingAcct;
 	private Response response;
 	private ACHAccountResponse updateResponse;
@@ -324,7 +322,7 @@ public class AccountManagerActivity extends BaseActivity implements
 		accountNumber.setHint("******" + bankInfo.AccountNumber);
 		accountNumber.setEnabled(false);
 		TextView confirm = (TextView) findViewById(R.id.txtConfirmAccountNumber);
-		confirm.setVisibility(View.GONE);		
+		confirm.setVisibility(View.GONE);
 
 		btnAcctType = (RadioGroup) findViewById(R.id.achBankCategories);
 		btnAcctType.setOnCheckedChangeListener(this);

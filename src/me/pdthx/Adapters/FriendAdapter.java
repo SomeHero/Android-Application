@@ -101,7 +101,14 @@ public final class FriendAdapter extends ArrayAdapter<Friend> implements Section
                 txtPaypoint.setText("Facebook Contact");
             }
             else {
-                txtPaypoint.setText(o.getPaypoint());
+                if (o.getPaypoints().size() != 0)
+                {
+                    txtPaypoint.setText(o.getPaypoints().size() + " valid paypoints.");
+                }
+                else
+                {
+                    txtPaypoint.setText(o.getPaypoint());
+                }
             }
         }
         Drawable drawableRow = v.getResources().getDrawable(

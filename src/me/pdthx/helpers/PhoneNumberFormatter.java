@@ -53,6 +53,6 @@ public class PhoneNumberFormatter
         	return fixedNumber.substring(0, 3) + "-" + fixedNumber.substring(3);
         }
 
-        return null;
+        return phoneNumber;
     }
 }

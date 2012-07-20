@@ -14,8 +14,7 @@ public class Friend implements Comparable<Friend> {
     private String paypoint = "";
     private Bitmap picture;
     private Uri pictureUri;
-    private ArrayList<String> emailAddresses = new ArrayList<String>();
-    private ArrayList<String> phoneNumbers = new ArrayList<String>();
+    private ArrayList<String> paypoints = new ArrayList<String>();
 
     public String getId()
     {
@@ -69,26 +68,10 @@ public class Friend implements Comparable<Friend> {
         this.pictureUri = pictureUri;
     }
 
-    public ArrayList<String> getEmailAddresses()
+    public ArrayList<String> getPaypoints()
     {
-        return emailAddresses;
+        return paypoints;
     }
-
-    public void addEmailAddress(String emailAddress)
-    {
-        emailAddresses.add(emailAddress);
-    }
-
-    public ArrayList<String> getPhoneNumbers()
-    {
-        return phoneNumbers;
-    }
-
-    public void addPhoneNumber(String phoneNumber)
-    {
-        phoneNumbers.add(phoneNumber);
-    }
-
 
     public boolean equals(Object other) {
         return other instanceof Friend && ((Friend)other).getId().equals(id);
@@ -130,15 +113,27 @@ public class Friend implements Comparable<Friend> {
             return true;
         }
 
+        for (String paypoint : paypoints)
+        {
+            if (paypoint.toLowerCase().startsWith(search))
+            {
+                return true;
+            }
+        }
+
         return false;
     }
 
     public String toString() {
-        if (!paypoint.equals("")) {
-            return name + ": " + paypoint;
-        }
 
-        return name;
+        if (paypoints.size() != 0)
+        {
+            return name + ": " + paypoints.size() + " paypoints.";
+        }
+        else
+        {
+            return name;
+        }
     }
 
 }
