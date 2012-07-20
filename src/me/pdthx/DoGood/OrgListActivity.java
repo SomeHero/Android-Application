@@ -30,6 +30,8 @@ import me.pdthx.Adapters.PaystreamAdapter;
 import me.pdthx.Helpers.PhoneNumberFormatter;
 import me.pdthx.Models.Friend;
 import me.pdthx.Models.Organization;
+import me.pdthx.Responses.OrganizationResponse;
+import me.pdthx.Services.PaymentServices;
 
 public class OrgListActivity extends BaseActivity {
 	protected static final int CHANGE_LIST = 6;
@@ -42,6 +44,7 @@ public class OrgListActivity extends BaseActivity {
 	private Button submitSearch;
 	private EditText searchBar;
 
+	private ArrayList<Friend> allContacts;
 	private FriendAdapter m_adapter;
 	private final static int SETFRIENDIMAGE = 1;
 	private static HashMap<String, Bitmap> pictureMap;
@@ -71,18 +74,14 @@ public class OrgListActivity extends BaseActivity {
 	}
 
 	private void showOrgController() {
-		if (friendsList != null && friendsList.size() > 0) {
-			Collections.sort(friendsList);
-			m_adapter = new FriendAdapter(this, R.layout.friend_item,
-					friendsList);
-
-		} else {
-			Log.e("Friend list problem", "Friend List not populated");
-		}
-
-		progressDialog.dismiss();
+		allContacts = new ArrayList<Friend>();
+		allContacts.addAll(contactList);
+		allContacts.addAll(friendsList);
+		Collections.sort(allContacts);
 
 		createFakeList();
+
+		progressDialog.dismiss();
 
 		Button backBtn = (Button) findViewById(R.id.btnBackBtn);
 		backBtn.setOnClickListener(new OnClickListener() {
@@ -217,7 +216,7 @@ public class OrgListActivity extends BaseActivity {
 					Organization chosenOrg = adapter.getItem(arg2);
 					data.putExtra("org", chosenOrg.getName());
 					data.putExtra("nav", "nonProfits");
-				} else if (currentNav.equals("allContacts")) {
+				} else {
 					Friend chosenFriend = m_adapter.getItem(arg2);
 
 					if (!chosenFriend.getId().equals("")) {
@@ -241,33 +240,82 @@ public class OrgListActivity extends BaseActivity {
 				Bundle bundle = data.getExtras();
 				String result = bundle.getString("result");
 				if (result.equals("allContacts")) {
-					theList.setAdapter(m_adapter);
-					currentNav = "allContacts";
-					submitSearch.setVisibility(View.GONE);
-					searchBar.setText("");
-					searchBar.setHint("Search your contact");
-					
+					TextView txtEmptyList = (TextView) findViewById(R.id.txtEmptyList);
+					if (allContacts.size() == 0) {
+						theList.setVisibility(View.GONE);
+						txtEmptyList.setVisibility(View.VISIBLE);
+					} else {
+						theList.setVisibility(View.VISIBLE);
+						m_adapter = new FriendAdapter(getApplicationContext(),
+								R.layout.friend_item, allContacts);
+						theList.setAdapter(m_adapter);
+						//m_adapter.notifyDataSetChanged();
+						currentNav = "allContacts";
+						submitSearch.setVisibility(View.GONE);
+						searchBar.setText("");
+						searchBar.setHint("Search all your contacts");
+						txtEmptyList.setVisibility(View.GONE);
+					}
+
 				} else if (result.equals("phoneContacts")) {
-					//
+					TextView txtEmptyList = (TextView) findViewById(R.id.txtEmptyList);
+					if (contactList.size() == 0) {
+						theList.setVisibility(View.GONE);
+						txtEmptyList.setVisibility(View.VISIBLE);
+					} else {
+						theList.setVisibility(View.VISIBLE);
+						m_adapter = new FriendAdapter(getApplicationContext(),
+								R.layout.friend_item, contactList);
+						m_adapter.notifyDataSetChanged();
+						theList.setAdapter(m_adapter);
+						currentNav = "phoneContacts";
+						submitSearch.setVisibility(View.GONE);
+						searchBar.setText("");
+						searchBar.setHint("Search your phone contacts");
+						txtEmptyList.setVisibility(View.GONE);
+					}
 
 				} else if (result.equals("fbContacts")) {
-					//
+					TextView txtEmptyList = (TextView) findViewById(R.id.txtEmptyList);
+					if (friendsList.size() == 0) {
+						theList.setVisibility(View.GONE);
+						txtEmptyList.setVisibility(View.VISIBLE);
+					} else {
+						theList.setVisibility(View.VISIBLE);
+						txtEmptyList.setVisibility(View.GONE);
+						m_adapter = new FriendAdapter(getApplicationContext(),
+								R.layout.friend_item, friendsList);
+						m_adapter.notifyDataSetChanged();
+						theList.setAdapter(m_adapter);
+						currentNav = "fbContacts";
+						submitSearch.setVisibility(View.GONE);
+						searchBar.setText("");
+						searchBar.setHint("Search your Facebook contacts");
+					}
 
 				} else if (result.equals("nonProfits")) {
-					adapter = new OrganizationAdapter(getApplicationContext(),
-							R.layout.dogood_org_item, orgList);
-					theList.setAdapter(adapter);
-					currentNav = "nonProfits";
-					submitSearch.setVisibility(View.VISIBLE);
-					searchBar.setText("");
-					searchBar.setHint("Search for your organization");
+					TextView txtEmptyList = (TextView) findViewById(R.id.txtEmptyList);
+					if (orgList.size() == 0) {
+						theList.setVisibility(View.GONE);
+						txtEmptyList.setVisibility(View.VISIBLE);
+					} else {
+						
+						theList.setVisibility(View.VISIBLE);
+						adapter = new OrganizationAdapter(getApplicationContext(),
+								R.layout.dogood_org_item, orgList);
+						theList.setAdapter(adapter);
+						currentNav = "nonProfits";
+						submitSearch.setVisibility(View.VISIBLE);
+						searchBar.setText("");
+						searchBar.setHint("Search for your organization");
+						txtEmptyList.setVisibility(View.GONE);
+					}
 				} else if (result.equals("pubDirectory")) {
 					//
 
 				}
 			}
-			if(requestCode == CHOSE_ORG)
-			{
+			if (requestCode == CHOSE_ORG) {
 				Bundle bundle = data.getExtras();
 				Intent sendData = new Intent();
 				sendData.putExtra("name", bundle.getString("name"));
@@ -281,6 +329,40 @@ public class OrgListActivity extends BaseActivity {
 	}
 
 	private void createFakeList() {
+		// GET FROM SERVER --->
+		/*ArrayList<OrganizationResponse> nonProfitListResponse = PaymentServices.getOrgs("NonProfits");
+		ArrayList<OrganizationResponse> organizationResponse = PaymentServices.getOrgs("Organizations");
+		
+		ArrayList<Organization> translateNonProfit = new ArrayList<Organization>();
+		for(int i = 0; i < nonProfitListResponse.size(); i++)
+		{
+			Organization ref = new Organization();
+			ref.setHeader("ALL CAUSES");
+			ref.setImageUri(nonProfitListResponse.get(i).MerchantImageUri);
+			ref.setName(nonProfitListResponse.get(i).Name);
+			ref.setSlogan("");
+			ref.setPreferredReceive(nonProfitListResponse.get(i).PreferredReceiveAccountId);
+			ref.setPreferredSend(nonProfitListResponse.get(i).PreferredSendAccountId);
+			ref.setInfo("");
+			
+			translateNonProfit.add(ref);
+		}
+		
+		ArrayList<Organization> translateOrganization = new ArrayList<Organization>();
+		for(int i = 0; i < organizationResponse.size(); i++)
+		{
+			Organization ref = new Organization();
+			ref.setHeader("ALL CAUSES");
+			ref.setImageUri(organizationResponse.get(i).MerchantImageUri);
+			ref.setName(organizationResponse.get(i).Name);
+			ref.setSlogan("");
+			ref.setPreferredReceive(organizationResponse.get(i).PreferredReceiveAccountId);
+			ref.setPreferredSend(organizationResponse.get(i).PreferredSendAccountId);
+			ref.setInfo("");
+			
+			translateNonProfit.add(ref);
+		}*/
+		
 		String path = "android.resource://me.pdthx/drawable/";
 		// Uri path = Uri.parse("android.resource://me.pdthx/");
 		String h = "ALL CAUSES";
