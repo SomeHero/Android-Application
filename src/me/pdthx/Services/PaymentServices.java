@@ -2,17 +2,24 @@ package me.pdthx.Services;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import me.pdthx.Requests.PaymentRequest;
+import me.pdthx.Responses.OrganizationResponse;
+import me.pdthx.Responses.PaystreamResponse;
 import me.pdthx.Responses.Response;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,9 +33,108 @@ public class PaymentServices {
 	private static final String SUBMITMONEY_URL = "/PayStreamMessages?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String REQUESTMONEY_URL = "/PayStreamMessages?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String GETORGS = "/merchants?type=";
 
-	public static Response sendMoney(
-			PaymentRequest paymentRequest) {
+	public static ArrayList<OrganizationResponse> getOrgs(String type) {
+		ArrayList<OrganizationResponse> listofOrgs = new ArrayList<OrganizationResponse>();
+
+		HttpResponse response = null;
+		if (type.equals("NonProfits")) {
+			try {
+				HttpClient httpClient = new DefaultHttpClient();
+				HttpGet request = new HttpGet(ROOTURL
+						+ GETORGS + "NonProfits");
+
+				request.setHeader("content-type", "application/json");
+
+				response = httpClient.execute(request);
+			} catch (ClientProtocolException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else {
+			try {
+				HttpClient httpClient = new DefaultHttpClient();
+				HttpGet request = new HttpGet(ROOTURL
+						+ GETORGS + "Organizations");
+
+				request.setHeader("content-type", "application/json");
+
+				response = httpClient.execute(request);
+			} catch (ClientProtocolException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		HttpEntity entity = response.getEntity();
+
+		if (entity != null) {
+
+			InputStream instream = null;
+			String result = "";
+			try {
+				instream = entity.getContent();
+				result = RestClient.convertStreamToString(instream);
+				// Log.i(TAG, "Result of conversation: [" + result +
+				// "]");
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				instream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			Log.i("User", result);
+
+			JSONArray messages = null;
+			try {
+				messages = new JSONArray(result);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+
+			try {
+				// Loop the Array
+				for (int i = 0; i < messages.length(); i++) {
+					JSONObject jsonResult = messages.getJSONObject(i);
+
+					OrganizationResponse obj = new OrganizationResponse();
+
+					obj.Id = jsonResult.getString("Id");
+					obj.MerchantImageUri = jsonResult.getString("MerchantImageUrl");
+					obj.Name = jsonResult.getString("Name");
+					obj.PreferredReceiveAccountId = jsonResult.getString("PreferredReceiveAccountId");
+					obj.PreferredSendAccountId = jsonResult.getString("PreferredSendAccountId");
+
+					listofOrgs.add(obj);
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return listofOrgs;
+	}
+
+	public static Response sendMoney(PaymentRequest paymentRequest) {
 		Response paymentResponse = new Response();
 
 		HttpResponse response = null;
@@ -94,13 +200,12 @@ public class PaymentServices {
 
 			Log.i("Payment Sumitted Response", result);
 
-
 			if (response.getStatusLine().getStatusCode() == 201) {
-				//Do something
+				// Do something
 				paymentResponse.Success = true;
-			}
-			else {
-				paymentResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+			} else {
+				paymentResponse.ReasonPhrase = response.getStatusLine()
+						.getReasonPhrase();
 				paymentResponse.Success = false;
 			}
 		}
@@ -176,11 +281,11 @@ public class PaymentServices {
 			Log.i("Payment Request Submitted", result);
 
 			if (response.getStatusLine().getStatusCode() == 201) {
-				//Do something
+				// Do something
 				paymentResponse.Success = true;
-			}
-			else {
-				paymentResponse.ReasonPhrase = response.getStatusLine().getReasonPhrase();
+			} else {
+				paymentResponse.ReasonPhrase = response.getStatusLine()
+						.getReasonPhrase();
 				paymentResponse.Success = false;
 			}
 		}
