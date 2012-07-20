@@ -1,12 +1,6 @@
 package me.pdthx.Models;
 
 import me.pdthx.Helpers.NameSeparator;
-import me.pdthx.Requests.UserRequest;
-import me.pdthx.Responses.UserResponse;
-import me.pdthx.Services.PaystreamService;
-import me.pdthx.Services.UserService;
-
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
 import android.graphics.Bitmap;
@@ -38,7 +32,7 @@ public class PaystreamTransaction implements Parcelable{
 	private Bitmap _cameraPic = null;
 
 	public boolean search(String queary) {
-		
+
 		String search = queary.trim().toLowerCase();
 		String[] names = NameSeparator.separateName(_recipientUri);
 		String firstName = names[0].toLowerCase();
@@ -46,7 +40,7 @@ public class PaystreamTransaction implements Parcelable{
 		String[] senderNames = NameSeparator.separateName(_senderUri);
 		String senderFirstName = senderNames[0].toLowerCase();
 		String senderLastName = senderNames[1].toLowerCase();
-		
+
 
         if (search.contains(" "))
         {
@@ -274,17 +268,17 @@ public class PaystreamTransaction implements Parcelable{
 		out.writeString(_transactionId);
 		out.writeString(_comments);
 	}
-	
+
 	public static final Parcelable.Creator<PaystreamTransaction> CREATOR = new Parcelable.Creator<PaystreamTransaction>(){
 		public PaystreamTransaction createFromParcel(Parcel in){
 			return new PaystreamTransaction(in);
 		}
-		
+
 		public PaystreamTransaction[] newArray(int size){
 			return new PaystreamTransaction[size];
 		}
 	};
-	
+
 	private PaystreamTransaction(Parcel in){
 		_date = in.readString();
 		_time = in.readString();
@@ -300,12 +294,12 @@ public class PaystreamTransaction implements Parcelable{
 	public PaystreamTransaction() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public String getDateString()
 	{
 		return _date;
 	}
-	
+
 	public String getTimeString()
 	{
 		return _time;

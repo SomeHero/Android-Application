@@ -48,13 +48,12 @@ OnCheckedChangeListener{
     private EditText searchBar = null;
     private int numTransactions;
     private ArrayList<PaystreamTransaction> transactionsList;
-    private int FILTER_PAYSTREAM = 1;
     private int refreshCount = 0;
     public static final String TAG = "PaystreamActivity";
     private PullAndRefreshListView mListView = null;
     private TextView mEmptyTextView = null;
     private RadioGroup group;
-    
+
     private String username;
 
     @Override
@@ -66,22 +65,6 @@ OnCheckedChangeListener{
             logout();
         } else {
             showPaystreamController();
-        }
-
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                showPaystreamController();
-            }
-        }
-        if (resultCode == FILTER_PAYSTREAM) {
-            // Show new view?
-        } else {
-            finish();
         }
 
     }
@@ -282,7 +265,7 @@ OnCheckedChangeListener{
             UserRequest messageRequest = new UserRequest();
 
             String userId = prefs.getString("userId", "");
-            
+
             messageRequest.UserId = userId;
             UserResponse userInfo = UserService.getUser(messageRequest);
 
