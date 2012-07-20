@@ -1,16 +1,10 @@
 package me.pdthx.Adapters;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-
 import me.pdthx.R;
 import me.pdthx.DoGood.DoGoodInfoActivity;
 import me.pdthx.Models.Organization;
-import me.pdthx.Models.PaystreamTransaction;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class OrganizationAdapter extends ArrayAdapter<Organization> {
 	protected static final int CHOSEN_ORG = 5;
@@ -78,7 +71,7 @@ private Context ctx;
 					txtHeader.setVisibility(View.GONE);
 				}
 			}
-			
+
 			if(picture != null)
 			{
 				if(o.getImageUri().length() > 0)
@@ -125,7 +118,7 @@ private Context ctx;
 							ref.putExtra("pic", picUri);
 							((Activity) ctx).startActivityForResult(ref, CHOSEN_ORG);
 						}
-						
+
 					});
 				}
 				else

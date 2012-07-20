@@ -59,7 +59,7 @@ public class BaseActivity extends Activity {
 	
 	protected static Thread contactThread;
 
-	protected int RETURNFROM_PROFILESETUP = 10;
+	protected final int SECURITYPIN = 300;
 
 	protected GoogleAnalyticsTracker tracker;
 	private ZubhiumSDK sdk;
@@ -245,6 +245,15 @@ public class BaseActivity extends Activity {
 			});
 
 		}
+	}
+
+	public void startSecurityPinActivity(String header, String body)
+	{
+	    Intent intent = new Intent(this, SecurityPinActivity.class);
+        intent.putExtra("headerText", header);
+        intent.putExtra("bodyText", body);
+
+        startActivityForResult(intent, SECURITYPIN);
 	}
 
 	public void onResume() {

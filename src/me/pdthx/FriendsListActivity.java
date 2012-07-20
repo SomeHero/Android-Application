@@ -166,7 +166,7 @@ public final class FriendsListActivity extends BaseActivity  {
                         if (current.matches("[0-9()-]+"))
                         {
                             String phone = current.replaceAll("[^0-9]", "");
-                            if (phone.length() == 10 || phone.length() == 7)
+                            if (phone.length() == 10)
                             {
                                 friend.setName("New Phone Contact");
                                 friend.setPaypoint(PhoneNumberFormatter.formatNumber(phone));

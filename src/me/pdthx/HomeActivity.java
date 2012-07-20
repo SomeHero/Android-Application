@@ -1,5 +1,6 @@
 package me.pdthx;
 
+import me.pdthx.Helpers.PhoneNumberFormatter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -198,7 +199,7 @@ public final class HomeActivity extends BaseActivity {
 			TextView txtPhoneNumber = (TextView)findViewById(R.id.home_phonenumber);
 			if(!userResponse.MobileNumber.equals("null"))
 			{
-				txtPhoneNumber.setText(userResponse.MobileNumber);
+				txtPhoneNumber.setText(PhoneNumberFormatter.formatNumber(userResponse.MobileNumber));
 			}
 			else
 			{

@@ -1,5 +1,6 @@
 package me.pdthx.Models;
 
+import java.util.ArrayList;
 import me.pdthx.Helpers.NameSeparator;
 import android.net.Uri;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ public class Friend implements Comparable<Friend> {
     private String paypoint = "";
     private Bitmap picture;
     private Uri pictureUri;
+    private ArrayList<String> paypoints = new ArrayList<String>();
 
     public String getId()
     {
@@ -65,6 +67,12 @@ public class Friend implements Comparable<Friend> {
     {
         this.pictureUri = pictureUri;
     }
+
+    public ArrayList<String> getPaypoints()
+    {
+        return paypoints;
+    }
+
     public boolean equals(Object other) {
         return other instanceof Friend && ((Friend)other).getId().equals(id);
     }
@@ -105,15 +113,27 @@ public class Friend implements Comparable<Friend> {
             return true;
         }
 
+        for (String paypoint : paypoints)
+        {
+            if (paypoint.toLowerCase().startsWith(search))
+            {
+                return true;
+            }
+        }
+
         return false;
     }
 
     public String toString() {
-        if (!paypoint.equals("")) {
-            return name + ": " + paypoint;
-        }
 
-        return name;
+        if (paypoints.size() != 0)
+        {
+            return name + ": " + paypoints.size() + " paypoints.";
+        }
+        else
+        {
+            return name;
+        }
     }
 
 }
