@@ -5,19 +5,15 @@
     android:orientation="vertical" >
 
     <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/list_header_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:paddingBottom="2dip"
         android:paddingLeft="5dip"
-        android:paddingTop="2dip"
-        android:textColor="#ffffff"
-        android:textColorHighlight="#ffffff" />
+        android:paddingTop="2dip" />
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="60dip"
         android:layout_weight="1"

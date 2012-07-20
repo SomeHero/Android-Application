@@ -118,6 +118,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name=".SelectRecipientActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name=".SendPaymentActivity"
             android:label="@string/app_name" >
         </activity>

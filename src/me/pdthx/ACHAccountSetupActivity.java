@@ -2,7 +2,7 @@ package me.pdthx;
 
 import java.io.FileInputStream;
 
-import com.googlecode.tesseract.android.TessBaseAPI;
+//import com.googlecode.tesseract.android.TessBaseAPI;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

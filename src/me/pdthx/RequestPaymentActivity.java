@@ -63,7 +63,6 @@ public class RequestPaymentActivity extends BaseActivity {
     final private int ADDACCOUNT_DIALOG = 7;
     final private int ADD_MONEY = 8;
     final private int SUBMITREQUEST_ACTION = 1;
-    final private int SECURITYPIN = 13;
     final private int CAMERA = 20;
 
     private Response paymentResponse;
@@ -386,13 +385,8 @@ public class RequestPaymentActivity extends BaseActivity {
 
                         if (prefs.getBoolean("hasACHAccount", false) || !prefs.getString("paymentAccountId", "").equals(""))
                         {
-                            Intent intent = new Intent(RequestPaymentActivity.this, SecurityPinActivity.class);
-                            intent.putExtra("headerText", "Confirm");
-                            intent.putExtra("bodyText",
-                                String.format("To confirm your payment of %s to %s, swipe you pin below.",
-                                txtAmount.getText(), friend.getName()));
-
-                            startActivityForResult(intent, SECURITYPIN);
+                            startSecurityPinActivity("Confirm", String.format("To confirm your payment of %s to %s, swipe you pin below.",
+                                    txtAmount.getText(), friend.getName()));
                         }
                         else
                         {
@@ -408,11 +402,12 @@ public class RequestPaymentActivity extends BaseActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Bundle bundle = data.getExtras();
+
 
         switch (resultCode)
         {
             case RESULT_OK:
+                Bundle bundle = data.getExtras();
                 switch (requestCode)
                 {
                     case ADDING_FRIEND:
@@ -443,9 +438,6 @@ public class RequestPaymentActivity extends BaseActivity {
                         break;
                     }
                 }
-                break;
-            case RESULT_CANCELED:
-                finish();
                 break;
         }
     }

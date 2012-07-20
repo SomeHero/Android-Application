@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.googlecode.tesseract.android.TessBaseAPI;
+//import com.googlecode.tesseract.android.TessBaseAPI;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -195,17 +195,17 @@ public class PhotoCaptureExample extends Activity {
 
 		Log.v(TAG, "Before baseApi");
 
-		TessBaseAPI baseApi = new TessBaseAPI();
-		baseApi.setDebug(true);
-		baseApi.init(DATA_PATH, "eng");
-		baseApi.setImage(bitmap);
-
-		String recognizedText = baseApi.getUTF8Text();
-
-		baseApi.end();
-
-		TextView result = (TextView) findViewById(R.id.txtResult);
-		result.setText(recognizedText);
+//		TessBaseAPI baseApi = new TessBaseAPI();
+//		baseApi.setDebug(true);
+//		baseApi.init(DATA_PATH, "eng");
+//		baseApi.setImage(bitmap);
+//
+//		String recognizedText = baseApi.getUTF8Text();
+//
+//		baseApi.end();
+//
+//		TextView result = (TextView) findViewById(R.id.txtResult);
+//		result.setText(recognizedText);
 	}
 
 	@Override
