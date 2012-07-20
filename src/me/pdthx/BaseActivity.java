@@ -49,14 +49,14 @@ public class BaseActivity extends Activity {
 	protected AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(
 			facebook);
 	protected static boolean signedInViaFacebook = false;
-	
+
 	private static boolean contactListAdded = false;
 	protected static boolean facebookFriendsAdded = false;
-	
-	private ContactList contactListRaw;
+
 	protected static ArrayList<Friend> contactList = new ArrayList<Friend>();
 	protected static ArrayList<Friend> friendsList = new ArrayList<Friend>();
-	
+	protected static ArrayList<Friend> combinedContactList = new ArrayList<Friend>();
+
 	protected static Thread contactThread;
 
 	protected final int SECURITYPIN = 300;
@@ -111,9 +111,10 @@ public class BaseActivity extends Activity {
 		{
 			Runnable run = new Runnable() {
 				public void run() {
-					contactListRaw = new ContactList(getBaseContext());				
+					ContactList contactListRaw = new ContactList(getBaseContext());
 					contactList.addAll(contactListRaw.getContacts());
 					contactListAdded = true;
+					combinedContactList.addAll(contactList);
 				}
 			};
 
@@ -124,6 +125,8 @@ public class BaseActivity extends Activity {
 				contactThread.start();
 			}
 		}
+
+
 		/*else
 		{
 			contactListRaw = new ContactList(getBaseContext());
@@ -209,6 +212,7 @@ public class BaseActivity extends Activity {
 						}
 
 						facebookFriendsAdded = true;
+						combinedContactList.addAll(friendsList);
 
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block

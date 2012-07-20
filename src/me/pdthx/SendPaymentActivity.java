@@ -565,7 +565,7 @@ public final class SendPaymentActivity extends BaseActivity {
         if (!id.equals(""))
         {
             chosenContact.setId(id);
-            friend = friendsList.get(friendsList.indexOf(chosenContact));
+            friend = combinedContactList.get(combinedContactList.indexOf(chosenContact));
 
             if (friend.isFBContact()) {
                 recipientUri = "fb_" + friend.getId();

@@ -104,7 +104,6 @@ private Context ctx;
 				if(o.getInfo().length() > 0)
 				{
 					txtInfo.setVisibility(View.VISIBLE);
-					final String theInfo = o.getInfo();
 					txtInfo.setOnClickListener(new OnClickListener(){
 
 						@Override

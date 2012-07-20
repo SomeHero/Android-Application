@@ -166,7 +166,7 @@ public class DoGoodIntroActivity extends BaseActivity {
 		ArrayList<Friend> all = new ArrayList<Friend>();
 		all.addAll(friendsList);
 		all.addAll(contactList);
-		
+
 		Friend chosenContact = new Friend();
 		if (!id.equals("")) {
 			chosenContact.setId(id);

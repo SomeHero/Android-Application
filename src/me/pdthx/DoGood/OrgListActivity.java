@@ -1,5 +1,6 @@
 package me.pdthx.DoGood;
 
+import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,7 +8,6 @@ import java.util.HashMap;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,17 +21,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import me.pdthx.BaseActivity;
-import me.pdthx.FriendsListActivity;
 import me.pdthx.R;
-import me.pdthx.SendPaymentActivity;
 import me.pdthx.Adapters.FriendAdapter;
 import me.pdthx.Adapters.OrganizationAdapter;
-import me.pdthx.Adapters.PaystreamAdapter;
 import me.pdthx.Helpers.PhoneNumberFormatter;
 import me.pdthx.Models.Friend;
 import me.pdthx.Models.Organization;
-import me.pdthx.Responses.OrganizationResponse;
-import me.pdthx.Services.PaymentServices;
 
 public class OrgListActivity extends BaseActivity {
 	protected static final int CHANGE_LIST = 6;
@@ -43,8 +38,8 @@ public class OrgListActivity extends BaseActivity {
 	private String currentNav;
 	private Button submitSearch;
 	private EditText searchBar;
+	private ImageView infoButton;
 
-	private ArrayList<Friend> allContacts;
 	private FriendAdapter m_adapter;
 	private final static int SETFRIENDIMAGE = 1;
 	private static HashMap<String, Bitmap> pictureMap;
@@ -74,10 +69,7 @@ public class OrgListActivity extends BaseActivity {
 	}
 
 	private void showOrgController() {
-		allContacts = new ArrayList<Friend>();
-		allContacts.addAll(contactList);
-		allContacts.addAll(friendsList);
-		Collections.sort(allContacts);
+		Collections.sort(combinedContactList);
 
 		createFakeList();
 
@@ -113,11 +105,11 @@ public class OrgListActivity extends BaseActivity {
 				String findRef = ref.getText().toString().trim();
 				if (findRef.length() > 0) {
 					ArrayList<Organization> change = searchList(findRef);
-					adapter = new OrganizationAdapter(getApplicationContext(),
+					adapter = new OrganizationAdapter(OrgListActivity.this,
 							R.layout.dogood_org_item, change);
 					theList.setAdapter(adapter);
 				} else {
-					adapter = new OrganizationAdapter(getApplicationContext(),
+					adapter = new OrganizationAdapter(OrgListActivity.this,
 							R.layout.dogood_org_item, orgList);
 					theList.setAdapter(adapter);
 				}
@@ -137,9 +129,9 @@ public class OrgListActivity extends BaseActivity {
 					ArrayList<Friend> searched = new ArrayList<Friend>();
 					current = s.toString();
 
-					for (int x = 0; x < friendsList.size(); x++) {
+					for (int x = 0; x <  combinedContactList.size(); x++) {
 
-						Friend friend = friendsList.get(x);
+						Friend friend = combinedContactList.get(x);
 						if (friend.masterSearch(current.toLowerCase())) {
 							searched.add(friend);
 						}
@@ -147,7 +139,7 @@ public class OrgListActivity extends BaseActivity {
 
 					if (searchBar.getText().toString().length() == 0) {
 						m_adapter = new FriendAdapter(OrgListActivity.this,
-								R.layout.friend_item, friendsList);
+								R.layout.friend_item, combinedContactList);
 					} else {
 						if (searched.size() > 0) {
 							m_adapter = new FriendAdapter(OrgListActivity.this,
@@ -241,13 +233,13 @@ public class OrgListActivity extends BaseActivity {
 				String result = bundle.getString("result");
 				if (result.equals("allContacts")) {
 					TextView txtEmptyList = (TextView) findViewById(R.id.txtEmptyList);
-					if (allContacts.size() == 0) {
+					if (combinedContactList.isEmpty()) {
 						theList.setVisibility(View.GONE);
 						txtEmptyList.setVisibility(View.VISIBLE);
 					} else {
 						theList.setVisibility(View.VISIBLE);
-						m_adapter = new FriendAdapter(getApplicationContext(),
-								R.layout.friend_item, allContacts);
+						m_adapter = new FriendAdapter(OrgListActivity.this,
+								R.layout.friend_item, combinedContactList);
 						theList.setAdapter(m_adapter);
 						//m_adapter.notifyDataSetChanged();
 						currentNav = "allContacts";
@@ -264,7 +256,7 @@ public class OrgListActivity extends BaseActivity {
 						txtEmptyList.setVisibility(View.VISIBLE);
 					} else {
 						theList.setVisibility(View.VISIBLE);
-						m_adapter = new FriendAdapter(getApplicationContext(),
+						m_adapter = new FriendAdapter(OrgListActivity.this,
 								R.layout.friend_item, contactList);
 						m_adapter.notifyDataSetChanged();
 						theList.setAdapter(m_adapter);
@@ -283,7 +275,7 @@ public class OrgListActivity extends BaseActivity {
 					} else {
 						theList.setVisibility(View.VISIBLE);
 						txtEmptyList.setVisibility(View.GONE);
-						m_adapter = new FriendAdapter(getApplicationContext(),
+						m_adapter = new FriendAdapter(OrgListActivity.this,
 								R.layout.friend_item, friendsList);
 						m_adapter.notifyDataSetChanged();
 						theList.setAdapter(m_adapter);
@@ -299,9 +291,9 @@ public class OrgListActivity extends BaseActivity {
 						theList.setVisibility(View.GONE);
 						txtEmptyList.setVisibility(View.VISIBLE);
 					} else {
-						
+
 						theList.setVisibility(View.VISIBLE);
-						adapter = new OrganizationAdapter(getApplicationContext(),
+						adapter = new OrganizationAdapter(OrgListActivity.this,
 								R.layout.dogood_org_item, orgList);
 						theList.setAdapter(adapter);
 						currentNav = "nonProfits";
@@ -332,7 +324,7 @@ public class OrgListActivity extends BaseActivity {
 		// GET FROM SERVER --->
 		/*ArrayList<OrganizationResponse> nonProfitListResponse = PaymentServices.getOrgs("NonProfits");
 		ArrayList<OrganizationResponse> organizationResponse = PaymentServices.getOrgs("Organizations");
-		
+
 		ArrayList<Organization> translateNonProfit = new ArrayList<Organization>();
 		for(int i = 0; i < nonProfitListResponse.size(); i++)
 		{
@@ -344,10 +336,10 @@ public class OrgListActivity extends BaseActivity {
 			ref.setPreferredReceive(nonProfitListResponse.get(i).PreferredReceiveAccountId);
 			ref.setPreferredSend(nonProfitListResponse.get(i).PreferredSendAccountId);
 			ref.setInfo("");
-			
+
 			translateNonProfit.add(ref);
 		}
-		
+
 		ArrayList<Organization> translateOrganization = new ArrayList<Organization>();
 		for(int i = 0; i < organizationResponse.size(); i++)
 		{
@@ -359,10 +351,10 @@ public class OrgListActivity extends BaseActivity {
 			ref.setPreferredReceive(organizationResponse.get(i).PreferredReceiveAccountId);
 			ref.setPreferredSend(organizationResponse.get(i).PreferredSendAccountId);
 			ref.setInfo("");
-			
+
 			translateNonProfit.add(ref);
 		}*/
-		
+
 		String path = "android.resource://me.pdthx/drawable/";
 		// Uri path = Uri.parse("android.resource://me.pdthx/");
 		String h = "ALL CAUSES";
