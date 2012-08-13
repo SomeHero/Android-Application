@@ -24,10 +24,8 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-public class PaystreamService {
+public class PaystreamService extends GlobalVariables {
 
-    private static final String ROOTURL = "http://23.21.203.171/api/internal/api";
-    private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
     private static final String PAYSTREAMMESSAGES_URL = "/Users/%s/PayStreamMessages";
     private static final String CANCELMESSAGE_URL = "/PayStreamMessages/%s/cancel_payment";
     private static final String REFUNDMESSAGE_URL = "/PayStreamMessages/%s/refund_payment";

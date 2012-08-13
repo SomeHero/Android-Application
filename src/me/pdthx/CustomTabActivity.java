@@ -53,35 +53,23 @@ public class CustomTabActivity extends TabActivity {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.tab_home_selector), "Home", intent);
 
-		intent = new Intent(mTabHost.getContext(), SendPaymentActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		setupTab(res.getDrawable(R.drawable.tab_send_selector), "Send $", intent);
-
 		intent = new Intent(mTabHost.getContext(), RequestPaymentActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.tab_request_selector), "Req $", intent);
 
-		intent = new Intent(mTabHost.getContext(), PaystreamActivity.class);
+		intent = new Intent(mTabHost.getContext(), SendPaymentActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		setupTab(res.getDrawable(R.drawable.tab_stream_selector), "Stream", intent);
-		
+		setupTab(res.getDrawable(R.drawable.tab_send_selector), "Send $", intent);
+
 		intent = new Intent(mTabHost.getContext(), DoGoodIntroActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.tab_dogood_selector), "Do Good", intent);
 
-		if (getIntent().getExtras() == null)
-		{
-		    mTabHost.setCurrentTab(0);
-		}
-		else
-		{
-		    mTabHost.setCurrentTab(getIntent().getExtras().getInt("tab"));
-		}
+		intent = new Intent(mTabHost.getContext(), PaystreamActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		setupTab(res.getDrawable(R.drawable.tab_stream_selector), "Stream", intent);
 
-		// intent = new Intent(CustomTabActivity.this,
-		// VerifyMobileNumberActivity.class);
-		// startActivityForResult(intent, 0);
-
+		mTabHost.setCurrentTab(getIntent().getIntExtra("tab", 0));
 	}
 
 	public void switchTab(int tab) {

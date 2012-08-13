@@ -105,10 +105,6 @@ public final class FriendAdapter extends ArrayAdapter<Friend> implements Section
                 {
                     txtPaypoint.setText(o.getPaypoints().size() + " valid paypoints.");
                 }
-                else
-                {
-                    txtPaypoint.setText(o.getPaypoint());
-                }
             }
         }
         Drawable drawableRow = v.getResources().getDrawable(

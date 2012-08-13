@@ -1,5 +1,6 @@
 package me.pdthx;
 
+import me.pdthx.Models.Organization;
 import android.content.pm.ActivityInfo;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -56,6 +57,8 @@ public class BaseActivity extends Activity {
 	protected static ArrayList<Friend> contactList = new ArrayList<Friend>();
 	protected static ArrayList<Friend> friendsList = new ArrayList<Friend>();
 	protected static ArrayList<Friend> combinedContactList = new ArrayList<Friend>();
+	protected static ArrayList<Organization> nonProfitsList = new ArrayList<Organization>();
+	protected static ArrayList<Organization> organizationsList = new ArrayList<Organization>();
 
 	protected static Thread contactThread;
 
@@ -64,11 +67,20 @@ public class BaseActivity extends Activity {
 	protected GoogleAnalyticsTracker tracker;
 	private ZubhiumSDK sdk;
 
+	public static void setNonProfitsList(ArrayList<Organization> newNonProfitsList)
+	{
+	    nonProfitsList = newNonProfitsList;
+	}
+	public static void setOrganizationsList(ArrayList<Organization> newOrganizationsList)
+	{
+	    organizationsList = newOrganizationsList;
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		tracker = GoogleAnalyticsTracker.getInstance();
 		tracker.startNewSession("UA-30208011-10", 5, this);
@@ -108,31 +120,23 @@ public class BaseActivity extends Activity {
 		}
 
 		if (contactList == null || contactList.size() == 0)
-		{
-			Runnable run = new Runnable() {
-				public void run() {
-					ContactList contactListRaw = new ContactList(getBaseContext());
-					contactList.addAll(contactListRaw.getContacts());
-					contactListAdded = true;
-					combinedContactList.addAll(contactList);
-				}
-			};
+        {
+            Runnable run = new Runnable() {
+                public void run() {
+                    ContactList contactListRaw = new ContactList(getBaseContext());
+                    contactList = contactListRaw.getContacts();
+                    contactListAdded = true;
+                    combinedContactList.addAll(contactList);
+                }
+            };
 
-			if (!contactListAdded)
-			{
-				contactListAdded = true;
-				contactThread = new Thread(run);
-				contactThread.start();
-			}
-		}
-
-
-		/*else
-		{
-			contactListRaw = new ContactList(getBaseContext());
-			contactList.addAll(contactListRaw.getContacts());
-			contactListAdded = true;
-		}*/
+            if (!contactListAdded)
+            {
+                contactListAdded = true;
+                contactThread = new Thread(run);
+                contactThread.start();
+            }
+        }
 
 	}
 
@@ -155,7 +159,7 @@ public class BaseActivity extends Activity {
 		}
 	}
 
-	public void signInWithFacebook(String[] permissions) {
+	protected void signInWithFacebook(String[] permissions) {
 		if (!facebook.isSessionValid())
 		{
 			facebook.authorize(this, permissions, 2,
@@ -185,15 +189,17 @@ public class BaseActivity extends Activity {
 		}
 	}
 
-	private void requestFacebookFriends() {
+	protected void requestFacebookFriends() {
 
 		if (signedInViaFacebook && !facebookFriendsAdded) {
+			facebookFriendsAdded = true;
 			mAsyncRunner.request("me/friends", new RequestListener(){
 
 				@Override
 				public void onComplete(String response, Object state) {
 
 					try {
+					    ArrayList<Friend> tempList = new ArrayList<Friend>();
 						JSONObject json = new JSONObject(response);
 						JSONArray d = json.getJSONArray("data");
 						int l = (d != null ? d.length() : 0);
@@ -206,49 +212,85 @@ public class BaseActivity extends Activity {
 							f.setId(id);
 							f.setName(n);
 							f.setFBContact(true);
-							friendsList.add(f);
+							f.getPaypoints().add("fb_" + id);
+							tempList.add(f);
 							Log.d(f.getName() + ": " + f.getId(), "Facebook Friends");			//SWEEETTNNEEESESSS
-
 						}
 
-						facebookFriendsAdded = true;
+						friendsList = tempList;
 						combinedContactList.addAll(friendsList);
+
 
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+					    facebookFriendsAdded = false;
+					    e.printStackTrace();
 					}
 				}
 
 				@Override
 				public void onIOException(IOException e, Object state) {
 					// TODO Auto-generated method stub
-
+				    facebookFriendsAdded = false;
 				}
 
 				@Override
 				public void onFileNotFoundException(FileNotFoundException e,
 						Object state) {
 					// TODO Auto-generated method stub
-
+				    facebookFriendsAdded = false;
 				}
 
 				@Override
 				public void onMalformedURLException(MalformedURLException e,
 						Object state) {
 					// TODO Auto-generated method stub
-
+				    facebookFriendsAdded = false;
 				}
 
 				@Override
 				public void onFacebookError(FacebookError e, Object state) {
 					// TODO Auto-generated method stub
-
+				    facebookFriendsAdded = false;
 				}
 
 			});
 
 		}
+	}
+
+	/**
+	 * This is called whenever a contact is selected.
+	 * This will force the app to open the correct tab
+	 */
+	public void contactSelected(int type, boolean sendingMoney, String id)
+	{
+	    if (type == 0 || type == 1 || type == 2)
+	    {
+	        if (sendingMoney)
+	        {
+	            //SendPayment
+	            if (getCallingActivity().getClassName().equals("SendPaymentActivity"))
+	            {
+	                //finish activity.
+	            }
+	            else {
+
+	            }
+	        }
+	        else {
+	            //RequestPayment
+	        }
+	    }
+	    else {
+	        if (sendingMoney)
+	        {
+	            //DonateMoney
+	        }
+	        else {
+	            //AcceptPledge
+	        }
+	    }
 	}
 
 	public void startSecurityPinActivity(String header, String body)
@@ -263,6 +305,13 @@ public class BaseActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		facebook.extendAccessTokenIfNeeded(this, null);
+
+	}
+
+	public void onDestroy() {
+	    super.onDestroy();
+        System.gc();
+        Runtime.getRuntime().gc();
 	}
 
 	@Override
@@ -270,7 +319,7 @@ public class BaseActivity extends Activity {
 	{
 	    if (!progressDialog.isShowing())
 	    {
-	        finish();
+	        super.onBackPressed();
 	    }
 	}
 
@@ -312,6 +361,7 @@ public class BaseActivity extends Activity {
 
 		facebookFriendsAdded = false;
 		friendsList.clear();
+		combinedContactList.clear();
 
 		contactListAdded = false;
 		signedInViaFacebook = false;

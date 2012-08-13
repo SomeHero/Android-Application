@@ -30,7 +30,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 	public void createNotification(Context context, String notificationTitleText, String mUserId, String transactionId) {
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.icon,
+		Notification notification = new Notification(R.drawable.paidthx_icon,
 				notificationTitleText, System.currentTimeMillis());
 		// Hide the notification after its selected
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;

@@ -1,5 +1,8 @@
 package me.pdthx;
 
+import me.pdthx.Adapters.ContactAdapter;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Spinner;
 import android.app.ProgressDialog;
 import android.provider.ContactsContract;
 import android.net.Uri;
@@ -38,9 +41,12 @@ public final class FriendsListActivity extends BaseActivity  {
     public static final String TAG = "FriendListActivity";
     private ListView mListView = null;
     private TextView mEmptyTextView = null;
+    private Spinner selectContactType;
+    private ContactAdapter selectContactAdapter;
     private final static int SETFRIENDIMAGE = 1;
     private static HashMap<String, Bitmap> pictureMap;
     private EditText searchBar = null;
+    private ArrayList<String> contactTypes = new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +81,17 @@ public final class FriendsListActivity extends BaseActivity  {
 
         mListView = (ListView) findViewById(R.id.lvFriends);
         searchBar = (EditText) findViewById(R.id.searchBar);
+        selectContactType = (Spinner) findViewById(R.id.contacttype_select);
+
+        contactTypes.add("All Contacts");
+        contactTypes.add("Phone Contacts");
+        contactTypes.add("Facebook Contacts");
+
+        selectContactAdapter = new ContactAdapter(this, R.layout.contacttype_closed, contactTypes);
+        selectContactAdapter.setDropDownViewResource(R.layout.contacttype_item);
+
+        selectContactType.setAdapter(selectContactAdapter);
+
         mListView.setOnScrollListener(mOnScrollListener);
 
         mEmptyTextView = (TextView)findViewById(R.id.txtEmptyFriendList);
@@ -112,12 +129,47 @@ public final class FriendsListActivity extends BaseActivity  {
                 }
                 else
                 {
-                    data.putExtra("paypoint", chosenFriend.getPaypoint());
+                    data.putExtra("paypoint", chosenFriend.getPaypoints().get(0));
                 }
 
                 setResult(RESULT_OK, data);
                 finish();
             }
+        });
+
+        selectContactType.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(
+                AdapterView<?> arg0,
+                View arg1,
+                int arg2,
+                long arg3)
+            {
+                if (arg2 == 0)
+                {
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, combinedContactList);
+                }
+
+                if (arg2 == 1)
+                {
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, contactList);
+                }
+
+                if (arg2 == 2)
+                {
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, friendsList);
+                }
+
+                mListView.setAdapter(m_adapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0)
+            {
+                // Auto-generated method stub
+            }
+
         });
 
         searchBar.addTextChangedListener(new TextWatcher() {
@@ -153,36 +205,36 @@ public final class FriendsListActivity extends BaseActivity  {
                     else
                     {
                         Log.d("No match found", "Maybe new person?");
-                        Friend friend = new Friend();
+                        Friend newContact = new Friend();
 
-                        friend.setName("'" + current + "' not found");
-                        friend.setPaypoint("Continue typing or check entry");
+                        newContact.setName("'" + current + "' not found");
+                        newContact.getPaypoints().add("Continue typing or check entry");
 
                         if (current.matches("[0-9()-]+"))
                         {
                             String phone = current.replaceAll("[^0-9]", "");
                             if (phone.length() == 10)
                             {
-                                friend.setName("New Phone Contact");
-                                friend.setPaypoint(PhoneNumberFormatter.formatNumber(phone));
+                                newContact.setName("New Phone Contact");
+                                newContact.getPaypoints().add(PhoneNumberFormatter.formatNumber(phone));
                             }
                         }
 
                         if (current.contains("@") && current.contains("."))
                         {
-                            friend.setName("New Email Address");
-                            friend.setPaypoint(current);
+                            newContact.setName("New Email Address");
+                            newContact.getPaypoints().add(current);
                         }
 
                         if (current.charAt(0) == '$')
                         {
-                            friend.setName("New MeCode");
-                            friend.setPaypoint(current);
+                            newContact.setName("New MeCode");
+                            newContact.getPaypoints().add(current);
                         }
 
-                        ArrayList<Friend> newContact = new ArrayList<Friend>();
-                        newContact.add(friend);
-                        m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, newContact);
+                        ArrayList<Friend> searchedContacts = new ArrayList<Friend>();
+                        searchedContacts.add(newContact);
+                        m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, searchedContacts);
                     }
                 }
                 mListView.setAdapter(m_adapter);

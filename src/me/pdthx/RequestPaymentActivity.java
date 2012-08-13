@@ -1,5 +1,8 @@
 package me.pdthx;
 
+import me.pdthx.Requests.MultipleURIRequest;
+import me.pdthx.Responses.MultipleURIResponse;
+import me.pdthx.Responses.ResponseArrayList;
 import java.io.FileInputStream;
 import java.text.NumberFormat;
 
@@ -37,6 +40,7 @@ public class RequestPaymentActivity extends BaseActivity {
     private String recipientUri;
     private double amount = 0;
     private String comments = "";
+    private String errorMessage = "";
 
     private Location location;
     private LocationManager locationManager;
@@ -59,6 +63,8 @@ public class RequestPaymentActivity extends BaseActivity {
     final private int SUBMITREQUESTSUCCESS_DIALOG = 4;
     final private int INVALIDPASSCODELENGTH_DIALOG = 5;
     final private int PAYMENTEXCEEDSLIMIT_DIALOG = 6;
+    final private int SUBMITPAYMENT_MULTIPLEURIS = 15;
+    final private int SELECT_RECIPIENT = 16;
 
     final private int ADDACCOUNT_DIALOG = 7;
     final private int ADD_MONEY = 8;
@@ -79,6 +85,7 @@ public class RequestPaymentActivity extends BaseActivity {
                         showDialog(SUBMITREQUESTSUCCESS_DIALOG);
 
                     } else if (paymentResponse != null) {
+                        errorMessage = paymentResponse.ReasonPhrase;
                         showDialog(SUBMITREQUESTFAILED_DIALOG);
                     } else {
                         showDialog(SUBMITREQUESTFAILED_DIALOG);
@@ -88,7 +95,7 @@ public class RequestPaymentActivity extends BaseActivity {
                 case ADDACCOUNT_DIALOG:
                     alertDialog.setTitle("No ACH Account Setup");
                     alertDialog.setMessage("This user account has no bank account attached, " +
-                        "in order to send a payment, you must add a bank account. " +
+                        "in order to request a payment, you must add a bank account. " +
                         "After adding a bank account, you will return to this screen " +
                         "with all the information filled in.");
                     alertDialog.setButton("Cancel", new DialogInterface.OnClickListener() {
@@ -108,7 +115,7 @@ public class RequestPaymentActivity extends BaseActivity {
                         {
                             // TODO Auto-generated method stub
                             Intent intent = new Intent(RequestPaymentActivity.this, ACHAccountSetupActivity.class);
-                            intent.putExtra("tab", 2);
+                            intent.putExtra("tab", 1);
                             dialog.dismiss();
                             startActivity(intent);
                         }
@@ -204,12 +211,83 @@ public class RequestPaymentActivity extends BaseActivity {
                 thread.start();
 
                 return dialog;
+            case SUBMITPAYMENT_MULTIPLEURIS:
+                progressDialog.setMessage("Finding recipient...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+                thread = new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        ResponseArrayList<MultipleURIResponse> response = new ResponseArrayList<MultipleURIResponse>();
+                        MultipleURIRequest request = new MultipleURIRequest();
+                        request.recipientUris.addAll(friend.getPaypoints());
+
+                        response = PaymentServices.determineRecipient(request);
+
+
+                        removeDialog(SUBMITPAYMENT_MULTIPLEURIS);
+
+                        if (response.Success)
+                        {
+                            if (response.size() != 1)
+                            {
+                                Intent intent = new Intent(RequestPaymentActivity.this, SelectRecipientActivity.class);
+
+                                if (response.size() != 0)
+                                {
+
+                                    String[] recipientUris = new String[response.size()];
+                                    String[] recipientStrings = new String[response.size()];
+
+                                    for (int i = 0; i < response.size(); i++)
+                                    {
+                                        recipientUris[i] = response.get(i).UserUri;
+                                    }
+
+                                    for (int i = 0; i < response.size(); i++)
+                                    {
+                                        recipientStrings[i] = response.get(i).toString();
+                                    }
+                                    intent.putExtra("uris", recipientUris);
+                                    intent.putExtra("recipients", recipientStrings);
+                                }
+                                else {
+                                    String[] recipientUris = new String[request.recipientUris.size()];
+                                    request.recipientUris.toArray(recipientUris);
+
+                                    intent.putExtra("uris", recipientUris);
+                                    intent.putExtra("recipients", recipientUris);
+                                }
+
+                                startActivityForResult(intent, SELECT_RECIPIENT);
+                            }
+                            else
+                            {
+                                recipientUri = response.get(0).UserUri;
+                                startSecurityPinActivity("Confirm", String.format("To confirm your payment of %s to %s, swipe you pin below.",
+                                    txtAmount.getText(), friend.getName()));
+                            }
+                        }
+                        else
+                        {
+                            errorMessage = response.ReasonPhrase;
+                            showDialog(SUBMITREQUESTFAILED_DIALOG);
+                        }
+                    }
+
+                });
+                dialog = progressDialog;
+                thread.start();
+
+                return dialog;
             case SUBMITREQUESTFAILED_DIALOG:
                 alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("Failed");
 
                 alertDialog
-                .setMessage(paymentResponse.ReasonPhrase);
+                .setMessage(errorMessage);
                 alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -359,7 +437,9 @@ public class RequestPaymentActivity extends BaseActivity {
                 }
                 comments = txtComments.getText().toString();
 
-                if (isValid & recipientUri.length() == 0) {
+                int numPaypoints = friend != null ? friend.getPaypoints().size() : 0;
+
+                if (isValid & numPaypoints == 0) {
                     showDialog(NORECIPIENTSPECIFIED_DIALOG);
                     isValid = false;
                 }
@@ -385,8 +465,16 @@ public class RequestPaymentActivity extends BaseActivity {
 
                         if (prefs.getBoolean("hasACHAccount", false) || !prefs.getString("paymentAccountId", "").equals(""))
                         {
-                            startSecurityPinActivity("Confirm", String.format("To confirm your payment of %s to %s, swipe you pin below.",
+                            if (numPaypoints == 1)
+                            {
+                                recipientUri = friend.getPaypoints().get(0);
+                                startSecurityPinActivity("Confirm", String.format("To confirm your payment of %s to %s, swipe you pin below.",
                                     txtAmount.getText(), friend.getName()));
+                            }
+                            else if (numPaypoints > 1)
+                            {
+                                showDialog(SUBMITPAYMENT_MULTIPLEURIS);
+                            }
                         }
                         else
                         {
@@ -421,6 +509,11 @@ public class RequestPaymentActivity extends BaseActivity {
                         passcode = bundle.getString("passcode");
                         showDialog(SUBMITREQUEST_DIALOG);
                         break;
+                    case SELECT_RECIPIENT:
+                        recipientUri = data.getStringExtra("uri");
+                        startSecurityPinActivity("Confirm", String.format("To confirm your payment of %s to %s, swipe you pin below.",
+                            txtAmount.getText(), friend.getName()));
+                        break;
                     case CAMERA:
                     {
                         try{
@@ -442,53 +535,6 @@ public class RequestPaymentActivity extends BaseActivity {
         }
     }
 
-//    protected void showSecurityPinDialog() {
-//        final Dialog d = new Dialog(RequestPaymentActivity.this, R.style.CustomDialogTheme);
-//        d.setContentView(R.layout.security_dialog);
-//
-//        d.getWindow().setLayout(400, 600);
-//        d.show();
-//
-//        TextView txtConfirmHeader = (TextView)d.findViewById(R.id.setupSecurityHeader);
-//        TextView txtConfirmBody = (TextView)d.findViewById(R.id.setupSecurityBody);
-//
-//        txtConfirmHeader.setText("Confirm Your Request");
-//        txtConfirmBody.setText(
-//            String.format("To confirm your request for %s from %s, swipe you pin below.",
-//                txtAmount.getText(), friend.getName()));
-//
-//        Button btnCancel = (Button) d.findViewById(R.id.btnCancelSendMoney);
-//        btnCancel.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                d.dismiss();
-//            }
-//        });
-//
-//        final CustomLockView ctrlSecurityPin = (CustomLockView) d.findViewById(R.id.ctrlSecurityPin);
-//        ctrlSecurityPin.invalidate();
-//        ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                passcode = ctrlSecurityPin.getPasscode();
-//
-//                if (passcode.length() > 3) {
-//
-//                    amount = Double.parseDouble(txtAmount.getText().toString()
-//                        .replaceAll("[$,]*", ""));
-//                    comments = txtComments.getText().toString();
-//                    passcode = ctrlSecurityPin.getPasscode();
-//
-//                    d.dismiss();
-//
-//                    showDialog(SUBMITREQUEST_DIALOG);
-//                } else
-//                    showDialog(INVALIDPASSCODELENGTH_DIALOG);
-//
-//                return false;
-//            }
-//        });
-//    }
-
     private void addingContact(String id, String paypoint) {
         Friend chosenContact = new Friend();
         if (id != null)
@@ -501,14 +547,14 @@ public class RequestPaymentActivity extends BaseActivity {
                 btnAddContacts.setText(friend.getName() + ": " + friend.getId());
             }
             else {
-                recipientUri = "" + friend.getPaypoint();
+                //recipientUri = "" + friend.getPaypoint();
                 btnAddContacts.setText(friend.toString());
             }
         }
         else
         {
             chosenContact.setName("New Contact");
-            chosenContact.setPaypoint(paypoint);
+            chosenContact.getPaypoints().add(paypoint);
             friend = chosenContact;
             recipientUri = "" + paypoint;
             btnAddContacts.setText("New contact: " + paypoint);
@@ -520,19 +566,18 @@ public class RequestPaymentActivity extends BaseActivity {
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.UserId = prefs.getString("userId", "");
         paymentRequest.SenderAccountId = prefs.getString("paymentAccountId", "");
-        paymentRequest.SenderUri = prefs.getString("login", "");
         paymentRequest.RecipientUri = recipientUri;
         paymentRequest.Amount = Double.parseDouble(txtAmount.getText().toString()
-            .replaceAll("[$,]*", ""));;
-            paymentRequest.Comments = comments;
-            paymentRequest.SecurityPin = passcode;
+            .replaceAll("[$,]*", ""));
+        paymentRequest.Comments = comments;
+        paymentRequest.SecurityPin = passcode;
 
-            if (location != null) {
-                paymentRequest.Latitude = location.getLatitude();
-                paymentRequest.Longitude = location.getLongitude();
-            }
+        if (location != null) {
+            paymentRequest.Latitude = location.getLatitude();
+            paymentRequest.Longitude = location.getLongitude();
+        }
 
-            paymentResponse = PaymentServices.requestMoney(paymentRequest);
+        paymentResponse = PaymentServices.requestMoney(paymentRequest);
     }
 
     /** Determines whether one Location reading is better than the current Location fix
