@@ -1,6 +1,6 @@
 package me.pdthx.Models;
 
-public class Organization {
+public class Organization implements Comparable<Organization> {
 
     private String id = "";
 	private String name = "";
@@ -16,9 +16,9 @@ public class Organization {
         return id;
     }
 
-    public void setId(String _id)
+    public void setId(String id)
     {
-        this.id = _id;
+        this.id = id;
     }
 
     public void setImageUri(String uri)
@@ -52,15 +52,15 @@ public class Organization {
 	}
 
 	public void setName(String name) {
-		name = name;
+		this.name = name;
 	}
 
 	public void setSlogan(String slogan) {
-		slogan = slogan;
+		this.slogan = slogan;
 	}
 
 	public void setInfo(String info) {
-		info = info;
+		this.info = info;
 	}
 
 	public String getName() {
@@ -89,5 +89,11 @@ public class Organization {
     public boolean search(String searchString)
     {
         return name.startsWith(searchString);
+    }
+
+    @Override
+    public int compareTo(Organization another)
+    {
+        return this.name.compareToIgnoreCase(another.name);
     }
 }

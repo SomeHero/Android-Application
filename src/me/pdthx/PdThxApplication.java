@@ -1,5 +1,6 @@
 package me.pdthx;
 
+import java.util.Collections;
 import android.util.Log;
 import me.pdthx.Responses.OrganizationResponse;
 import me.pdthx.Services.PaymentServices;
@@ -39,6 +40,7 @@ public class PdThxApplication
                    nonProfitsList.add(ref);
                }
 
+               Collections.sort(nonProfitsList);
                BaseActivity.setNonProfitsList(nonProfitsList);
 
                for(int i = 0; i < organizationResponse.size(); i++)
@@ -53,7 +55,7 @@ public class PdThxApplication
 
                    organizationsList.add(ref);
                }
-
+               Collections.sort(organizationsList);
                BaseActivity.setOrganizationsList(organizationsList);
            }
         }).start();

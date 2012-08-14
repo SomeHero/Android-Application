@@ -1,30 +1,19 @@
 package me.pdthx.DoGood;
 
-import me.pdthx.FriendsListActivity;
-import me.pdthx.Services.PaymentServices;
-import me.pdthx.Responses.OrganizationResponse;
 import java.util.ArrayList;
-import java.util.Collections;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import me.pdthx.BaseActivity;
 import me.pdthx.R;
-import me.pdthx.Adapters.FriendAdapter;
 import me.pdthx.Adapters.OrganizationAdapter;
-import me.pdthx.Helpers.PhoneNumberFormatter;
-import me.pdthx.Models.Friend;
 import me.pdthx.Models.Organization;
 
 public class OrgListActivity extends BaseActivity {
@@ -32,7 +21,6 @@ public class OrgListActivity extends BaseActivity {
 	private static final int CHOSE_ORG = 5;
 	private ListView theList;
 	private OrganizationAdapter adapter;
-	private String currentNav;
 	private Button submitSearch;
 	private EditText searchBar;
 
@@ -40,7 +28,6 @@ public class OrgListActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.donate_contacts);
-		currentNav = "nonProfits";
 		showOrgController();
 	}
 
@@ -69,21 +56,6 @@ public class OrgListActivity extends BaseActivity {
                         adapter = new OrganizationAdapter(OrgListActivity.this, R.layout.dogood_org_item,
                             tempList);
                     }
-				}
-				else {
-				    if (currentNav.equals("nonProfits"))
-				    {
-				        adapter = new OrganizationAdapter(OrgListActivity.this, R.layout.dogood_org_item,
-				            nonProfitsList);
-				    }
-				    else if (currentNav.equals("pubDirectory"))
-				    {
-				        adapter = new OrganizationAdapter(OrgListActivity.this, R.layout.dogood_org_item,
-                            organizationsList);
-				    }
-				    else {
-				        //Do nothing.
-				    }
 				}
 			}
 

@@ -12,7 +12,7 @@ import android.widget.Button;
 @SuppressWarnings("deprecation")
 public class DoGoodIntroActivity extends BaseActivity {
 
-    private boolean atIntroScreen = true;
+    private static boolean atIntroScreen = true;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,9 +45,10 @@ public class DoGoodIntroActivity extends BaseActivity {
 
 	public void replaceContentView(String id, Intent newIntent)
 	{
+	    atIntroScreen = false;
 	    View view = ((ActivityGroup) getParent()).getLocalActivityManager().startActivity(id, newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
 	    setContentView(view);
-	    atIntroScreen = false;
+
 	}
 
     @Override
@@ -58,9 +59,9 @@ public class DoGoodIntroActivity extends BaseActivity {
             finish();
         }
         else {
+            atIntroScreen = true;
             View view = ((ActivityGroup) getParent()).getLocalActivityManager().startActivity("Do Good", new Intent(DoGoodIntroActivity.this, DoGoodIntroActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)).getDecorView();
             setContentView(view);
-            atIntroScreen = true;
         }
 
     }

@@ -1,5 +1,6 @@
 package me.pdthx;
 
+import java.util.Collections;
 import me.pdthx.Models.Organization;
 import android.content.pm.ActivityInfo;
 import java.io.FileNotFoundException;
@@ -126,6 +127,7 @@ public class BaseActivity extends Activity {
                     ContactList contactListRaw = new ContactList(getBaseContext());
                     contactList = contactListRaw.getContacts();
                     contactListAdded = true;
+                    Collections.sort(contactList);
                     combinedContactList.addAll(contactList);
                 }
             };
@@ -218,6 +220,7 @@ public class BaseActivity extends Activity {
 						}
 
 						friendsList = tempList;
+						Collections.sort(friendsList);
 						combinedContactList.addAll(friendsList);
 
 
@@ -257,40 +260,6 @@ public class BaseActivity extends Activity {
 			});
 
 		}
-	}
-
-	/**
-	 * This is called whenever a contact is selected.
-	 * This will force the app to open the correct tab
-	 */
-	public void contactSelected(int type, boolean sendingMoney, String id)
-	{
-	    if (type == 0 || type == 1 || type == 2)
-	    {
-	        if (sendingMoney)
-	        {
-	            //SendPayment
-	            if (getCallingActivity().getClassName().equals("SendPaymentActivity"))
-	            {
-	                //finish activity.
-	            }
-	            else {
-
-	            }
-	        }
-	        else {
-	            //RequestPayment
-	        }
-	    }
-	    else {
-	        if (sendingMoney)
-	        {
-	            //DonateMoney
-	        }
-	        else {
-	            //AcceptPledge
-	        }
-	    }
 	}
 
 	public void startSecurityPinActivity(String header, String body)

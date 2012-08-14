@@ -53,7 +53,7 @@ public class DonateActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.dogood_controller);
+        setContentView(R.layout.dogood_controller);
         showDonateActivity();
     }
 
