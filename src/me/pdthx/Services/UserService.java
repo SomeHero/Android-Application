@@ -43,9 +43,8 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-public class UserService {
-	private static final String ROOTURL = "http://23.21.203.171/api/internal/api";
-	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
+public class UserService extends GlobalVariables {
+
 	private static final String USERSIGNINSERVICE_URL = "/Users/Validate_User?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String USERFBSIGNINSERVICE_URL = "/Users/signin_withfacebook?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String REGISTER_URL = "/Users?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
@@ -1017,7 +1016,7 @@ public class UserService {
 
 		return userResponse;
 	}
-	
+
 	public static UserCheckImageResponse sendCheckImage(UserCheckImageRequest userRequest){
 		UserCheckImageResponse checkResponse =  new UserCheckImageResponse();
 		HttpResponse response = null;

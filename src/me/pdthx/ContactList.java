@@ -34,44 +34,46 @@ public class ContactList {
             contact.setId(new UUID(new Random().nextLong(), contactId).toString());
             Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId);
             contact.setPictureUri(contactUri);
+            if (contact.getName() != null)
+            {
+                if (hasPhone.equals("1")) {
+                    // You know it has a number so now query it like this
+                    Cursor phones = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ contactId, null, null);
+                    while (phones.moveToNext()) {
+                        String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        String fixedNumber = PhoneNumberFormatter.stripNumber(phoneNumber);
 
-            if (hasPhone.equals("1")) {
-                // You know it has a number so now query it like this
-                Cursor phones = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ contactId, null, null);
-                while (phones.moveToNext()) {
-                    String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    String fixedNumber = PhoneNumberFormatter.stripNumber(phoneNumber);
+                        if (fixedNumber != null && !phoneNumbers.contains(fixedNumber)) {
+                            //phoneFriend.setPaypoint(fixedNumber);
 
-                    if (fixedNumber != null && !phoneNumbers.contains(fixedNumber)) {
-                        //phoneFriend.setPaypoint(fixedNumber);
+                            phoneNumbers.add(fixedNumber);
+                            contact.getPaypoints().add(fixedNumber);
+                            Log.d("Adding Contact:", name + ": " + fixedNumber);
+                            //contactsList.add(phoneFriend);
+                        }
+                    }
+                    phones.close();
+                }
 
-                        phoneNumbers.add(fixedNumber);
-                        contact.getPaypoints().add(fixedNumber);
-                        Log.d("Adding Contact:", name + ": " + fixedNumber);
-                        //contactsList.add(phoneFriend);
+                Cursor emails = context.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactId, null, null);
+                while (emails.moveToNext()) {
+                    // This would allow you get several email addresses
+                    String emailAddress = emails.getString(
+                        emails.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
+
+                    if (!emailAddresses.contains(emailAddress)) {
+                        //emailFriend.setPaypoint(emailAddress);
+
+                        emailAddresses.add(emailAddress);
+                        contact.getPaypoints().add(emailAddress);
+                        Log.d("Adding Contact:", name + ": " + emailAddress);
+                        //contactsList.add(emailFriend);
                     }
                 }
-                phones.close();
+                emails.close();
+
+                contactsList.add(contact);
             }
-
-            Cursor emails = context.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactId, null, null);
-            while (emails.moveToNext()) {
-                // This would allow you get several email addresses
-                String emailAddress = emails.getString(
-                    emails.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS));
-
-                if (!emailAddresses.contains(emailAddress)) {
-                    //emailFriend.setPaypoint(emailAddress);
-
-                    emailAddresses.add(emailAddress);
-                    contact.getPaypoints().add(emailAddress);
-                    Log.d("Adding Contact:", name + ": " + emailAddress);
-                    //contactsList.add(emailFriend);
-                }
-            }
-            emails.close();
-
-            contactsList.add(contact);
         }
         Log.d("Contacts", "Contacts complete!");
         cursor.close();

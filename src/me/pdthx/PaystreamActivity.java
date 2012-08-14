@@ -229,23 +229,13 @@ OnCheckedChangeListener{
                 for (int i = 0; i < m_transactions.size(); i++)
                     m_adapter.add(m_transactions.get(i));
 
-//				Toast.makeText(getBaseContext(),
-//						"CHILD COUNT: " + mListView.getChildCount(), 3);
-//				if (mListView.getChildAt(mListView.getChildCount() - 1)
-//						.getVisibility() == View.GONE) {
-//					mListView.findViewById(R.id.pull_to_refresh_header)
-//							.setVisibility(View.GONE);
-//				} else {
-//					mListView.findViewById(R.id.pull_to_refresh_header)
-//							.setVisibility(View.VISIBLE);
-//				}
-
             } else {
                 m_adapter.clear();
                 mEmptyTextView.setVisibility(View.VISIBLE);
             }
             m_ProgressDialog.dismiss();
             m_adapter.notifyDataSetChanged();
+
 
             if (getIntent().getStringExtra("userId") != null
                 && prefs.getString("userId", "").equals(
@@ -255,8 +245,11 @@ OnCheckedChangeListener{
 
                 // Use a fake transaction with the proper id to
                 // get the real transaction.
-                getTransactionDetails(m_transactions.indexOf(transaction) + 1);
+                int index = m_transactions.indexOf(transaction) + 1;
+                getTransactionDetails(index);
             }
+
+
         }
     };
 

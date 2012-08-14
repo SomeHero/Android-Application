@@ -10,7 +10,7 @@ public class FriendTest
     public void setUp() {
         friend = new Friend();
         friend.setName("Edward Mitchell");
-        friend.setPaypoint("edeesis@yahoo.com");
+        friend.getPaypoints().add("edeesis@yahoo.com");
         friend.setFBContact(true);
     }
 
@@ -18,7 +18,7 @@ public class FriendTest
         assertTrue(friend.masterSearch("ed"));
         assertTrue(friend.masterSearch("edw"));
         assertTrue(friend.masterSearch("mi"));
-        friend.setPaypoint("7574691582");
+        friend.getPaypoints().add("7574691582");
         assertTrue(friend.masterSearch("757"));
         assertFalse(friend.masterSearch("ward"));
         assertTrue(friend.masterSearch("edward mi"));

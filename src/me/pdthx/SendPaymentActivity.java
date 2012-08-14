@@ -127,7 +127,7 @@ public final class SendPaymentActivity extends BaseActivity {
                         {
                             // TODO Auto-generated method stub
                             Intent intent = new Intent(SendPaymentActivity.this, ACHAccountSetupActivity.class);
-                            intent.putExtra("tab", 1);
+                            intent.putExtra("tab", 2);
                             dialog.dismiss();
                             startActivity(intent);
                         }
@@ -240,14 +240,9 @@ public final class SendPaymentActivity extends BaseActivity {
                         // TODO Auto-generated method stub
                         ResponseArrayList<MultipleURIResponse> response = new ResponseArrayList<MultipleURIResponse>();
                         MultipleURIRequest request = new MultipleURIRequest();
-                        try {
-                            request.recipientUris.addAll(friend.getPaypoints());
+                        request.recipientUris.addAll(friend.getPaypoints());
 
-                            response = PaymentServices.determineRecipient(request);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        response = PaymentServices.determineRecipient(request);
 
                         removeDialog(SUBMITPAYMENT_MULTIPLEURIS);
 
@@ -470,6 +465,7 @@ public final class SendPaymentActivity extends BaseActivity {
                         {
                             if (numPaypoints == 1)
                             {
+                                recipientUri = friend.getPaypoints().get(0);
                                 startSecurityPinActivity("Confirm", String.format("To confirm your payment of %s to %s, swipe you pin below.",
                                     txtAmount.getText(), friend.getName()));
                             }
@@ -518,57 +514,19 @@ public final class SendPaymentActivity extends BaseActivity {
                             txtAmount.getText(), friend.getName()));
                         break;
                 }
-             break;
+                break;
         }
     }
-
-//    protected void showSecurityPinDialog() {
-//        setContentView(R.layout.security_dialog);
-//        TextView txtConfirmHeader = (TextView) findViewById(R.id.setupSecurityHeader);
-//        TextView txtConfirmBody = (TextView) findViewById(R.id.setupSecurityBody);
-//
-//        txtConfirmHeader.setText("Confirm Your Payment");
-//        txtConfirmBody.setText(String.format("To confirm your payment of %s to %s, swipe you pin below.",
-//            txtAmount.getText(), friend.getName()));
-//
-//        Button btnCancel = (Button) findViewById(R.id.btnCancelSendMoney);
-//        btnCancel.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                setContentView(R.layout.sendmoney_controller);
-//            }
-//        });
-//
-//        final CustomLockView ctrlSecurityPin = (CustomLockView) findViewById(R.id.ctrlSecurityPin);
-//        ctrlSecurityPin.invalidate();
-//        ctrlSecurityPin.setOnTouchListener(new OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                passcode = ctrlSecurityPin.getPasscode();
-//
-//                if (passcode.length() > 3) {
-//                    amount = Double.parseDouble(txtAmount.getText().toString()
-//                        .replace("$", ""));
-//                    comments = txtComments.getText().toString();
-//                    passcode = ctrlSecurityPin.getPasscode();
-//
-//                    showDialog(SUBMITPAYMENT_DIALOG);
-//                } else
-//                    showDialog(INVALIDPASSCODELENGTH_DIALOG);
-//
-//                return false;
-//            }
-//        });
-//    }
 
     private void addingContact(String id, String paypoint) {
         Friend chosenContact = new Friend();
         if (!id.equals(""))
         {
             chosenContact.setId(id);
-            friend = friendsList.get(friendsList.indexOf(chosenContact));
+            friend = combinedContactList.get(combinedContactList.indexOf(chosenContact));
 
             if (friend.isFBContact()) {
-                recipientUri = "fb_" + friend.getId();
+                //recipientUri = "fb_" + friend.getId();
                 btnAddContacts.setText(friend.getName() + ": " + friend.getId());
             }
             else {
@@ -579,7 +537,7 @@ public final class SendPaymentActivity extends BaseActivity {
         else
         {
             chosenContact.setName("New Contact");
-            chosenContact.setPaypoint(paypoint);
+            chosenContact.getPaypoints().add(paypoint);
             friend = chosenContact;
             recipientUri = "" + paypoint;
             btnAddContacts.setText("New contact: " + paypoint);
@@ -591,7 +549,6 @@ public final class SendPaymentActivity extends BaseActivity {
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.UserId = prefs.getString("userId", "");
         paymentRequest.SecurityPin = passcode;
-        paymentRequest.SenderUri = prefs.getString("login", "");
         paymentRequest.RecipientUri = recipientUri;
         paymentRequest.Amount = amount;
         paymentRequest.Comments = comments;

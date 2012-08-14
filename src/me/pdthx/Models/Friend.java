@@ -11,7 +11,6 @@ public class Friend implements Comparable<Friend> {
     private String lastName = "";
     private String id = "";
     private boolean fbContact = false;
-    private String paypoint = "";
     private Bitmap picture;
     private Uri pictureUri;
     private ArrayList<String> paypoints = new ArrayList<String>();
@@ -30,10 +29,10 @@ public class Friend implements Comparable<Friend> {
     }
 
     public void setName(String name) {
-        String[] names = NameSeparator.separateName(name);
-        firstName = names[0];
-        lastName = names[1];
-        this.name = name;
+        if (name != null && name.length() != 0)
+        {
+            this.name = name;
+        }
     }
 
     public boolean isFBContact() {
@@ -44,14 +43,6 @@ public class Friend implements Comparable<Friend> {
         this.fbContact = fbContact;
     }
 
-    public String getPaypoint()
-    {
-        return paypoint;
-    }
-    public void setPaypoint(String paypoint)
-    {
-        this.paypoint = paypoint;
-    }
     public Bitmap getPicture() {
         return picture;
     }
@@ -105,11 +96,6 @@ public class Friend implements Comparable<Friend> {
         }
 
         if (lastName.toLowerCase().startsWith(search)) {
-            return true;
-        }
-
-        if (paypoint.toLowerCase().startsWith(search))
-        {
             return true;
         }
 

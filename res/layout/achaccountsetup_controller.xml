@@ -142,12 +142,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
-                    <me.pdthx.SegmentButtons.SegmentedControlButton
+                    <me.pdthx.CustomViews.SegmentedControlButton
                         android:id="@+id/achCheckings"
                         android:checked="false"
                         android:text="Checkings" />
 
-                    <me.pdthx.SegmentButtons.SegmentedControlButton
+                    <me.pdthx.CustomViews.SegmentedControlButton
                         android:id="@+id/achSavings"
                         android:checked="false"
                         android:text="Savings" />

@@ -1,5 +1,8 @@
 package me.pdthx;
 
+import me.pdthx.Adapters.ContactAdapter;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Spinner;
 import android.app.ProgressDialog;
 import android.provider.ContactsContract;
 import android.net.Uri;
@@ -32,17 +35,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public final class FriendsListActivity extends BaseActivity  {
+public final class FriendsListActivity extends BaseActivity implements OnScrollListener  {
+
+    public static final String TAG = "FriendListActivity";
 
     private FriendAdapter m_adapter;
-    public static final String TAG = "FriendListActivity";
+    private ContactAdapter selectContactAdapter;
+
     private ListView mListView = null;
     private TextView mEmptyTextView = null;
-    private final static int SETFRIENDIMAGE = 1;
-    private static HashMap<String, Bitmap> pictureMap;
+    private Spinner selectContactType;
     private EditText searchBar = null;
-    
-    private ArrayList<Friend> combinedFriendsList = new ArrayList<Friend>();
+
+    private static HashMap<String, Bitmap> pictureMap;
+    private ArrayList<String> contactTypes = new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,21 +83,29 @@ public final class FriendsListActivity extends BaseActivity  {
 
         mListView = (ListView) findViewById(R.id.lvFriends);
         searchBar = (EditText) findViewById(R.id.searchBar);
-        mListView.setOnScrollListener(mOnScrollListener);
-        
-        combinedFriendsList.addAll(contactList);
-        combinedFriendsList.addAll(friendsList);
+        selectContactType = (Spinner) findViewById(R.id.contacttype_select);
+
+        contactTypes.add("All Contacts");
+        contactTypes.add("Phone Contacts");
+        contactTypes.add("Facebook Contacts");
+
+        selectContactAdapter = new ContactAdapter(this, R.layout.contacttype_closed, contactTypes);
+        selectContactAdapter.setDropDownViewResource(R.layout.contacttype_item);
+        selectContactAdapter.setSelected("All Contacts");
+
+        selectContactType.setAdapter(selectContactAdapter);
+
+        mListView.setOnScrollListener(this);
 
         mEmptyTextView = (TextView)findViewById(R.id.txtEmptyFriendList);
 
-        if(friendsList != null && friendsList.size() > 0) {
-            Collections.sort(friendsList);
+        if(combinedContactList.size() > 0) {
+            Collections.sort(combinedContactList);
             mEmptyTextView.setVisibility(View.GONE);
-            m_adapter = new FriendAdapter(this, R.layout.friend_item, combinedFriendsList);
+            m_adapter = new FriendAdapter(this, R.layout.friend_item, combinedContactList);
             mListView.setAdapter(m_adapter);
             mListView.setFastScrollEnabled(true);
             m_adapter.notifyDataSetChanged();
-
         }
         else {
             Log.e("Friend list problem", "Friend List not populated");
@@ -100,7 +114,7 @@ public final class FriendsListActivity extends BaseActivity  {
 
         progressDialog.dismiss();
 
-        loadViewableImages(mListView.getFirstVisiblePosition(), mListView.getChildCount());
+        loadViewableImages(0, mListView.getChildCount());
 
 
         mListView.setOnItemClickListener(new OnItemClickListener() {
@@ -117,12 +131,56 @@ public final class FriendsListActivity extends BaseActivity  {
                 }
                 else
                 {
-                    data.putExtra("paypoint", chosenFriend.getPaypoint());
+                    data.putExtra("paypoint", chosenFriend.getPaypoints().get(0));
                 }
 
                 setResult(RESULT_OK, data);
                 finish();
             }
+        });
+
+        selectContactType.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+            {
+                if (arg2 == 0)
+                {
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, combinedContactList);
+                    selectContactAdapter.setSelected("All Contacts");
+                }
+
+                if (arg2 == 1)
+                {
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, contactList);
+                    selectContactAdapter.setSelected("Phone Contacts");
+                }
+
+                if (arg2 == 2)
+                {
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, friendsList);
+                    selectContactAdapter.setSelected("Facebook Contacts");
+                }
+                mListView.setAdapter(m_adapter);
+
+                if (m_adapter.isEmpty())
+                {
+                    mListView.setVisibility(View.GONE);
+                    mEmptyTextView.setVisibility(View.VISIBLE);
+                }
+                else {
+                    mListView.setVisibility(View.VISIBLE);
+                    mEmptyTextView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0)
+            {
+                m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, combinedContactList);
+                mListView.setAdapter(m_adapter);
+            }
+
         });
 
         searchBar.addTextChangedListener(new TextWatcher() {
@@ -133,188 +191,205 @@ public final class FriendsListActivity extends BaseActivity  {
             public void afterTextChanged(Editable s) {
 
                 ArrayList<Friend> searched = new ArrayList<Friend>();
-                current = s.toString();
+                ArrayList<Friend> list;
+                String selected = selectContactAdapter.getSelected();
 
-                for (int x = 0; x < friendsList.size(); x++) {
-
-                    Friend friend = friendsList.get(x);
-                    if (friend.masterSearch(current.toLowerCase())) {
-                        searched.add(friend);
-                    }
-                }
-
-                if(searchBar.getText().toString().length() == 0)
+                if (selected.equals("All Contacts"))
                 {
-                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item,
-                        friendsList);
+                    list = combinedContactList;
+                }
+                else if (selected.equals("Phone Contacts"))
+                {
+                    list = contactList;
+                }
+                else if (selected.equals("Facebook Contacts"))
+                {
+                    list = friendsList;
                 }
                 else
                 {
-                    if (searched.size() > 0)
-                    {
-                        m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item,
-                            searched);
-                    }
-                    else
-                    {
-                        Log.d("No match found", "Maybe new person?");
-                        Friend friend = new Friend();
-
-                        friend.setName("'" + current + "' not found");
-                        friend.setPaypoint("Continue typing or check entry");
-
-                        if (current.matches("[0-9()-]+"))
-                        {
-                            String phone = current.replaceAll("[^0-9]", "");
-                            if (phone.length() == 10)
-                            {
-                                friend.setName("New Phone Contact");
-                                friend.setPaypoint(PhoneNumberFormatter.formatNumber(phone));
-                            }
-                        }
-
-                        if (current.contains("@") && current.contains("."))
-                        {
-                            friend.setName("New Email Address");
-                            friend.setPaypoint(current);
-                        }
-
-                        if (current.charAt(0) == '$')
-                        {
-                            friend.setName("New MeCode");
-                            friend.setPaypoint(current);
-                        }
-
-                        ArrayList<Friend> newContact = new ArrayList<Friend>();
-                        newContact.add(friend);
-                        m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, newContact);
-                    }
+                    list = combinedContactList;
                 }
-                mListView.setAdapter(m_adapter);
+            current = s.toString();
 
+            for (int x = 0; x < list.size(); x++) {
+
+                Friend friend = list.get(x);
+                if (friend.masterSearch(current.toLowerCase())) {
+                    searched.add(friend);
+                }
             }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before,
-                int count)
+            if(searchBar.getText().toString().length() == 0)
             {
-
-
+                m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item,
+                    list);
             }
+            else
+            {
+                if (searched.size() > 0)
+                {
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item,
+                        searched);
+                }
+                else
+                {
+                    Log.d("No match found", "Maybe new person?");
+                    Friend newContact = new Friend();
 
-        });
-    }
+                    newContact.setName("'" + current + "' not found");
+                    newContact.getPaypoints().add("Continue typing or check entry");
 
-    private OnScrollListener mOnScrollListener = new OnScrollListener() {
+                    if (current.matches("[0-9()-]+"))
+                    {
+                        String phone = current.replaceAll("[^0-9]", "");
+                        if (phone.length() == 10)
+                        {
+                            newContact.setName("New Phone Contact");
+                            newContact.getPaypoints().add(PhoneNumberFormatter.formatNumber(phone));
+                        }
+                    }
 
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem,
-            int visibleItemCount, int totalItemCount) {
-            // TODO Auto-generated method stub
+                    if (current.contains("@") && current.contains("."))
+                    {
+                        newContact.setName("New Email Address");
+                        newContact.getPaypoints().add(current);
+                    }
+
+                    if (current.charAt(0) == '$')
+                    {
+                        newContact.setName("New MeCode");
+                        newContact.getPaypoints().add(current);
+                    }
+
+                    ArrayList<Friend> searchedContacts = new ArrayList<Friend>();
+                    searchedContacts.add(newContact);
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, searchedContacts);
+                }
+            }
+            mListView.setAdapter(m_adapter);
+
         }
 
         @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-            // TODO Auto-generated method stub
-            switch (scrollState) {
+        public void beforeTextChanged(CharSequence s, int start, int count,
+            int after) {
 
-                case SCROLL_STATE_IDLE :
+        }
 
-                    loadViewableImages(view.getFirstVisiblePosition(), view.getChildCount());
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before,
+            int count)
+        {
 
-                    break;
 
-                case SCROLL_STATE_TOUCH_SCROLL:
+        }
 
-                    break;
+    });
+}
 
-                case SCROLL_STATE_FLING :
-                    break;
 
+@Override
+public void onScroll(AbsListView view, int firstVisibleItem,
+    int visibleItemCount, int totalItemCount) {
+    // TODO Auto-generated method stub
+}
+
+@Override
+public void onScrollStateChanged(AbsListView view, int scrollState) {
+    // TODO Auto-generated method stub
+    switch (scrollState) {
+
+        case SCROLL_STATE_IDLE :
+
+            loadViewableImages(view.getFirstVisiblePosition(), view.getChildCount());
+
+            break;
+
+        case SCROLL_STATE_TOUCH_SCROLL:
+
+            break;
+
+        case SCROLL_STATE_FLING :
+            break;
+
+    }
+
+}
+
+private void loadViewableImages(int first, int count) {
+    for (int i = 0; i < count; i++) {
+
+        Friend friend = (Friend) mListView.getAdapter().getItem(i + first);
+        ImageView imageView = (ImageView) mListView.getChildAt(i).findViewById(R.id.imgFriend);
+        if (friend.getPicture() == null) {
+            Bitmap picture = pictureMap.get(friend.getId());
+            if (picture == null) {
+                if (friend.isFBContact()) {
+                    fetchDrawableOnThread(friend, imageView);
+                }
+                else {
+                    picture = loadContactPhoto(friend.getPictureUri());
+
+                    if (picture != null)
+                    {
+                        friend.setPicture(picture);
+                        pictureMap.put(friend.getId(), picture);
+                        imageView.setImageBitmap(picture);
+                    }
+                    else {
+                        imageView.setImageResource(R.drawable.avatar_unknown);
+                    }
+                }
+            }
+            else {
+                imageView.setImageBitmap(picture);
+            }
+        }
+        else {
+            imageView.setImageBitmap(friend.getPicture());
+        }
+    }
+
+}
+
+private void fetchDrawableOnThread(final Friend friend, final ImageView imageView) {
+    final Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message message) {
+            Bitmap image = (Bitmap) message.obj;
+
+            friend.setPicture(image);
+            pictureMap.put(friend.getId(), image);
+            imageView.setImageBitmap(image);
+            m_adapter.notifyDataSetChanged();
+        }
+    };
+
+    Thread thread = new Thread() {
+        public void run() {
+            try {
+                URL url = new URL("http://graph.facebook.com/" + friend.getId() + "/picture");
+                Bitmap mIcon = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                Message message = handler.obtainMessage(1, mIcon);
+                handler.sendMessage(message);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
 
         }
     };
+    thread.start();
+}
 
-    private void loadViewableImages(int first, int count) {
-        for (int i = 0; i < count; i++) {
-
-            Friend friend = (Friend) mListView.getAdapter().getItem(i + first);
-            ImageView imageView = (ImageView) mListView.getChildAt(i).findViewById(R.id.imgFriend);
-            if (friend.getPicture() == null) {
-                Bitmap picture = pictureMap.get(friend.getId());
-                if (picture == null) {
-                    if (friend.isFBContact()) {
-                        fetchDrawableOnThread(friend, imageView);
-                    }
-                    else {
-                        picture = loadContactPhoto(friend.getPictureUri());
-
-                        if (picture != null)
-                        {
-                            friend.setPicture(picture);
-                            pictureMap.put(friend.getId(), picture);
-                            imageView.setImageBitmap(picture);
-                        }
-                        else {
-                            imageView.setImageResource(R.drawable.avatar_unknown);
-                        }
-                    }
-                }
-                else {
-                    imageView.setImageBitmap(picture);
-                }
-            }
-            else {
-                imageView.setImageBitmap(friend.getPicture());
-            }
-        }
-
+public Bitmap loadContactPhoto(Uri uri) {
+    InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(
+        getContentResolver(), uri);
+    if (input == null) {
+        return null;
     }
-
-    private void fetchDrawableOnThread(final Friend friend, final ImageView imageView) {
-        final Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message message) {
-                Bitmap image = (Bitmap) message.obj;
-
-                friend.setPicture(image);
-                pictureMap.put(friend.getId(), image);
-                imageView.setImageBitmap(image);
-                m_adapter.notifyDataSetChanged();
-            }
-        };
-
-        Thread thread = new Thread() {
-            public void run() {
-                try {
-                    URL url = new URL("http://graph.facebook.com/" + friend.getId() + "/picture");
-                    Bitmap mIcon = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    Message message = handler.obtainMessage(SETFRIENDIMAGE, mIcon);
-                    handler.sendMessage(message);
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
-            }
-        };
-        thread.start();
-    }
-
-    public Bitmap loadContactPhoto(Uri uri) {
-        InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(
-            getContentResolver(), uri);
-        if (input == null) {
-            return null;
-        }
-        return BitmapFactory.decodeStream(input);
-    }
+    return BitmapFactory.decodeStream(input);
+}
 
 }

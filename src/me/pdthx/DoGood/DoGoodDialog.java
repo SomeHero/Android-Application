@@ -1,7 +1,6 @@
 package me.pdthx.DoGood;
 
 import me.pdthx.R;
-import me.pdthx.Models.Organization;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +23,7 @@ public class DoGoodDialog extends Activity {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
 		showDialog();
 	}
-	
+
 	public void showDialog()
 	{
 		LinearLayout allContactsBtn = (LinearLayout)findViewById(R.id.nav_allcontacts);
@@ -37,9 +36,9 @@ public class DoGoodDialog extends Activity {
 				setResult(RESULT_OK, data);
 				finish();
 			}
-			
+
 		});
-		
+
 		LinearLayout phoneContactsBtn = (LinearLayout)findViewById(R.id.nav_phonecontacts);
 		phoneContactsBtn.setOnClickListener(new OnClickListener(){
 
@@ -50,9 +49,9 @@ public class DoGoodDialog extends Activity {
 				setResult(RESULT_OK, data);
 				finish();
 			}
-			
+
 		});
-		
+
 		LinearLayout fbContactsBtn = (LinearLayout)findViewById(R.id.nav_facebookcontacts);
 		fbContactsBtn.setOnClickListener(new OnClickListener(){
 
@@ -63,9 +62,9 @@ public class DoGoodDialog extends Activity {
 				setResult(RESULT_OK, data);
 				finish();
 			}
-			
+
 		});
-		
+
 		LinearLayout nonProfitsBtn = (LinearLayout)findViewById(R.id.nav_nonprofits);
 		nonProfitsBtn.setOnClickListener(new OnClickListener(){
 
@@ -76,9 +75,9 @@ public class DoGoodDialog extends Activity {
 				setResult(RESULT_OK, data);
 				finish();
 			}
-			
+
 		});
-		
+
 		LinearLayout pubDirectBtn = (LinearLayout)findViewById(R.id.nav_pubdirect);
 		pubDirectBtn.setOnClickListener(new OnClickListener(){
 
@@ -89,17 +88,17 @@ public class DoGoodDialog extends Activity {
 				setResult(RESULT_OK, data);
 				finish();
 			}
-			
+
 		});
 	}
-	
-	@Override
-	public boolean onTouchEvent(MotionEvent event)  
-	{  
 
-	       if(event.getAction() == MotionEvent.ACTION_OUTSIDE){   
+	@Override
+	public boolean onTouchEvent(MotionEvent event)
+	{
+
+	       if(event.getAction() == MotionEvent.ACTION_OUTSIDE){
 	              finish();
-	       }  
-	       return false;  
-	}  
+	       }
+	       return false;
+	}
 }

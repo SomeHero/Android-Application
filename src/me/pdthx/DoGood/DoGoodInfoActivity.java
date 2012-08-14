@@ -15,9 +15,6 @@ import android.widget.TextView;
 import me.pdthx.AddMoneyActivity;
 import me.pdthx.BaseActivity;
 import me.pdthx.R;
-import me.pdthx.SendPaymentActivity;
-import me.pdthx.Models.Friend;
-import me.pdthx.Models.Organization;
 
 public class DoGoodInfoActivity extends BaseActivity {
 	protected static final int ADDING_MONEY = 10;
@@ -43,7 +40,7 @@ public class DoGoodInfoActivity extends BaseActivity {
 		title.setText(name);
 		TextView sloganInfo = (TextView)findViewById(R.id.info_orgSlogan);
 		sloganInfo.setText(slogan);
-		
+
 		ImageView picture = (ImageView)findViewById(R.id.info_orgPic);
 		Uri url;
 		try {
@@ -54,7 +51,7 @@ public class DoGoodInfoActivity extends BaseActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		Button backBtn = (Button) findViewById(R.id.btnBackBtn);
 		backBtn.setOnClickListener(new OnClickListener() {
 
