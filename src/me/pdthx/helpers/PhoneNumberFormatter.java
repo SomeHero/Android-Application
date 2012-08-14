@@ -7,9 +7,8 @@ public class PhoneNumberFormatter
     public static String stripNumber(String phoneNumber) {
 
         String strippedNumber = phoneNumber.replaceAll("[^0-9]", "");
-
-
-        return strippedNumber.length() >= 10 ? strippedNumber : null;
+        String regex = "[2-9][0-9]{2}[2-9][0-9]{2}[0-9]{4}";
+        return strippedNumber.matches(regex) ? strippedNumber : null;
     }
 
     public static String formatNumber(String phoneNumber) {
@@ -53,6 +52,6 @@ public class PhoneNumberFormatter
         	return fixedNumber.substring(0, 3) + "-" + fixedNumber.substring(3);
         }
 
-        return phoneNumber;
+        return null;
     }
 }

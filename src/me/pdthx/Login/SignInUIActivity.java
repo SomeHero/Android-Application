@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,7 +15,6 @@ import me.pdthx.ACHAccountSetupActivity;
 import me.pdthx.BaseActivity;
 import me.pdthx.CustomTabActivity;
 import me.pdthx.R;
-import me.pdthx.Models.Friend;
 import me.pdthx.Requests.UserFBSignInRequest;
 import me.pdthx.Requests.UserSignInRequest;
 import me.pdthx.Responses.UserSignInResponse;
@@ -89,7 +87,7 @@ public class SignInUIActivity extends BaseActivity {
                 case(USERSIGNIN_FAILED):
                 alertDialog.setTitle("Sign In Failed.");
                 alertDialog
-                .setMessage("Sign In failed. "+ userSignInResponse.ReasonPhrase + "Please try again.");
+                .setMessage("Sign In failed. Please try again.");
                 alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -274,6 +272,8 @@ public class SignInUIActivity extends BaseActivity {
                         requestFacebookFriends();
                     }
 
+                    signInHandler.sendEmptyMessage(FACEBOOK_SIGNIN);
+
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     Editor edit = prefs.edit();
@@ -305,69 +305,6 @@ public class SignInUIActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 Log.e("Facebook Error", e.toString());
             }
-            @Override
-            public void onFacebookError(FacebookError e, Object state) {
-                // TODO Auto-generated method stub
-                Log.e("Facebook Error", e.toString());
-            }
-
-        });
-    }
-
-    private void requestFacebookFriends() {
-        mAsyncRunner.request("me/friends", new RequestListener(){
-
-            @Override
-            public void onComplete(String response, Object state) {
-
-                try {
-                    JSONObject json = new JSONObject(response);
-                    JSONArray d = json.getJSONArray("data");
-                    int l = (d != null ? d.length() : 0);
-                    Log.d("Requesting Friends, Signing In", "d.length(): " + l);
-                    for (int i=0; i<l; i++) {
-                        JSONObject o = d.getJSONObject(i);
-                        String n = o.getString("name");
-                        String id = o.getString("id");
-                        Friend f = new Friend();
-                        f.setId(id);
-                        f.setName(n);
-                        f.setFBContact(true);
-                        friendsList.add(f);
-                        //Log.d(f.getName() + ": " + f.getId(), "Facebook Friends");			//SWEEETTNNEEESESSS
-
-                    }
-
-                    facebookFriendsAdded = true;
-                    progressDialog.dismiss();
-                    signInHandler.sendEmptyMessage(FACEBOOK_SIGNIN);
-
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onIOException(IOException e, Object state) {
-                // TODO Auto-generated method stub
-                Log.e("Facebook Error", e.toString());
-            }
-
-            @Override
-            public void onFileNotFoundException(FileNotFoundException e,
-                Object state) {
-                // TODO Auto-generated method stub
-                Log.e("Facebook Error", e.toString());
-            }
-
-            @Override
-            public void onMalformedURLException(MalformedURLException e,
-                Object state) {
-                // TODO Auto-generated method stub
-                Log.e("Facebook Error", e.toString());
-            }
-
             @Override
             public void onFacebookError(FacebookError e, Object state) {
                 // TODO Auto-generated method stub

@@ -1,8 +1,6 @@
 package me.pdthx;
 
 import me.pdthx.Helpers.PhoneNumberFormatter;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Responses.UserResponse;
@@ -20,8 +18,8 @@ import android.widget.TextView;
 
 public final class HomeActivity extends BaseActivity {
 
-	public static final String TAG = "HomeActivity";
-	private String userId = "";
+    public static final String TAG = "HomeActivity";
+    private String userId = "";
 
 //	private String SENT = "SMS_SENT";
 //    private String DELIVERED = "SMS_DELIVERED";
@@ -30,34 +28,34 @@ public final class HomeActivity extends BaseActivity {
 //    private PendingIntent sentPI;
 //    private PendingIntent deliveredPI;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		tracker.trackPageView("Home");
+        tracker.trackPageView("Home");
 
-		if(prefs.getString("userId", "").length() == 0) {
-			logout();
-		}
-		else {
-			showHomeController();
-		}
-	}
+        if(prefs.getString("userId", "").length() == 0) {
+            logout();
+        }
+        else {
+            showHomeController();
+        }
+    }
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			showHomeController();
-		} else {
-			finish();
-		}
-	}
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            showHomeController();
+        } else {
+            finish();
+        }
+    }
 
-	public void switchTabInActivity(int indexTabToSwitchTo) {
-		CustomTabActivity ParentActivity;
-		ParentActivity = (CustomTabActivity) this.getParent();
-		ParentActivity.switchTab(indexTabToSwitchTo);
-	}
+    public void switchTabInActivity(int indexTabToSwitchTo) {
+        CustomTabActivity ParentActivity;
+        ParentActivity = (CustomTabActivity) this.getParent();
+        ParentActivity.switchTab(indexTabToSwitchTo);
+    }
 
 //	public void setupSMS() {
 //		sentPI = PendingIntent.getBroadcast(this, 0,
@@ -115,24 +113,24 @@ public final class HomeActivity extends BaseActivity {
 //        }, new IntentFilter(DELIVERED));
 //	}
 
-	private void showHomeController() {
-		userId = prefs.getString("userId", "");
+    private void showHomeController() {
+        userId = prefs.getString("userId", "");
 
-		UserRequest userRequest = new UserRequest();
-		userRequest.UserId = userId;
+        UserRequest userRequest = new UserRequest();
+        userRequest.UserId = userId;
 
-		UserResponse userResponse = UserService.getUser(userRequest);
+        UserResponse userResponse = UserService.getUser(userRequest);
 
-		if(userResponse == null)
-		{
-		    logout();
-		}
-		else {
-			if (userResponse.RegistrationId.equals("null")) {
-				registerPushNotifications();
-			}
+        if(userResponse == null)
+        {
+            logout();
+        }
+        else {
+            if (userResponse.RegistrationId.equals("null")) {
+                registerPushNotifications();
+            }
 
-			/*if (userResponse.MobileNumber != null &&
+            /*if (userResponse.MobileNumber != null &&
 					userResponse.MobileNumber.equals("null")) {
 
 				setupSMS();
@@ -149,88 +147,79 @@ public final class HomeActivity extends BaseActivity {
     	        }
 			}*/
 
-			Editor editor = prefs.edit();
-			editor.putInt("upperLimit", userResponse.UpperLimit);
+            Editor editor = prefs.edit();
+            editor.putInt("upperLimit", userResponse.UpperLimit);
 
-			if (userResponse.UserName != null
-					&& userResponse.UserName.contains("fb_")) {
-				editor.putBoolean("signedInViaFacebook", true);
-			}
-			editor.commit();
+            if (userResponse.UserName != null
+                && userResponse.UserName.contains("fb_")) {
+                editor.putBoolean("signedInViaFacebook", true);
+            }
+            editor.commit();
 
-			setContentView(R.layout.homescreen);
+            setContentView(R.layout.homescreen);
 
-			ImageView imgUserName = (ImageView) findViewById(R.id.home_userImg);
-			if (imgUserName != null) {
-				URL url;
-				try {
-					if (!userResponse.ImageUrl.equals("null") && !userResponse.ImageUrl.equals("")) {
-						try {
-							url = new URL(userResponse.ImageUrl);
-							Bitmap mIcon = BitmapFactory.decodeStream(url
-									.openConnection().getInputStream());
-							imgUserName.setImageBitmap(mIcon);
-						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							imgUserName.setImageResource(R.drawable.avatar_unknown);
-						}
+            ImageView imgUserName = (ImageView) findViewById(R.id.home_userImg);
+            if (imgUserName != null) {
+                URL url;
+                try {
+                    if (!userResponse.ImageUrl.equals("null") && !userResponse.ImageUrl.equals("")) {
+                        url = new URL(userResponse.ImageUrl);
+                        Bitmap mIcon = BitmapFactory.decodeStream(url
+                            .openConnection().getInputStream());
+                        imgUserName.setImageBitmap(mIcon);
 
-					} else {
-						imgUserName.setImageResource(R.drawable.avatar_unknown);
-					}
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+                    } else {
+                        imgUserName.setImageResource(R.drawable.avatar_unknown);
+                    }
+                } catch (Exception ex)
+                {
+                    imgUserName.setImageResource(R.drawable.avatar_unknown);
+                }
+            }
 
-			TextView txtUserName = (TextView)findViewById(R.id.home_username);
-			if (!userResponse.FirstName.equals("null") && !userResponse.LastName.equals("null") ) {
-				txtUserName.setText(userResponse.FirstName + " " + userResponse.LastName);
-			}
-			else {
-				txtUserName.setText("PaidThx User");
-			}
+            TextView txtUserName = (TextView)findViewById(R.id.home_username);
+            if (!userResponse.FirstName.equals("null") && !userResponse.LastName.equals("null") ) {
+                txtUserName.setText(userResponse.FirstName + " " + userResponse.LastName);
+            }
+            else {
+                txtUserName.setText("PaidThx User");
+            }
 
-			TextView txtPhoneNumber = (TextView)findViewById(R.id.home_phonenumber);
-			if(!userResponse.MobileNumber.equals("null"))
-			{
-				txtPhoneNumber.setText(PhoneNumberFormatter.formatNumber(userResponse.MobileNumber));
-			}
-			else
-			{
-				txtPhoneNumber.setText(" ");
-			}
+            TextView txtPhoneNumber = (TextView)findViewById(R.id.home_phonenumber);
+            if(!userResponse.MobileNumber.equals("null"))
+            {
+                txtPhoneNumber.setText(PhoneNumberFormatter.formatNumber(userResponse.MobileNumber));
+            }
+            else
+            {
+                txtPhoneNumber.setText(" ");
+            }
 
-			TextView txtEmail = (TextView)findViewById(R.id.home_email);
-			if(!userResponse.EmailAddress.equals("null"))
-			{
-				txtEmail.setText(userResponse.EmailAddress);
-			} else {
-				txtEmail.setText(" ");
-			}
+            TextView txtEmail = (TextView)findViewById(R.id.home_email);
+            if(!userResponse.EmailAddress.equals("null"))
+            {
+                txtEmail.setText(userResponse.EmailAddress);
+            } else {
+                txtEmail.setText(" ");
+            }
 
-			Button btnSendMoney = (Button)findViewById(R.id.home_sendmoneyBtn);
-			btnSendMoney.setOnClickListener(new OnClickListener() {
-				public void onClick(View argO) {
+            Button btnSendMoney = (Button)findViewById(R.id.home_sendmoneyBtn);
+            btnSendMoney.setOnClickListener(new OnClickListener() {
+                public void onClick(View argO) {
 
-					switchTabInActivity(1);
-				}
-			});
+                    switchTabInActivity(1);
+                }
+            });
 
-			Button btnRequestMoney = (Button)findViewById(R.id.home_requestmoneyBtn);
+            Button btnRequestMoney = (Button)findViewById(R.id.home_requestmoneyBtn);
 
-			btnRequestMoney.setOnClickListener(new OnClickListener() {
-				public void onClick(View argO) {
+            btnRequestMoney.setOnClickListener(new OnClickListener() {
+                public void onClick(View argO) {
 
-					switchTabInActivity(2);
-				}
-			});
-			/*NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+                    switchTabInActivity(2);
+                }
+            });
+            /*NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 
 			Button btnSendMoney = (Button) findViewById(R.id.home_sendmoneyBtn);
 			btnSendMoney.setOnClickListener(new OnClickListener() {
@@ -249,56 +238,56 @@ public final class HomeActivity extends BaseActivity {
 				}
 			});
 			/*
-			 * NumberFormat currencyFormatter =
-			 * NumberFormat.getCurrencyInstance();
+             * NumberFormat currencyFormatter =
+             * NumberFormat.getCurrencyInstance();
 <<<<<<< HEAD
-			 *
+             *
 =======
-			 *
+             *
 >>>>>>> 8b0d758dfc94f90184323cbdbf36649c639afdd3
-			 * TextView txtTotalMoneySent =
-			 * (TextView)findViewById(R.id.txtTotalMoneySent);
-			 * txtTotalMoneySent.
-			 * setText(currencyFormatter.format(userResponse.TotalMoneySent));
+             * TextView txtTotalMoneySent =
+             * (TextView)findViewById(R.id.txtTotalMoneySent);
+             * txtTotalMoneySent.
+             * setText(currencyFormatter.format(userResponse.TotalMoneySent));
 <<<<<<< HEAD
-			 *
+             *
 =======
-			 *
+             *
 >>>>>>> 8b0d758dfc94f90184323cbdbf36649c639afdd3
-			 * TextView txtTotalMoneyReceived =
-			 * (TextView)findViewById(R.id.txtTotalMoneyReceived);
-			 * txtTotalMoneyReceived
-			 * .setText(currencyFormatter.format(userResponse
-			 * .TotalMoneyReceived));
+             * TextView txtTotalMoneyReceived =
+             * (TextView)findViewById(R.id.txtTotalMoneyReceived);
+             * txtTotalMoneyReceived
+             * .setText(currencyFormatter.format(userResponse
+             * .TotalMoneyReceived));
 <<<<<<< HEAD
-			 *
+             *
 =======
-			 *
+             *
 >>>>>>> 8b0d758dfc94f90184323cbdbf36649c639afdd3
-			 * Button btnSendMoney =
-			 * (Button)findViewById(R.id.btnQuickLinkSent);
-			 * btnSendMoney.setOnClickListener(new OnClickListener() { public
-			 * void onClick(View argO) {
+             * Button btnSendMoney =
+             * (Button)findViewById(R.id.btnQuickLinkSent);
+             * btnSendMoney.setOnClickListener(new OnClickListener() { public
+             * void onClick(View argO) {
 <<<<<<< HEAD
-			 *
-			 * switchTabInActivity(1); } }); Button btnRequestMoney =
-			 * (Button)findViewById(R.id.btnQuickLinkRequest);
-			 *
-			 * btnRequestMoney.setOnClickListener(new OnClickListener() { public
-			 * void onClick(View argO) {
-			 *
+             *
+             * switchTabInActivity(1); } }); Button btnRequestMoney =
+             * (Button)findViewById(R.id.btnQuickLinkRequest);
+             *
+             * btnRequestMoney.setOnClickListener(new OnClickListener() { public
+             * void onClick(View argO) {
+             *
 =======
-			 *
-			 * switchTabInActivity(1); } }); Button btnRequestMoney =
-			 * (Button)findViewById(R.id.btnQuickLinkRequest);
-			 *
-			 * btnRequestMoney.setOnClickListener(new OnClickListener() { public
-			 * void onClick(View argO) {
-			 *
+             *
+             * switchTabInActivity(1); } }); Button btnRequestMoney =
+             * (Button)findViewById(R.id.btnQuickLinkRequest);
+             *
+             * btnRequestMoney.setOnClickListener(new OnClickListener() { public
+             * void onClick(View argO) {
+             *
 >>>>>>> 8b0d758dfc94f90184323cbdbf36649c639afdd3
-			 * switchTabInActivity(2); } });
-			 */
+             * switchTabInActivity(2); } });
+             */
 
-		}
-	}
+        }
+    }
 }

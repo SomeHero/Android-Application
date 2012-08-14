@@ -1,5 +1,6 @@
 package me.pdthx.Services;
 
+import me.pdthx.Requests.DoGoodRequest;
 import me.pdthx.Responses.ResponseArrayList;
 import me.pdthx.Responses.MultipleURIResponse;
 import java.util.ArrayList;
@@ -7,13 +8,8 @@ import org.json.JSONArray;
 import me.pdthx.Requests.MultipleURIRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-
 import me.pdthx.Requests.PaymentRequest;
 import me.pdthx.Responses.OrganizationResponse;
-import me.pdthx.Responses.PaystreamResponse;
 import me.pdthx.Responses.Response;
 
 import org.apache.http.HttpEntity;
@@ -24,22 +20,21 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
 
-public class PaymentServices {
+public class PaymentServices extends GlobalVariables {
 	public PaymentServices() {
 	}
-
-	private static final String ROOTURL = "http://23.21.203.171/api/internal/api";
 	private static final String SUBMITMONEY_URL = "/PayStreamMessages?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String REQUESTMONEY_URL = "/PayStreamMessages?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String DONATEMONEY_URL = "/PayStreamMessages/donate?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
+	private static final String ACCEPTPLEDGE_URL = "/PayStreamMessages/accept_pledge?apiKey=bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String APIKEY = "bda11d91-7ade-4da1-855d-24adfe39d174";
 	private static final String GETORGS = "/merchants?type=";
-	 private static final String DETERMINEUSERS_URL = "/paystreammessages/multiple_uris";
+	private static final String DETERMINEUSERS_URL = "/paystreammessages/multiple_uris";
 
 	public static ArrayList<OrganizationResponse> getOrgs(String type) {
 		ArrayList<OrganizationResponse> listofOrgs = new ArrayList<OrganizationResponse>();
@@ -153,7 +148,6 @@ public class PaymentServices {
 			json.put("apiKey", APIKEY);
 			json.put("senderId", paymentRequest.UserId);
 			json.put("securityPin", paymentRequest.SecurityPin);
-			json.put("senderUri", paymentRequest.SenderUri);
 			json.put("recipientUri", paymentRequest.RecipientUri);
 			json.put("amount", paymentRequest.Amount);
 			json.put("comments", paymentRequest.Comments);
@@ -231,9 +225,7 @@ public class PaymentServices {
 			JSONObject json = new JSONObject();
 			json.put("apiKey", APIKEY);
 			json.put("senderId", paymentRequest.UserId);
-			json.put("senderId", paymentRequest.UserId);
 			json.put("securityPin", paymentRequest.SecurityPin);
-			json.put("senderUri", paymentRequest.SenderUri);
 			json.put("recipientUri", paymentRequest.RecipientUri);
 			json.put("amount", paymentRequest.Amount);
 			json.put("comments", paymentRequest.Comments);
@@ -298,6 +290,161 @@ public class PaymentServices {
 
 		return paymentResponse;
 	}
+
+	public static Response donateMoney(DoGoodRequest paymentRequest) {
+        Response paymentResponse = new Response();
+
+        HttpResponse response = null;
+
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost request = new HttpPost(ROOTURL + DONATEMONEY_URL);
+
+            JSONObject json = new JSONObject();
+            json.put("apiKey", APIKEY);
+            json.put("organizationId", paymentRequest.OrganizationId);
+            json.put("senderId", paymentRequest.UserId);
+            json.put("securityPin", paymentRequest.SecurityPin);
+            json.put("amount", paymentRequest.Amount);
+            json.put("comments", paymentRequest.Comments);
+            json.put("senderAccountId", paymentRequest.SenderAccountId);
+            json.put("latitude", paymentRequest.Latitude);
+            json.put("longitude", paymentRequest.Longitude);
+
+            StringEntity entity = new StringEntity(json.toString());
+            request.setEntity(entity);
+            request.setHeader("content-type", "application/json");
+
+            response = httpClient.execute(request);
+
+        } catch (ClientProtocolException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        HttpEntity entity = response.getEntity();
+
+        if (entity != null) {
+
+            InputStream instream = null;
+            String result = "";
+            try {
+                instream = entity.getContent();
+                result = RestClient.convertStreamToString(instream);
+                // Log.i(TAG, "Result of converstion: [" + result +
+                // "]");
+            } catch (IllegalStateException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+                instream.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            Log.i("Payment Sumitted Response", result);
+
+            if (response.getStatusLine().getStatusCode() == 201) {
+                // Do something
+                paymentResponse.Success = true;
+            } else {
+                paymentResponse.ReasonPhrase = response.getStatusLine()
+                        .getReasonPhrase();
+                paymentResponse.Success = false;
+            }
+        }
+
+        return paymentResponse;
+    }
+
+	public static Response acceptPledge(DoGoodRequest paymentRequest) {
+        Response paymentResponse = new Response();
+
+        HttpResponse response = null;
+
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost request = new HttpPost(ROOTURL + ACCEPTPLEDGE_URL);
+
+            JSONObject json = new JSONObject();
+            json.put("apiKey", APIKEY);
+            json.put("behalfOfId", paymentRequest.OrganizationId);
+            json.put("senderId", paymentRequest.UserId);
+            json.put("securityPin", paymentRequest.SecurityPin);
+            json.put("recipientUri", paymentRequest.RecipientUri);
+            json.put("amount", paymentRequest.Amount);
+            json.put("comments", paymentRequest.Comments);
+            json.put("senderAccountId", paymentRequest.SenderAccountId);
+            json.put("latitude", paymentRequest.Latitude);
+            json.put("longitude", paymentRequest.Longitude);
+
+            StringEntity entity = new StringEntity(json.toString());
+            request.setEntity(entity);
+            request.setHeader("content-type", "application/json");
+
+            response = httpClient.execute(request);
+
+        } catch (ClientProtocolException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        HttpEntity entity = response.getEntity();
+
+        if (entity != null) {
+
+            InputStream instream = null;
+            String result = "";
+            try {
+                instream = entity.getContent();
+                result = RestClient.convertStreamToString(instream);
+                // Log.i(TAG, "Result of converstion: [" + result +
+                // "]");
+            } catch (IllegalStateException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+                instream.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            Log.i("Payment Sumitted Response", result);
+
+            if (response.getStatusLine().getStatusCode() == 201) {
+                // Do something
+                paymentResponse.Success = true;
+            } else {
+                paymentResponse.ReasonPhrase = response.getStatusLine()
+                        .getReasonPhrase();
+                paymentResponse.Success = false;
+            }
+        }
+
+        return paymentResponse;
+    }
 
     public static ResponseArrayList<MultipleURIResponse> determineRecipient(MultipleURIRequest paymentRequest)
     {

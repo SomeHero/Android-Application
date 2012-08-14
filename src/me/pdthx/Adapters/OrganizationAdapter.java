@@ -63,13 +63,7 @@ private Context ctx;
 			ImageView txtInfo = (ImageView) v.findViewById(R.id.org_item_info);
 
 			if (txtHeader != null) {
-				if (o.getHeader().length() > 0) {
-					txtHeader.setVisibility(View.VISIBLE);
-					txtHeader.setText(o.getHeader());
-					txtHeader.setBackgroundColor(Color.parseColor("#7A7A7A"));
-				} else {
-					txtHeader.setVisibility(View.GONE);
-				}
+			    txtHeader.setVisibility(View.GONE);
 			}
 
 			if(picture != null)
@@ -104,7 +98,6 @@ private Context ctx;
 				if(o.getInfo().length() > 0)
 				{
 					txtInfo.setVisibility(View.VISIBLE);
-					final String theInfo = o.getInfo();
 					txtInfo.setOnClickListener(new OnClickListener(){
 
 						@Override
