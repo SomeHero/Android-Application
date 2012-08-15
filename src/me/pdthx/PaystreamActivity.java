@@ -36,7 +36,6 @@ import android.widget.TextView;
 public final class PaystreamActivity extends BaseActivity implements
 OnCheckedChangeListener{
 
-    private ProgressDialog m_ProgressDialog = null;
     private ArrayList<PaystreamTransaction> m_transactions = null;
     private ArrayList<PaystreamTransaction> send_transactions = null;
     private ArrayList<PaystreamTransaction> recieve_transactions = null;
@@ -48,7 +47,6 @@ OnCheckedChangeListener{
     private EditText searchBar = null;
     private int numTransactions;
     private ArrayList<PaystreamTransaction> transactionsList;
-    private int refreshCount = 0;
     public static final String TAG = "PaystreamActivity";
     private PullAndRefreshListView mListView = null;
     private TextView mEmptyTextView = null;
@@ -59,6 +57,7 @@ OnCheckedChangeListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getParent().setTitle("Paystream");
         tracker.trackPageView("Paystream");
 
         if (prefs.getString("userId", "").length() == 0) {
@@ -85,9 +84,6 @@ OnCheckedChangeListener{
         transactionsList = new ArrayList<PaystreamTransaction>();
         group = (RadioGroup) findViewById(R.id.paystreamSubCategories);
 
-        if (refreshCount > 1) {
-            searchBar.setText("");
-        }
         searchBar.addTextChangedListener(new TextWatcher() {
 
             String current = "";
@@ -212,9 +208,9 @@ OnCheckedChangeListener{
                 runOnUiThread(returnRes);
             }
         };
-        Thread thread = new Thread(null, viewOrders, "MagentoBackground");
+        Thread thread = new Thread(viewOrders, "MagentoBackground");
         thread.start();
-        m_ProgressDialog = ProgressDialog.show(PaystreamActivity.this,
+        progressDialog = ProgressDialog.show(PaystreamActivity.this,
             "Please wait...", "Retrieving your paystream...", true);
     }
 
@@ -233,7 +229,7 @@ OnCheckedChangeListener{
                 m_adapter.clear();
                 mEmptyTextView.setVisibility(View.VISIBLE);
             }
-            m_ProgressDialog.dismiss();
+            progressDialog.dismiss();
             m_adapter.notifyDataSetChanged();
 
 
@@ -409,10 +405,6 @@ OnCheckedChangeListener{
                 }
             }
 
-            refreshCount++; // This won't work once Paystream is more efficient
-            if (refreshCount > 1) {
-                transactionsList.clear();
-            }
             numTransactions = m_transactions.size();
             for (int t = 0; t < numTransactions; t++) {
                 transactionsList.add(m_transactions.get(t));

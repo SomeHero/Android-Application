@@ -379,7 +379,7 @@ public class PaymentServices extends GlobalVariables {
 
             JSONObject json = new JSONObject();
             json.put("apiKey", APIKEY);
-            json.put("behalfOfId", paymentRequest.OrganizationId);
+            json.put("onBehalfOfId", paymentRequest.OrganizationId);
             json.put("senderId", paymentRequest.UserId);
             json.put("securityPin", paymentRequest.SecurityPin);
             json.put("recipientUri", paymentRequest.RecipientUri);

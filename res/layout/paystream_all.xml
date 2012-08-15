@@ -71,24 +71,24 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <me.pdthx.SegmentButtons.SegmentedControlButton
+            <me.pdthx.CustomViews.SegmentedControlButton
                 android:id="@+id/paystreamAll"
                 android:checked="true"
                 android:text="All" />
 
-            <me.pdthx.SegmentButtons.SegmentedControlButton
+            <me.pdthx.CustomViews.SegmentedControlButton
                 android:id="@+id/paystreamSent"
                 android:checked="false"
                 android:text="Sent" />
 
-            <me.pdthx.SegmentButtons.SegmentedControlButton
+            <me.pdthx.CustomViews.SegmentedControlButton
                 android:id="@+id/paystreamReceived"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="Received" />
 
-            <me.pdthx.SegmentButtons.SegmentedControlButton
+            <me.pdthx.CustomViews.SegmentedControlButton
                 android:id="@+id/paystreamOther"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

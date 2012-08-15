@@ -1,5 +1,8 @@
 package me.pdthx.DoGood;
 
+import android.widget.ImageView;
+import me.pdthx.Models.Organization;
+import me.pdthx.Setup.ACHAccountSetupActivity;
 import me.pdthx.Requests.DoGoodRequest;
 import me.pdthx.Responses.Response;
 import android.widget.Button;
@@ -9,7 +12,6 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import java.text.NumberFormat;
-import me.pdthx.ACHAccountSetupActivity;
 import me.pdthx.Services.PaymentServices;
 import android.widget.TextView;
 import me.pdthx.AddMoneyActivity;
@@ -33,17 +35,18 @@ public class DonateActivity extends BaseActivity {
     private TextView txtOrgName;
     private TextView txtOrgDetails;
 
-    final private int ACCEPTPLEDGE_ACTION = 17;
-    final private int ACCEPTPLEDGE_DIALOG = 0;
+    final private int DONATEMONEY_ACTION = 17;
+    final private int DONATEMONEY_DIALOG = 0;
     final private int NORECIPIENTSPECIFIED_DIALOG = 1;
     final private int NOAMOUNTSPECIFIED_DIALOG = 2;
     final private int PAYMENTEXCEEDSLIMIT_DIALOG = 5;
-    final private int ACCEPTPLEDGEFAILED_DIALOG = 3;
-    final private int ACCEPTPLEDGESUCCESS_DIALOG = 4;
+    final private int DONATEMONEYFAILED_DIALOG = 3;
+    final private int DONATEMONEYSUCCESS_DIALOG = 4;
     final private int ADDACCOUNT_DIALOG = 10;
     final private int INVALIDPASSCODELENGTH_DIALOG = 12;
 
     private String orgId;
+    private Organization organization;
     private double amount;
     private String errorMessage;
     private String comments;
@@ -54,6 +57,7 @@ public class DonateActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dogood_controller);
+        getParent().setTitle("Donate Money");
         showDonateActivity();
     }
 
@@ -96,11 +100,12 @@ public class DonateActivity extends BaseActivity {
                     break;
 
 
-                case ACCEPTPLEDGE_DIALOG:
-                    tracker.trackPageView("Acceping Pledge: Confirm");
+                case DONATEMONEY_DIALOG:
+                    tracker.trackPageView("Donating Money: Confirm");
 
                     progressDialog.setMessage("Submitting...");
                     progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.show();
 
                     new Thread(new Runnable() {
 
@@ -113,28 +118,28 @@ public class DonateActivity extends BaseActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            dialogHandler.sendEmptyMessage(ACCEPTPLEDGE_ACTION);
+                            dialogHandler.sendEmptyMessage(DONATEMONEY_ACTION);
                         }
 
                     }).start();
                     break;
 
-                case ACCEPTPLEDGE_ACTION:
-                    removeDialog(ACCEPTPLEDGE_DIALOG);
+                case DONATEMONEY_ACTION:
+                    progressDialog.dismiss();
 
                     if (donateResponse != null
                         && donateResponse.Success)
                     {
-                        dialogHandler.sendEmptyMessage(ACCEPTPLEDGESUCCESS_DIALOG);
+                        dialogHandler.sendEmptyMessage(DONATEMONEYSUCCESS_DIALOG);
                     } else if (donateResponse != null) {
                         errorMessage = donateResponse.ReasonPhrase;
-                        dialogHandler.sendEmptyMessage(ACCEPTPLEDGEFAILED_DIALOG);
+                        dialogHandler.sendEmptyMessage(DONATEMONEYFAILED_DIALOG);
                     } else {
-                        dialogHandler.sendEmptyMessage(ACCEPTPLEDGEFAILED_DIALOG);
+                        dialogHandler.sendEmptyMessage(DONATEMONEYFAILED_DIALOG);
                     }
                     break;
 
-                case ACCEPTPLEDGEFAILED_DIALOG:
+                case DONATEMONEYFAILED_DIALOG:
                     alertDialog.setTitle("Failed");
 
                     alertDialog.setMessage(errorMessage);
@@ -144,21 +149,21 @@ public class DonateActivity extends BaseActivity {
 
                         }
                     });
+                    alertDialog.show();
                     break;
 
-                case ACCEPTPLEDGESUCCESS_DIALOG:
+                case DONATEMONEYSUCCESS_DIALOG:
                     tracker.trackPageView("Accept Pledge: Completed");
                     alertDialog.setTitle("Pledge Sumitted");
                     NumberFormat nf = NumberFormat.getCurrencyInstance();
 
                     alertDialog.setMessage(String.format(
-                        "Your payment for %s was sent to %s.", nf.format(amount),
-                        txtOrgName.getText()));
+                        "Your donation of %s was sent to %s.", nf.format(amount),
+                        organization.getName()));
 
                     alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            removeDialog(4);
-                            dialog.dismiss();
+                            alertDialog.dismiss();
 
                             txtOrgName.setText("Add recipient");
                             txtOrgDetails.setText("");
@@ -166,6 +171,8 @@ public class DonateActivity extends BaseActivity {
                             txtComments.setText("");
                         }
                     });
+
+                    alertDialog.show();
                     break;
 
                 case NORECIPIENTSPECIFIED_DIALOG:
@@ -305,13 +312,34 @@ public class DonateActivity extends BaseActivity {
                 {
                     case ADD_ORG :
                         orgId = data.getStringExtra("id");
+                        Organization org = new Organization();
+                        org.setId(orgId);
+                        organization = nonProfitsList.get(nonProfitsList.indexOf(org));
+                        txtOrgName.setText(organization.getName());
+                        txtOrgDetails.setText(organization.getSlogan());
+                        ImageView img = (ImageView) findViewById(R.id.donate_orgimg);
+
+                        if (organization.getPicture() != null)
+                        {
+                            img.setImageBitmap(organization.getPicture());
+                        }
+
+                        int amount = data.getIntExtra("amount", 0);
+                        if (amount != 0)
+                        {
+                            TextView addMoney = (TextView) findViewById(R.id.donate_amountResult);
+                            addMoney.setText("$" + amount);
+                        }
                         break;
 
                     case ADD_MONEY:
-                        String amount = data.getStringExtra("index");
+                        String strAmount = data.getStringExtra("index");
                         TextView addMoney = (TextView) findViewById(R.id.donate_amountResult);
-                        addMoney.setText("$" + amount);
+                        addMoney.setText("$" + strAmount);
                         break;
+                    case SECURITYPIN:
+                        passcode = data.getStringExtra("passcode");
+                        dialogHandler.sendEmptyMessage(DONATEMONEY_DIALOG);
                 }
                 break;
             }
@@ -327,7 +355,7 @@ public class DonateActivity extends BaseActivity {
         request.SecurityPin = passcode;
         request.SenderAccountId = prefs.getString("paymentAccountId", "");
         request.UserId = prefs.getString("userId", "");
-        PaymentServices.donateMoney(request);
+        donateResponse = PaymentServices.donateMoney(request);
     }
 
 }

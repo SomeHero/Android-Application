@@ -75,65 +75,47 @@
         </activity>
         <activity
             android:name=".AddMoneyActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" > >
-        </activity>
-        <activity
-            android:name=".ACHAccountSetupActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" > >
+            android:label="Select Amount" >
         </activity>
         <activity
             android:name=".CameraActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".CustomTabActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".FriendsListActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" > >
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".PaystreamActivity"
-            android:label="@string/app_name"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" > >
+            android:label="Paystream"
+            android:noHistory="true" >
         </activity>
         <activity
             android:name=".ProfileControllerActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" > >
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".RequestPaymentActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:name=".RequestPaymentActivity" >
         </activity>
         <activity
             android:name=".SecurityPinActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" > >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".SelectRecipientActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" > >
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".SendPaymentActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" > >
+            android:name=".SendPaymentActivity" >
         </activity>
 
         <!-- Paystream Dialogs -->
@@ -168,28 +150,23 @@
         </activity>
         <activity
             android:name=".Login.WelcomeActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Login.SignInUIActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:name=".Login.SignInActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".Login.ForgotPasswordActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" > >
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Login.SignUpUIActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:name=".Login.SignUpActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".Login.AboutActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
 
         <!-- Payment Account Management -->
@@ -200,18 +177,15 @@
         </activity>
         <activity
             android:name=".Accounts.AccountManagerActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".Accounts.EnterPinActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".Accounts.LinkAccountActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
 
         <!-- Setup ACH Account Screens -->
@@ -229,11 +203,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Setup.CreatePinActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".Setup.ConfirmPinActivity"
+            android:name=".Setup.ACHAccountSetupActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
@@ -245,16 +215,14 @@
 
         <activity
             android:name=".Settings.SettingsActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
         
         <!-- Security and Privacy Screens -->
         
         <activity
             android:name=".Settings.SecuritySettingsActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".Settings.ChangePasswordActivity"
@@ -284,23 +252,19 @@
         </activity>
         <activity
             android:name=".DoGood.DoGoodIntroActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".DoGood.DonateActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".DoGood.PledgeActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".DoGood.OrgListActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".DoGood.DoGoodDialog"
@@ -309,8 +273,7 @@
         </activity>
         <activity
             android:name=".DoGood.DoGoodInfoActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >            
+            android:label="@string/app_name" >            
         </activity>
         
     </application>
