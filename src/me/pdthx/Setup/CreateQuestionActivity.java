@@ -27,10 +27,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class CreateQuestionActivity extends BaseActivity {
-	
+
 	private String[] questions;
 	private int currentId = 1;
-	
+
 	final private int USERDATA_FAILED = 2;
 	final private int SETUPACHACCOUNT_FAILED = 3;
 	final private int USERREGISTRATION_FAILED = 4;
@@ -82,7 +82,7 @@ public class CreateQuestionActivity extends BaseActivity {
 				EditText userAnswer = (EditText)findViewById(R.id.setupSecurityTxtAnswer);
 				String answer = userAnswer.getText().toString().trim();
 
-				request = getIntent().getExtras().getParcelable("achAccountObject");
+				request = getIntent().getParcelableExtra("achAccountObject");
 
 				request.SecurityAnswer = answer;
 				request.SecurityQuestionId = currentId;

@@ -5,7 +5,6 @@ import java.net.URL;
 import me.pdthx.Requests.UserRequest;
 import me.pdthx.Responses.UserResponse;
 import me.pdthx.Services.UserService;
-import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,6 +30,7 @@ public final class HomeActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getParent().setTitle("PaidThx");
 
         tracker.trackPageView("Home");
 
@@ -40,15 +40,7 @@ public final class HomeActivity extends BaseActivity {
         else {
             showHomeController();
         }
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            showHomeController();
-        } else {
-            finish();
-        }
     }
 
     public void switchTabInActivity(int indexTabToSwitchTo) {

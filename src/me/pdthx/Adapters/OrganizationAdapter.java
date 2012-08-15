@@ -1,6 +1,5 @@
 package me.pdthx.Adapters;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import me.pdthx.R;
 import me.pdthx.DoGood.DoGoodInfoActivity;
@@ -8,10 +7,7 @@ import me.pdthx.Models.Organization;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,18 +38,6 @@ private Context ctx;
 		}
 		final Organization o = items.get(position);
 		if (o != null) {
-			// OLD:
-			// TextView txtHeader = (TextView) v
-			// .findViewById(R.id.list_header_title);
-			// ImageView imgTransactionType = (ImageView) v
-			// .findViewById(R.id.imgTransactionType);
-			// TextView txtRecipientUri = (TextView) v
-			// .findViewById(R.id.txtRecipientUri);
-			// TextView txtPaymentDate = (TextView) v
-			// .findViewById(R.id.txtPaymentDate);
-			// ImageView imgStatus = (ImageView) v.findViewById(R.id.imgStatus);
-			// TextView txtAmount = (TextView) v.findViewById(R.id.txtAmount);
-			// DateFormat timeFormat = DateFormat.getTimeInstance();
 			TextView txtHeader = (TextView) v
 					.findViewById(R.id.org_item_header);
 			TextView txtName = (TextView) v.findViewById(R.id.org_item_name);
@@ -68,17 +52,9 @@ private Context ctx;
 
 			if(picture != null)
 			{
-				if(o.getImageUri().length() > 0)
+				if(o.getPicture() != null)
 				{
-					Uri url;
-					try {
-						url = Uri.parse(o.getImageUri());
-						Bitmap bmp=BitmapFactory.decodeStream(ctx.getContentResolver().openInputStream(url));
-						picture.setImageBitmap(bmp);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			        picture.setImageBitmap(o.getPicture());
 				}
 				else
 				{

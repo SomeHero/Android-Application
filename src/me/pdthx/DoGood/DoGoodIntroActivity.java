@@ -17,6 +17,7 @@ public class DoGoodIntroActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dogood_intro);
+		getParent().setTitle("Do Good");
 		setupIntroController();
 	}
 

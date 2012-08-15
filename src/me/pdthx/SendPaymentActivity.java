@@ -16,6 +16,7 @@
 
 package me.pdthx;
 
+import me.pdthx.Setup.ACHAccountSetupActivity;
 import me.pdthx.Responses.MultipleURIResponse;
 import me.pdthx.Responses.ResponseArrayList;
 import me.pdthx.Requests.MultipleURIRequest;
@@ -144,7 +145,7 @@ public final class SendPaymentActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Send Money");
+        getParent().setTitle("Send Money");
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -520,10 +521,10 @@ public final class SendPaymentActivity extends BaseActivity {
 
     private void addingContact(String id, String paypoint) {
         Friend chosenContact = new Friend();
-        if (!id.equals(""))
+        if (id != null && !id.equals(""))
         {
             chosenContact.setId(id);
-            friend = combinedContactList.get(combinedContactList.indexOf(chosenContact));
+            friend = allContacts.get(allContacts.indexOf(chosenContact));
 
             if (friend.isFBContact()) {
                 //recipientUri = "fb_" + friend.getId();

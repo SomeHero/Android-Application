@@ -45,9 +45,6 @@ public class ContactAdapter
             v = vi.inflate(R.layout.contacttype_closed, null);
         }
 
-        ImageView img = (ImageView) v.findViewById(R.id.imgTypeClosed);
-        img.setImageBitmap(images.get(selected));
-
         return v;
     }
 
@@ -68,6 +65,11 @@ public class ContactAdapter
         imgContactType.setImageBitmap(images.get(contactType));
 
         return v;
+    }
+
+    public HashMap<String, Bitmap> getImages()
+    {
+        return images;
     }
 
     public String getSelected()
