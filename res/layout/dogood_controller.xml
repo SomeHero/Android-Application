@@ -57,9 +57,9 @@
                 android:paddingLeft="2dp"
                 android:paddingRight="11dp"
                 android:paddingTop="2dp" >
-
+
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/donate_orgimg"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/icon_roundedbg"

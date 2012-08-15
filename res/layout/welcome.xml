@@ -8,10 +8,11 @@
 
     <RelativeLayout
         android:layout_width="305dp"
-        android:layout_height="535dp"
+        android:layout_height="fill_parent"
         android:layout_marginBottom="19dp"
-        android:background="@drawable/welcome_sc"
-        android:orientation="vertical" >
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:paddingTop="10dp" >
 
         <ImageView
             android:id="@+id/pdthxlogo"
@@ -81,8 +82,8 @@
                 android:layout_height="60dp"
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="15dp"
-                android:text="I&apos;m new to PaidThx"
                 android:background="@drawable/button_selector"
+                android:text="I&apos;m new to PaidThx"
                 android:textColor="#FFFFFF"
                 android:textSize="16dp"
                 android:textStyle="bold" />
@@ -91,8 +92,8 @@
                 android:id="@+id/signin_button"
                 android:layout_width="275dp"
                 android:layout_height="60dp"
-                android:text="I already use PaidThx"
                 android:background="@drawable/blue_button_selector"
+                android:text="I already use PaidThx"
                 android:textColor="#FFFFFF"
                 android:textSize="16dp"
                 android:textStyle="bold" />

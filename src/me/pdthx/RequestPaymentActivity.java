@@ -1,9 +1,9 @@
 package me.pdthx;
 
+import me.pdthx.Setup.ACHAccountSetupActivity;
 import me.pdthx.Requests.MultipleURIRequest;
 import me.pdthx.Responses.MultipleURIResponse;
 import me.pdthx.Responses.ResponseArrayList;
-import java.io.FileInputStream;
 import java.text.NumberFormat;
 
 import me.pdthx.Models.Friend;
@@ -16,8 +16,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -30,8 +28,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 
 public class RequestPaymentActivity extends BaseActivity {
 
@@ -48,7 +44,7 @@ public class RequestPaymentActivity extends BaseActivity {
 
     private Friend friend;
 
-    private ImageButton btnCamera;
+    //private ImageButton btnCamera;
     private Button btnAddContacts;
     private Button txtAmount;
     private EditText txtComments;
@@ -129,7 +125,7 @@ public class RequestPaymentActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Request Money");
+        getParent().setTitle("Request Money");
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -400,15 +396,15 @@ public class RequestPaymentActivity extends BaseActivity {
             }
         });
 
-        btnCamera = (ImageButton) findViewById(R.id.camera);
-        btnCamera.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v) {
-
-                startActivityForResult(new Intent(RequestPaymentActivity.this, CameraActivity.class), CAMERA);
-            }
-        });
+//        btnCamera = (ImageButton) findViewById(R.id.camera);
+//        btnCamera.setOnClickListener(new OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v) {
+//
+//                startActivityForResult(new Intent(RequestPaymentActivity.this, CameraActivity.class), CAMERA);
+//            }
+//        });
 
         btnAddContacts = (Button) findViewById(R.id.addRecipient);
         btnAddContacts.setOnClickListener(new OnClickListener(){
@@ -516,19 +512,19 @@ public class RequestPaymentActivity extends BaseActivity {
                         break;
                     case CAMERA:
                     {
-                        try{
-
-                            String path = (String) data.getExtras().get("index");
-                            FileInputStream in = new FileInputStream(path);
-                            Bitmap thumbnail = BitmapFactory.decodeStream(in);
-                            ImageView cameraImage = (ImageView) findViewById(R.id.cameraImage);
-                            cameraImage.setImageBitmap(thumbnail);
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-                        break;
+//                        try{
+//
+//                            String path = (String) data.getExtras().get("index");
+//                            FileInputStream in = new FileInputStream(path);
+//                            Bitmap thumbnail = BitmapFactory.decodeStream(in);
+//                            ImageView cameraImage = (ImageView) findViewById(R.id.cameraImage);
+//                            cameraImage.setImageBitmap(thumbnail);
+//                        }
+//                        catch (Exception e)
+//                        {
+//                            e.printStackTrace();
+//                        }
+//                        break;
                     }
                 }
                 break;
@@ -537,10 +533,10 @@ public class RequestPaymentActivity extends BaseActivity {
 
     private void addingContact(String id, String paypoint) {
         Friend chosenContact = new Friend();
-        if (id != null)
+        if (id != null && !id.equals(""))
         {
             chosenContact.setId(id);
-            friend = combinedContactList.get(combinedContactList.indexOf(chosenContact));
+            friend = allContacts.get(allContacts.indexOf(chosenContact));
 
             if (friend.isFBContact()) {
                 recipientUri = "fb_" + friend.getId();

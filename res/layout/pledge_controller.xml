@@ -56,9 +56,9 @@
                 android:paddingLeft="2dp"
                 android:paddingRight="11dp"
                 android:paddingTop="2dp" >
-
+
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/donate_orgimg"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/icon_roundedbg"
@@ -127,19 +127,31 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/icon_roundedbg"
                     android:src="@drawable/to_icon" />
-
-                <TextView
-                    android:id="@+id/donate_contactResult"
-                    android:layout_width="182dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="0.8"
-                    android:background="#FAFAFA"
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".8"
                     android:gravity="center"
-                    android:hint="Select a Donor"
-                    android:paddingLeft="10dp"
-                    android:singleLine="true"
-                    android:textSize="14dp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/donate_contactResult"
+                        android:layout_width="182dp"
+                        android:layout_height="wrap_content"
+                        android:background="#FAFAFA"
+                        android:hint="Select a Donor"
+                        android:paddingLeft="10dp"
+                        android:singleLine="true"
+                        android:textSize="14dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/donate_contactBottomText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imageView3"

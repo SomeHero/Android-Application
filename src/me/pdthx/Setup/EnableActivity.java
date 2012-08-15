@@ -1,6 +1,5 @@
 package me.pdthx.Setup;
 
-import me.pdthx.ACHAccountSetupActivity;
 import me.pdthx.BaseActivity;
 import me.pdthx.CustomTabActivity;
 import me.pdthx.R;

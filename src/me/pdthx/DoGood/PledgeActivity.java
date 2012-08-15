@@ -1,5 +1,8 @@
 package me.pdthx.DoGood;
 
+import android.widget.ImageView;
+import me.pdthx.Models.Organization;
+import me.pdthx.Setup.ACHAccountSetupActivity;
 import me.pdthx.Requests.DoGoodRequest;
 import android.app.ProgressDialog;
 import java.text.NumberFormat;
@@ -12,7 +15,6 @@ import me.pdthx.Responses.Response;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
-import me.pdthx.ACHAccountSetupActivity;
 import android.widget.EditText;
 import android.widget.Button;
 import me.pdthx.Models.Friend;
@@ -55,6 +57,7 @@ public class PledgeActivity extends BaseActivity {
 	private TextView txtOrgDetails;
 
 	private String orgId;
+	private Organization organization;
 	private double amount;
 	private Friend pledger;
 	private String pledgerUri;
@@ -66,6 +69,7 @@ public class PledgeActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pledge_controller);
+		getParent().setTitle("Accept Pledge");
 		showPledge();
 	}
 
@@ -113,6 +117,7 @@ public class PledgeActivity extends BaseActivity {
 
                     progressDialog.setMessage("Submitting...");
                     progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.show();
 
                     new Thread(new Runnable() {
 
@@ -132,7 +137,7 @@ public class PledgeActivity extends BaseActivity {
                     break;
 
                 case ACCEPTPLEDGE_ACTION:
-                    removeDialog(ACCEPTPLEDGE_DIALOG);
+                    progressDialog.dismiss();
 
                     if (pledgeResponse != null
                         && pledgeResponse.Success)
@@ -224,6 +229,7 @@ public class PledgeActivity extends BaseActivity {
 
                         }
                     });
+                    alertDialog.show();
                     break;
 
                 case ACCEPTPLEDGESUCCESS_DIALOG:
@@ -232,21 +238,23 @@ public class PledgeActivity extends BaseActivity {
                     NumberFormat nf = NumberFormat.getCurrencyInstance();
 
                     alertDialog.setMessage(String.format(
-                        "Your payment for %s was sent to %s.", nf.format(amount),
-                        pledgerUri));
+                        "Your pledge for %s was sent to %s.", nf.format(amount),
+                        pledger.getName()));
 
                     alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            removeDialog(4);
                             dialog.dismiss();
 
                             pledger = null;
+                            TextView contactBottom = (TextView) findViewById(R.id.donate_contactBottomText);
+                            contactBottom.setText("");
                             txtOrgName.setText("Add recipient");
                             txtOrgDetails.setText("");
                             addMoney.setText("$0.00");
                             txtComments.setText("");
                         }
                     });
+                    alertDialog.show();
                     break;
 
                 case NORECIPIENTSPECIFIED_DIALOG:
@@ -409,6 +417,24 @@ public class PledgeActivity extends BaseActivity {
 	            {
 	                case ADD_ORG :
 	                    orgId = data.getStringExtra("id");
+                        Organization org = new Organization();
+                        org.setId(orgId);
+                        organization = nonProfitsList.get(nonProfitsList.indexOf(org));
+                        txtOrgName.setText(organization.getName());
+                        txtOrgDetails.setText(organization.getSlogan());
+                        ImageView img = (ImageView) findViewById(R.id.donate_orgimg);
+
+                        if (organization.getPicture() != null)
+                        {
+                            img.setImageBitmap(organization.getPicture());
+                        }
+
+                        int amount = data.getIntExtra("amount", 0);
+                        if (amount != 0)
+                        {
+                            TextView addMoney = (TextView) findViewById(R.id.donate_amountResult);
+                            addMoney.setText("$" + amount);
+                        }
 	                    break;
 	                case ADDING_FRIEND:
 	                    addingPledger(data.getStringExtra("id"), data.getStringExtra("paypoint"));
@@ -418,8 +444,8 @@ public class PledgeActivity extends BaseActivity {
                         dialogHandler.sendEmptyMessage(ACCEPTPLEDGE_DIALOG);
                         break;
 	                case ADD_MONEY:
-                        String amount = data.getStringExtra("index");
-                        addMoney.setText("$" + amount);
+                        String strAmount = data.getStringExtra("index");
+                        addMoney.setText("$" + strAmount);
 	                    break;
 	            }
 	            break;
@@ -429,26 +455,30 @@ public class PledgeActivity extends BaseActivity {
 
 	private void addingPledger(String id, String paypoint) {
         Friend chosenContact = new Friend();
-        if (!id.equals("")) {
+        TextView contactBottom = (TextView) findViewById(R.id.donate_contactBottomText);
+        if (id != null && !id.equals("")) {
             chosenContact.setId(id);
-            pledger = combinedContactList.get(combinedContactList.indexOf(chosenContact));
+            pledger = allContacts.get(allContacts.indexOf(chosenContact));
 
             if (pledger.isFBContact()) {
                 pledgerUri = "fb_" + pledger.getId();
-                TextView contactResult = (TextView) findViewById(R.id.donate_OrgResult);
-                contactResult.setText(pledger.getName() + ": " + pledger.getId());
+                TextView contactResult = (TextView) findViewById(R.id.donate_contactResult);
+                contactResult.setText(pledger.getName());
+                contactBottom.setText(pledger.getId());
             } else {
                 pledgerUri = "" + pledger.getPaypoints().get(0);
-                TextView contactResult = (TextView) findViewById(R.id.donate_OrgResult);
-                contactResult.setText(pledger.toString());
+                TextView contactResult = (TextView) findViewById(R.id.donate_contactResult);
+                contactResult.setText(pledger.getName());
+                contactBottom.setText(pledger.getPaypoints().get(0));
             }
         } else {
             chosenContact.setName("New Contact");
             chosenContact.getPaypoints().add(paypoint);
             pledger = chosenContact;
             pledgerUri = "" + paypoint;
-            TextView contactResult = (TextView) findViewById(R.id.donate_OrgResult);
-            contactResult.setText("New contact: " + paypoint);
+            TextView contactResult = (TextView) findViewById(R.id.donate_contactResult);
+            contactResult.setText("New contact");
+            contactBottom.setText(paypoint);
         }
     }
 

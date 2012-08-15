@@ -55,9 +55,9 @@ public class BaseActivity extends Activity {
 	private static boolean contactListAdded = false;
 	protected static boolean facebookFriendsAdded = false;
 
-	protected static ArrayList<Friend> contactList = new ArrayList<Friend>();
-	protected static ArrayList<Friend> friendsList = new ArrayList<Friend>();
-	protected static ArrayList<Friend> combinedContactList = new ArrayList<Friend>();
+	protected static ArrayList<Friend> phoneContacts = new ArrayList<Friend>();
+	protected static ArrayList<Friend> facebookContacts = new ArrayList<Friend>();
+	protected static ArrayList<Friend> allContacts = new ArrayList<Friend>();
 	protected static ArrayList<Organization> nonProfitsList = new ArrayList<Organization>();
 	protected static ArrayList<Organization> organizationsList = new ArrayList<Organization>();
 
@@ -110,7 +110,7 @@ public class BaseActivity extends Activity {
 
 		if (signedInViaFacebook && !facebookFriendsAdded)
 		{
-			if (friendsList.size() == 0)
+			if (facebookContacts.size() == 0)
 			{
 				requestFacebookFriends();
 			}
@@ -120,15 +120,15 @@ public class BaseActivity extends Activity {
 			}
 		}
 
-		if (contactList == null || contactList.size() == 0)
+		if (phoneContacts == null || phoneContacts.size() == 0)
         {
             Runnable run = new Runnable() {
                 public void run() {
                     ContactList contactListRaw = new ContactList(getBaseContext());
-                    contactList = contactListRaw.getContacts();
+                    phoneContacts = contactListRaw.getContacts();
                     contactListAdded = true;
-                    Collections.sort(contactList);
-                    combinedContactList.addAll(contactList);
+                    Collections.sort(phoneContacts);
+                    allContacts.addAll(phoneContacts);
                 }
             };
 
@@ -219,9 +219,9 @@ public class BaseActivity extends Activity {
 							Log.d(f.getName() + ": " + f.getId(), "Facebook Friends");			//SWEEETTNNEEESESSS
 						}
 
-						friendsList = tempList;
-						Collections.sort(friendsList);
-						combinedContactList.addAll(friendsList);
+						facebookContacts = tempList;
+						Collections.sort(facebookContacts);
+						allContacts.addAll(facebookContacts);
 
 
 					} catch (JSONException e) {
@@ -329,8 +329,8 @@ public class BaseActivity extends Activity {
 	public void logout() {
 
 		facebookFriendsAdded = false;
-		friendsList.clear();
-		combinedContactList.clear();
+		facebookContacts.clear();
+		allContacts.clear();
 
 		contactListAdded = false;
 		signedInViaFacebook = false;

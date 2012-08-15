@@ -59,11 +59,11 @@ public class TabUIActivity extends TabActivity {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.pdthx_wel), "Welcome", intent);
 
-		intent = new Intent(tabHost.getContext(), SignUpUIActivity.class);
+		intent = new Intent(tabHost.getContext(), SignUpActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.pdthx_signup), "Sign Up", intent);
 
-		intent = new Intent(tabHost.getContext(), SignInUIActivity.class);
+		intent = new Intent(tabHost.getContext(), SignInActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		setupTab(res.getDrawable(R.drawable.pdthx_signin), "Sign In", intent);
 

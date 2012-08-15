@@ -99,10 +99,10 @@ public final class FriendsListActivity extends BaseActivity implements OnScrollL
 
         mEmptyTextView = (TextView)findViewById(R.id.txtEmptyFriendList);
 
-        if(combinedContactList.size() > 0) {
-            Collections.sort(combinedContactList);
+        if(allContacts.size() > 0) {
+            Collections.sort(allContacts);
             mEmptyTextView.setVisibility(View.GONE);
-            m_adapter = new FriendAdapter(this, R.layout.friend_item, combinedContactList);
+            m_adapter = new FriendAdapter(this, R.layout.friend_item, allContacts);
             mListView.setAdapter(m_adapter);
             mListView.setFastScrollEnabled(true);
             m_adapter.notifyDataSetChanged();
@@ -113,7 +113,6 @@ public final class FriendsListActivity extends BaseActivity implements OnScrollL
         }
 
         progressDialog.dismiss();
-
         loadViewableImages(0, mListView.getChildCount());
 
 
@@ -146,21 +145,24 @@ public final class FriendsListActivity extends BaseActivity implements OnScrollL
             {
                 if (arg2 == 0)
                 {
-                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, combinedContactList);
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, allContacts);
                     selectContactAdapter.setSelected("All Contacts");
                 }
 
                 if (arg2 == 1)
                 {
-                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, contactList);
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, phoneContacts);
                     selectContactAdapter.setSelected("Phone Contacts");
                 }
 
                 if (arg2 == 2)
                 {
-                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, friendsList);
+                    m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, facebookContacts);
                     selectContactAdapter.setSelected("Facebook Contacts");
                 }
+
+                ImageView img = (ImageView) selectContactType.findViewById(R.id.imgTypeClosed);
+                img.setImageBitmap(selectContactAdapter.getImages().get(selectContactAdapter.getSelected()));
                 mListView.setAdapter(m_adapter);
 
                 if (m_adapter.isEmpty())
@@ -177,7 +179,7 @@ public final class FriendsListActivity extends BaseActivity implements OnScrollL
             @Override
             public void onNothingSelected(AdapterView<?> arg0)
             {
-                m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, combinedContactList);
+                m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, allContacts);
                 mListView.setAdapter(m_adapter);
             }
 
@@ -196,19 +198,19 @@ public final class FriendsListActivity extends BaseActivity implements OnScrollL
 
                 if (selected.equals("All Contacts"))
                 {
-                    list = combinedContactList;
+                    list = allContacts;
                 }
                 else if (selected.equals("Phone Contacts"))
                 {
-                    list = contactList;
+                    list = phoneContacts;
                 }
                 else if (selected.equals("Facebook Contacts"))
                 {
-                    list = friendsList;
+                    list = facebookContacts;
                 }
                 else
                 {
-                    list = combinedContactList;
+                    list = allContacts;
                 }
             current = s.toString();
 
@@ -246,20 +248,20 @@ public final class FriendsListActivity extends BaseActivity implements OnScrollL
                         if (phone.length() == 10)
                         {
                             newContact.setName("New Phone Contact");
-                            newContact.getPaypoints().add(PhoneNumberFormatter.formatNumber(phone));
+                            newContact.getPaypoints().set(0, PhoneNumberFormatter.formatNumber(phone));
                         }
                     }
 
                     if (current.contains("@") && current.contains("."))
                     {
                         newContact.setName("New Email Address");
-                        newContact.getPaypoints().add(current);
+                        newContact.getPaypoints().set(0, current);
                     }
 
                     if (current.charAt(0) == '$')
                     {
                         newContact.setName("New MeCode");
-                        newContact.getPaypoints().add(current);
+                        newContact.getPaypoints().set(0, current);
                     }
 
                     ArrayList<Friend> searchedContacts = new ArrayList<Friend>();
@@ -267,6 +269,8 @@ public final class FriendsListActivity extends BaseActivity implements OnScrollL
                     m_adapter = new FriendAdapter(FriendsListActivity.this, R.layout.friend_item, searchedContacts);
                 }
             }
+            mListView.setVisibility(View.VISIBLE);
+            mEmptyTextView.setVisibility(View.GONE);
             mListView.setAdapter(m_adapter);
 
         }
